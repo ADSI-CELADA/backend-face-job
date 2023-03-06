@@ -5,8 +5,10 @@ import jwt from "jsonwebtoken";
 
 export const createUserClient = async (req, res) => {
   try {
-    let { email, name, age, number, password, iconUser, profession, codigo} = req.body;
-    codigo = 0
+    let { email, name, date, number, password, iconUser, profession, codigo } =
+      req.body;
+    codigo = 0;
+    iconUser = ""
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hash = bcrypt.hashSync(password, salt);
@@ -19,8 +21,8 @@ export const createUserClient = async (req, res) => {
       res.json({ data: "ya existe el correo" });
     } else {
       const [result] = await conexion.query(
-      `INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
-        [email, name, age, number, hash, iconUser, profession, codigo]
+        `INSERT INTO cliente (email, name, date, number, password, iconUser, profession, codigo) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+        [email, name, date, number, hash, iconUser, profession, codigo]
       );
       if (result.affectedRow != 0) {
         return res.json({ data: "INSERT_OK" });
@@ -48,10 +50,10 @@ export const loginUserClient = async (req, res) => {
           if (!isMatch) {
             return res.json({ data: "PASSWORD_ERROR" });
           } else {
-            const email = result[0].email
-            const token = jwt.sign({email}, TOKEN_SECRET, {
-              expiresIn : TOKEN_EXPIRE
-            })
+            const email = result[0].email;
+            const token = jwt.sign({ email }, TOKEN_SECRET, {
+              expiresIn: TOKEN_EXPIRE,
+            });
             return res.json({ data: "logueado", result, token });
           }
         });
