@@ -430,7 +430,7 @@ export const userPosts = async (req, res) => {
   try {
     let { email } = req.params;
     const [result] = await conexion.query(
-      " SELECT publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+      " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
       [email]
     );
     res.json(result);

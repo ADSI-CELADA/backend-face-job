@@ -10,6 +10,25 @@ const getRandomInt = (cod) => {
   return cod;
 };
 
+export const dataUser=async(req,res)=>{
+  try {
+     const token=req.headers["token"]
+  if (token) {
+    let correo=jwt.verify(token,TOKEN_SECRET)
+    let {email}=correo
+    const [result]=await conexion.query('SELECT * FROM cliente where email=?',[email])
+    return res.json(result)
+  }else{
+    return res.json('failed')
+  }
+  } catch (error) {
+    console.log(error);
+  }
+ 
+}
+
+
+
 export const sendMail = async (req, res) => {
   try {
     const token = req.headers["token"];

@@ -4,7 +4,7 @@ import { createPost, createPostTextos, DeletePost, DeletePostText, DontLike, Don
 export const PostsUserRouter = Router()
 
 PostsUserRouter.post('/user/image',imagenPerfil)
-PostsUserRouter.post('/user/postsimagenes/:email', userPosts)
+PostsUserRouter.get('/user/postsimagenes/:email', userPosts)
 PostsUserRouter.post('/user/createposttext/:email', createPostTextos)
 PostsUserRouter.post('/user/createpost/:email', createPost)
 PostsUserRouter.post('/user/userPoststextos/:email', userPostsTextos)

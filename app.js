@@ -34,5 +34,5 @@ app.use(profileUser)
 
 // Server ->
 app.listen(PORT_APP, () => {
-  console.log(`Server running uvub ${PORT_APP}`);
+  console.log(`Server running FACE-JOB ${PORT_APP}`);
 });
