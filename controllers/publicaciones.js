@@ -2,6 +2,7 @@ import conexion from "../database/db.js";
 import { uploadImage } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_CODE, TOKEN_EXPIRE, TOKEN_SECRET } from "../config/config.js";
+import { response } from "express";
 
 export const imagenPerfil = async (req, res) => {
   try {
@@ -112,12 +113,12 @@ export const createPost = async (req, res) => {
 };
 
 export const likesImg = async (req, res) => {
-  let token= req.headers["token"];
+  const token= req.headers["token"];
   
   try {
     if(token){
       let correo=jwt.verify(token,TOKEN_SECRET)
-      let {email}=correo
+      const  {email}=correo
       const { id } = req.body;
       let estado = "megusta";
       const [result] = await conexion.query(
@@ -242,7 +243,7 @@ export const DontLikeText = async (req, res) => {
     if (result.affectedRows == 1) {
       const [rest] = await conexion.query(
         "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
-        [id, id]
+        [id,id]
       );
       if (rest.affectedRows == 1) {
         res.json("bien dislike");
@@ -261,10 +262,10 @@ export const DontLikeText = async (req, res) => {
 
 export const DontLike = async (req, res) => {
 try {
-  let token =req.headers["token"]
+  const token =req.headers["token"]
 if (token) {
   let correo=jwt.verify(token,TOKEN_SECRET)
-  let {email}=correo
+  const {email}=correo
   let { id } = req.body;
   let estado = "nomegusta";
   const [result] = await conexion.query(
@@ -274,7 +275,7 @@ if (token) {
   if (result.affectedRows == 1) {
     const [rest] = await conexion.query(
       "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)-1 WHERE id=?",
-      [id, id]
+      [id,id]
     );
     if (rest.affectedRows == 1) {
       res.json("bien dislike");
@@ -470,12 +471,38 @@ export const DeletePostText = async (req, res) => {
 
 export const userPosts = async (req, res) => {
   try {
-    let { email } = req.params;
-    const [result] = await conexion.query(
-      " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
-      [email]
-    );
-    res.json(result);
+    const { email } = req.params;
+    const token=req.headers["token"]
+      
+      let correo=jwt.verify(token,TOKEN_SECRET)
+      const emails=correo.email
+    
+    if (email==emails) {
+      const [result] = await conexion.query(
+        " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+        [email]
+      );
+    
+     return res.json(result);
+    }
+   
+    if(email!=emails){
+     
+      const [resultu] = await conexion.query(
+        " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+        [email]
+      );
+    
+      
+       const [response]=await conexion.query('SELECT megusta.estado,megusta.id_megusta FROM megusta,publicaciones,cliente,publicaciones_cliente WHERE id_megusta=publicaciones.id AND cliente.email=email_megusta and email_megusta=? AND  publicaciones_cliente.id2=publicaciones.id AND publicaciones_cliente.email3=?;',[emails,email]) 
+  
+   
+      
+      return res.json({data1:resultu,data2:response});
+    }
+    
+  
+    
   } catch (error) {
     return res.status(404).json({ message: "ERROR 404" });
   }
@@ -483,12 +510,33 @@ export const userPosts = async (req, res) => {
 
 export const userPostsTextos = async (req, res) => {
   try {
-    let { email } = req.params;
-    const [result] = await conexion.query(
+    const { email } = req.params;
+    const token=req.headers["token"]
+      
+      let correo=jwt.verify(token,TOKEN_SECRET)
+      const emails=correo.email
+      if (email==emails) {
+        const [result] = await conexion.query(
       " SELECT publicacionestextos.textos,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC",
       [email]
     );
     res.json(result);
+      }
+      if(email!=emails){
+     
+        const [resultu] = await conexion.query(
+          "SELECT publicacionestextos.textos,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC ",
+          [email]
+        );
+      
+        
+         const [response]=await conexion.query('SELECT megustatextos.estado,megustatextos.id_textos FROM megustatextos,publicacionestextos,cliente,publicacionestextos_cliente WHERE id_textos=publicacionestextos.id AND cliente.email=email_cliente2 and email_cliente2=? AND  publicacionestextos_cliente.id3=publicacionestextos.id AND publicacionestextos_cliente.email4=?',[emails,email]) 
+    
+     
+        
+        return res.json({data1:resultu,data2:response});
+      }
+    
   } catch (error) {
     return res.status(404).json({ message: "ERROR 404" });
   }

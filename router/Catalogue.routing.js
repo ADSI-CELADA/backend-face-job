@@ -5,5 +5,5 @@ export const CatalogueRouter = Router()
 
 CatalogueRouter.get('/consultProfessionals',consultProfessional)
 CatalogueRouter.get('/consultTarget',consultTarget)
-CatalogueRouter.post('/consultCategories',consultCategories)
-CatalogueRouter.post('/consultProfile',consultProfile)
+CatalogueRouter.get('/consultCategories/:profession',consultCategories)
+CatalogueRouter.get('/consultProfile/:email',consultProfile)

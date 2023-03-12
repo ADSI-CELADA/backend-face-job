@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const createUserClient = async (req, res) => {
   try {
-    let { email, name, date, number, password, iconUser, profession, codigo } =
+    let { email, name,lastname, date, number, password, iconUser, profession, codigo} =
       req.body;
     codigo = 0;
     iconUser = ""
@@ -21,8 +21,8 @@ export const createUserClient = async (req, res) => {
       res.json({ data: "ya existe el correo" });
     } else {
       const [result] = await conexion.query(
-        `INSERT INTO cliente (email, name, date, number, password, iconUser, profession, codigo) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
-        [email, name, date, number, hash, iconUser, profession, codigo]
+        `INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo,lastname) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?)`,
+        [email, name, date, number, hash, iconUser, profession, codigo,lastname]
       );
       if (result.affectedRow != 0) {
         return res.json({ data: "INSERT_OK" });

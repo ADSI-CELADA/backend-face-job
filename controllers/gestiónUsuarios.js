@@ -31,8 +31,6 @@ export const dataUser=async(req,res)=>{
 export const sendMailEmail = async (req, res) => {
   try {
 
-  
-     
       let { email } = req.body;
       if (validator.isEmail(email)) {
         let code = getRandomInt(0);
@@ -88,7 +86,7 @@ export const validateCodeEmail = async (req, res) => {
     );
 
     let value = { codigo: parseInt(codigo) };
-
+      console.log(codigo);
     console.log(result[0].codigo, "code ->", value.codigo);
 
       if (value.codigo == result[0].codigo) {
