@@ -28,6 +28,32 @@ export const dataUser=async(req,res)=>{
 }
 
 
+export const sendMailEmail = async (req, res) => {
+  try {
+
+  
+     
+      let { email } = req.body;
+      if (validator.isEmail(email)) {
+        let code = getRandomInt(0);
+        let response = nodemailerPass(email, code);
+        const [result] = await conexion.query(
+          `UPDATE cliente SET codigo = ? WHERE email = "${email}"`,
+          [code]
+        );
+        return res.json({ message: "send", response, code, result });
+      }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+
+
+
 
 export const sendMail = async (req, res) => {
   try {
@@ -50,6 +76,60 @@ export const sendMail = async (req, res) => {
     console.log(error);
   }
 };
+
+
+export const validateCodeEmail = async (req, res) => {
+  try {
+   
+    let { codigo } = req.body;
+    let { email } = req.params;
+    const [result] = await conexion.query(
+      `SELECT codigo FROM cliente WHERE email = "${email}"`
+    );
+
+    let value = { codigo: parseInt(codigo) };
+
+    console.log(result[0].codigo, "code ->", value.codigo);
+
+      if (value.codigo == result[0].codigo) {
+        return res.json({ data: "CODE_VALIDE" });
+      } else {
+        return res.json({ data: "NOT_VALIDE" });
+      }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const updatePasswordEmail = async (req, res) => {
+  const { password } = req.body;
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  try {
+   
+  
+      let { email } = req.params;
+      const passOld = await conexion.query(
+        `SELECT password FROM cliente WHERE email = "${email}"`
+      );
+      if (passOld != password) {
+        const [result] = await conexion.query(
+          `UPDATE cliente SET password = ? WHERE email = "${email}"`,
+          [hash]
+        );
+        if (result.affectedRows != 0) {
+          return res.json({ result, data: "PASSWORD_UPDATE" });
+        }
+      }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
 
 export const validateCode = async (req, res) => {
   try {

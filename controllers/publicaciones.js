@@ -1,26 +1,32 @@
 import conexion from "../database/db.js";
 import { uploadImage } from "../utils/cloudinary.js";
+import jwt from "jsonwebtoken";
+import { TOKEN_CODE, TOKEN_EXPIRE, TOKEN_SECRET } from "../config/config.js";
 
 export const imagenPerfil = async (req, res) => {
   try {
-    const { email } = req.body;
+    const token = req.headers['token'];
+if(token){
+  let correo=jwt.verify(token,TOKEN_SECRET)
+    let {email}=correo
+  let img;
+  if (req.files.img) {
+    const result = await uploadImage(req.files.img.tempFilePath);
+    console.log(result);
+    img = result.secure_url;
+  }
 
-    let img;
-    if (req.files.img) {
-      const result = await uploadImage(req.files.img.tempFilePath);
-      console.log(result);
-      img = result.secure_url;
-    }
-
-    const [result] = await conexion.query(
-      "UPDATE cliente SET iconUser=?  WHERE email=?",
-      [img, email]
-    );
-    if (result.affectedRows != 0) {
-      return res.json({ data: "INSERT_OK" });
-    } else {
-      return res.json({ data: "ERROR", error });
-    }
+  const [result] = await conexion.query(
+    "UPDATE cliente SET iconUser=?  WHERE email=?",
+    [img, email]
+  );
+  if (result.affectedRows != 0) {
+    return res.json({ data: "INSERT_OK" });
+  } else {
+    return res.json({ data: "ERROR", error });
+  }
+}
+   
   } catch (error) {
     return res.status(404).json({ message: "ERROR 404" });
   }
@@ -106,128 +112,159 @@ export const createPost = async (req, res) => {
 };
 
 export const likesImg = async (req, res) => {
-  let { email } = req.params;
-  const { id } = req.body;
-  let estado = "megusta";
-  const [result] = await conexion.query(
-    "SELECT email_megusta from megusta WHERE email_megusta=? && id_megusta=?",
-    [email, id]
-  );
-
-  if (result.length > 0) {
-    const [resultado] = await conexion.query(
-      "UPDATE megusta set estado=? WHERE email_megusta=? && id_megusta=?",
-      [estado, email, id]
-    );
-    if (resultado.affectedRows == 1) {
-      const [rest] = await conexion.query(
-        "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
-        [id, id]
+  let token= req.headers["token"];
+  
+  try {
+    if(token){
+      let correo=jwt.verify(token,TOKEN_SECRET)
+      let {email}=correo
+      const { id } = req.body;
+      let estado = "megusta";
+      const [result] = await conexion.query(
+        "SELECT email_megusta from megusta WHERE email_megusta=? && id_megusta=?",
+        [email, id]
       );
-      if (rest.affectedRows == 1) {
-        res.json("bien");
+    
+      if (result.length > 0) {
+        const [resultado] = await conexion.query(
+          "UPDATE megusta set estado=? WHERE email_megusta=? && id_megusta=?",
+          [estado, email, id]
+        );
+        if (resultado.affectedRows == 1) {
+          const [rest] = await conexion.query(
+            "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
+            [id, id]
+          );
+          if (rest.affectedRows == 1) {
+            res.json("bien");
+          } else {
+            res.json("mal el like");
+          }
+        } else {
+          res.json("mal");
+        }
       } else {
-        res.json("mal el like");
+        let estado = "megusta";
+        const [resulti] = await conexion.query(
+          "INSERT megusta(id_megusta,email_megusta,estado) VALUES (?,?,?)",
+          [id, email, estado]
+        );
+        if (resulti.affectedRows == 1) {
+          const [rest] = await conexion.query(
+            "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
+            [id, id]
+          );
+          if (rest.affectedRows == 1) {
+            res.json("bien");
+          } else {
+            res.json("mal el like");
+          }
+        } else {
+          res.json("mal");
+        }
       }
-    } else {
-      res.json("mal");
     }
-  } else {
-    let estado = "megusta";
-    const [resulti] = await conexion.query(
-      "INSERT megusta(id_megusta,email_megusta,estado) VALUES (?,?,?)",
-      [id, email, estado]
-    );
-    if (resulti.affectedRows == 1) {
-      const [rest] = await conexion.query(
-        "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
-        [id, id]
-      );
-      if (rest.affectedRows == 1) {
-        res.json("bien");
-      } else {
-        res.json("mal el like");
-      }
-    } else {
-      res.json("mal");
-    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
 export const likesTexts = async (req, res) => {
-  let { email } = req.params;
-  const { id } = req.body;
-  let estado = "megusta";
-  const [result] = await conexion.query(
-    "SELECT email_cliente2 from megustatextos WHERE email_cliente2=? && id_textos=?",
-    [email, id]
-  );
-
-  if (result.length > 0) {
-    const [resultado] = await conexion.query(
-      "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
-      [estado, email, id]
-    );
-    if (resultado.affectedRows == 1) {
-      const [rest] = await conexion.query(
-        "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
-        [id, id]
-      );
-      if (rest.affectedRows == 1) {
-        res.json("bien");
-      } else {
-        res.json("mal el like");
-      }
-    } else {
-      res.json("mal");
-    }
-  } else {
+  try {
+    let token= req.headers['token'];
+  if (token) {
+    let correo=jwt.verify(token,TOKEN_SECRET)
+    let {email}=correo
+    const { id } = req.body;
     let estado = "megusta";
-    const [resulti] = await conexion.query(
-      "INSERT megustatextos(id_textos,email_cliente2,estado) VALUES (?,?,?)",
-      [id, email, estado]
+    const [result] = await conexion.query(
+      "SELECT email_cliente2 from megustatextos WHERE email_cliente2=? && id_textos=?",
+      [email, id]
     );
-    if (resulti.affectedRows == 1) {
-      const [rest] = await conexion.query(
-        "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
-        [id, id]
+  
+    if (result.length > 0) {
+      const [resultado] = await conexion.query(
+        "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
+        [estado, email, id]
       );
-      if (rest.affectedRows == 1) {
-        res.json("bien");
+      if (resultado.affectedRows == 1) {
+        const [rest] = await conexion.query(
+          "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
+          [id, id]
+        );
+        if (rest.affectedRows == 1) {
+          res.json("bien");
+        } else {
+          res.json("mal el like");
+        }
       } else {
-        res.json("mal el like");
+        res.json("mal");
       }
     } else {
-      res.json("mal");
+      let estado = "megusta";
+      const [resulti] = await conexion.query(
+        "INSERT megustatextos(id_textos,email_cliente2,estado) VALUES (?,?,?)",
+        [id, email, estado]
+      );
+      if (resulti.affectedRows == 1) {
+        const [rest] = await conexion.query(
+          "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
+          [id, id]
+        );
+        if (rest.affectedRows == 1) {
+          res.json("bien");
+        } else {
+          res.json("mal el like");
+        }
+      } else {
+        res.json("mal");
+      }
     }
   }
+  } catch (error) {
+    console.log(error);
+  }
+ 
 };
 
 export const DontLikeText = async (req, res) => {
-  let { email } = req.params;
-  let { id } = req.body;
-  let estado = "nomegusta";
-  const [result] = await conexion.query(
-    "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
-    [estado, email, id]
-  );
-  if (result.affectedRows == 1) {
-    const [rest] = await conexion.query(
-      "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
-      [id, id]
+  try {
+    let token  = req.headers['token'];
+  if (token) {
+    let correo=jwt.verify(token,TOKEN_SECRET)
+    let {email}=correo
+    let { id } = req.body;
+    let estado = "nomegusta";
+    const [result] = await conexion.query(
+      "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
+      [estado, email, id]
     );
-    if (rest.affectedRows == 1) {
-      res.json("bien dislike");
+    if (result.affectedRows == 1) {
+      const [rest] = await conexion.query(
+        "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
+        [id, id]
+      );
+      if (rest.affectedRows == 1) {
+        res.json("bien dislike");
+      } else {
+        res.json("mal el dislike");
+      }
     } else {
-      res.json("mal el dislike");
+      res.json("mal dislike");
     }
-  } else {
-    res.json("mal dislike");
+  }
+ 
+  } catch (error) {
+    console.log(error);
   }
 };
 
 export const DontLike = async (req, res) => {
-  let { email } = req.params;
+try {
+  let token =req.headers["token"]
+if (token) {
+  let correo=jwt.verify(token,TOKEN_SECRET)
+  let {email}=correo
   let { id } = req.body;
   let estado = "nomegusta";
   const [result] = await conexion.query(
@@ -247,6 +284,11 @@ export const DontLike = async (req, res) => {
   } else {
     res.json("mal dislike");
   }
+}
+} catch (error) {
+  console.log(error);
+}
+  
 };
 
 export const DeletePost = async (req, res) => {
