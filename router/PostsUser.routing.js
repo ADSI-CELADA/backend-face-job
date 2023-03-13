@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { createPost, createPostTextos, DeletePost, DeletePostText, DontLike, DontLikeText, imagenPerfil, likesImg, likesTexts, UpdateText, userPosts, userPostsTextos } from "../controllers/publicaciones.js"
+import { createPost, createPostTextos, DeletePost, DeletePostText, DontLike, DontLikeText, imagenPerfil, likesImg, likesTexts, UpdateText, userPosts, userPostsTextos,insertComment } from "../controllers/publicaciones.js"
 
 export const PostsUserRouter = Router()
 
@@ -15,3 +15,4 @@ PostsUserRouter.post('/user/usernomegustatext', DontLikeText)
 PostsUserRouter.delete('/user/userEliminaPost/:id', DeletePost)
 PostsUserRouter.delete('/user/userEliminaPostText/:id', DeletePostText)
 PostsUserRouter.put('/user/userUpdatePostText/:id', UpdateText)
+PostsUserRouter.post('/user/insertComment/:id', insertComment)

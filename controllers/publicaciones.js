@@ -541,3 +541,31 @@ export const userPostsTextos = async (req, res) => {
     return res.status(404).json({ message: "ERROR 404" });
   }
 };
+
+
+export const insertComment = async (req, res) => {
+  const  token= req.headers['token'];
+    if(token){
+        let correo=jwt.verify(token,TOKEN_SECRET)
+        const {email}=correo;
+        const {coment}=req.body
+        const {id}=req.params
+        const [result]=await conexion.query('INSERT INTO comentarios(comentario) VALUES(?)',[coment])
+        if (result.affectedRows != 0) {
+          const id_comentario=result.insertId
+          const [resultado]=await conexion.query('INSERT INTO comentarios_imagen(id_comentario,idimagen) VALUES(?,?)',[id_comentario,id])
+          if (resultado.affectedRows !=0) {
+            const [response]=await  conexion.query('INSERT INTO comentarios_usuario(id_comentario3,emailcliente) VALUES(?,?)',[id_comentario,email])
+          if (response.affectedRows !=0) {
+            res.json('insert OK')
+          }else{  
+            res.json('not insert')
+          }
+          
+          }
+
+
+        }
+    }
+ 
+};
