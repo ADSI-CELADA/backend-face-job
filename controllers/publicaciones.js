@@ -569,3 +569,41 @@ export const insertComment = async (req, res) => {
     }
  
 };
+
+export const getComments = async (req, res) => {
+ 
+    try {
+        const {id}=req.params
+        const [result]=await conexion.query('SELECT cliente.name,cliente.iconUser,comentarios.comentario,comentarios.id,comentarios_imagen.idimagen,comentarios_usuario.emailcliente FROM comentarios,cliente,comentarios_usuario,comentarios_imagen WHERE comentarios.id=comentarios_usuario.id_comentario3 and comentarios.id=comentarios_imagen.id_comentario AND comentarios.comentario is NOT null and cliente.email=comentarios_usuario.emailcliente and comentarios_imagen.idimagen=? ORDER BY comentarios.hora DESC',[id])
+
+       
+          res.json(result)
+      
+    } catch (error) {
+      console.log(error);
+    }
+      
+};
+
+
+export const updateComments = async (req, res) => {
+ 
+  try {
+    const {comment}=req.body
+      const {id}=req.params
+      const [result]=await conexion.query('UPDATE comentarios SET comentarios.comentario=? WHERE comentarios.id=?',[comment,id])
+
+     if (result.affectedRows!=0) {
+      
+        res.json(result)
+     }else{
+      res.json("not update")
+     }
+    
+  } catch (error) {
+    console.log(error);
+  }
+    
+};
+
+
