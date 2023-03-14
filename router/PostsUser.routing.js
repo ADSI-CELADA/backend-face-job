@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { updateComments,createPost, createPostTextos,getComments, DeletePost, DeletePostText, DontLike, DontLikeText, imagenPerfil, likesImg, likesTexts, UpdateText, userPosts, userPostsTextos,insertComment } from "../controllers/publicaciones.js"
+import { deleteComments,updateComments,createPost, createPostTextos,getComments, DeletePost, DeletePostText, DontLike, DontLikeText, imagenPerfil, likesImg, likesTexts, UpdateText, userPosts, userPostsTextos,insertComment, insertCommentText, getCommentsText, deleteCommentsText } from "../controllers/publicaciones.js"
 
 export const PostsUserRouter = Router()
 
@@ -15,8 +15,14 @@ PostsUserRouter.post('/user/usernomegustatext', DontLikeText)
 PostsUserRouter.delete('/user/userEliminaPost/:id', DeletePost)
 PostsUserRouter.delete('/user/userEliminaPostText/:id', DeletePostText)
 PostsUserRouter.put('/user/userUpdatePostText/:id', UpdateText)
+
 PostsUserRouter.post('/user/insertComment/:id', insertComment)
 PostsUserRouter.get('/user/getComments/:id', getComments)
 PostsUserRouter.put('/user/updateComments/:id', updateComments)
+PostsUserRouter.put('/user/deleteComments/:id', deleteComments)
+
+PostsUserRouter.post('/user/insertCommentText/:id', insertCommentText)
+PostsUserRouter.get('/user/getCommentsText/:id', getCommentsText)
+PostsUserRouter.put('/user/deleteCommentsText/:id', deleteCommentsText)
 
 

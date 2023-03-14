@@ -479,7 +479,7 @@ export const userPosts = async (req, res) => {
     
     if (email==emails) {
       const [result] = await conexion.query(
-        " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+        " SELECT cliente.profession,publicaciones.img,publicaciones.comments,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
         [email]
       );
     
@@ -489,7 +489,7 @@ export const userPosts = async (req, res) => {
     if(email!=emails){
      
       const [resultu] = await conexion.query(
-        " SELECT cliente.profession,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+        " SELECT cliente.profession,publicaciones.comments,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
         [email]
       );
     
@@ -517,7 +517,7 @@ export const userPostsTextos = async (req, res) => {
       const emails=correo.email
       if (email==emails) {
         const [result] = await conexion.query(
-      " SELECT publicacionestextos.textos,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC",
+      " SELECT publicacionestextos.textos,publicacionestextos.comments,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC",
       [email]
     );
     res.json(result);
@@ -525,7 +525,7 @@ export const userPostsTextos = async (req, res) => {
       if(email!=emails){
      
         const [resultu] = await conexion.query(
-          "SELECT publicacionestextos.textos,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC ",
+          "SELECT publicacionestextos.textos,publicacionestextos.comments,publicacionestextos.description,publicacionestextos.likes,publicacionestextos.id,cliente.email,cliente.name,cliente.iconUser,publicacionestextos_cliente.tiempo,megustatextos.estado FROM cliente,publicacionestextos,publicacionestextos_cliente,megustatextos WHERE publicacionestextos_cliente.email4=cliente.email && publicacionestextos_cliente.id3=publicacionestextos.id && cliente.email=megustatextos.email_cliente2 && publicacionestextos_cliente.id3=megustatextos.id_textos && publicacionestextos_cliente.email4=? ORDER BY publicacionestextos_cliente.tiempo DESC ",
           [email]
         );
       
@@ -557,6 +557,41 @@ export const insertComment = async (req, res) => {
           if (resultado.affectedRows !=0) {
             const [response]=await  conexion.query('INSERT INTO comentarios_usuario(id_comentario3,emailcliente) VALUES(?,?)',[id_comentario,email])
           if (response.affectedRows !=0) {
+            const [rest] = await conexion.query(
+              "UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)+1 WHERE id=?",
+              [id,id]
+            );
+            res.json('insert OK')
+          }else{  
+            res.json('not insert')
+          }
+          
+          }
+
+
+        }
+    }
+ 
+};
+
+export const insertCommentText = async (req, res) => {
+  const  token= req.headers['token'];
+    if(token){
+        let correo=jwt.verify(token,TOKEN_SECRET)
+        const {email}=correo;
+        const {coment}=req.body
+        const {id}=req.params
+        const [result]=await conexion.query('INSERT INTO comentarios(comentario) VALUES(?)',[coment])
+        if (result.affectedRows != 0) {
+          const id_comentario=result.insertId
+          const [resultado]=await conexion.query('INSERT INTO comentarios_textos(id_comentario2,idtextos) VALUES(?,?)',[id_comentario,id])
+          if (resultado.affectedRows !=0) {
+            const [response]=await  conexion.query('INSERT INTO comentarios_usuario(id_comentario3,emailcliente) VALUES(?,?)',[id_comentario,email])
+          if (response.affectedRows !=0) {
+            const [rest] = await conexion.query(
+              "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
+              [id,id]
+            );
             res.json('insert OK')
           }else{  
             res.json('not insert')
@@ -584,7 +619,20 @@ export const getComments = async (req, res) => {
     }
       
 };
+export const getCommentsText = async (req, res) => {
+ 
+  try {
+      const {id}=req.params
+      const [result]=await conexion.query('SELECT cliente.name,cliente.iconUser,comentarios.comentario,comentarios.id,comentarios_textos.idtextos,comentarios_usuario.emailcliente FROM comentarios,cliente,comentarios_usuario,comentarios_textos WHERE comentarios.id=comentarios_usuario.id_comentario3 and comentarios.id=comentarios_textos.id_comentario2 AND comentarios.comentario is NOT null and cliente.email=comentarios_usuario.emailcliente and comentarios_textos.idtextos=? ORDER BY comentarios.hora DESC',[id])
 
+     
+        res.json(result)
+    
+  } catch (error) {
+    console.log(error);
+  }
+    
+};
 
 export const updateComments = async (req, res) => {
  
@@ -607,3 +655,72 @@ export const updateComments = async (req, res) => {
 };
 
 
+
+
+export const deleteComments = async (req, res) => {
+ 
+  try {
+      const {param}=req.body
+      const {id}=req.params
+     const [result]=await conexion.query('DELETE FROM comentarios_usuario WHERE id_comentario3=?',[id])
+
+     if (result.affectedRows!=0) {
+      const [resulti]=await conexion.query('DELETE FROM comentarios_imagen WHERE id_comentario=?',[id])
+          if (resulti.affectedRows!=0) {
+            const [resultu]=await conexion.query('DELETE FROM comentarios WHERE id=?',[id])
+              if (resultu.affectedRows!=0) { 
+                const [rest] = await conexion.query("UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)-1 WHERE id=?",[param,param])
+                  
+                if (rest.affectedRows!=0) {
+                 res.json(rest)
+                }else{
+                  
+                  console.log("falla el update");
+                }
+                
+              }
+          }
+     }else{
+      res.json("not delete")
+     }
+    
+  } catch (error) {
+    console.log(error);
+  }
+    
+};
+
+
+
+export const deleteCommentsText = async (req, res) => {
+ 
+  try {
+    
+      const {id}=req.params
+      const {param}=req.body
+
+      if (id) {
+        const [result]=await conexion.query('DELETE FROM comentarios_usuario WHERE id_comentario3=?',[id])
+
+     if (result.affectedRows!=0) {
+      const [resulti]=await conexion.query('DELETE FROM comentarios_textos WHERE id_comentario2=?',[id])
+          if (resulti.affectedRows!=0) {
+            const [resultu]=await conexion.query('DELETE FROM comentarios WHERE id=?',[id])
+              if (resultu.affectedRows!=0) {
+                const [rest] = await conexion.query("UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)-1 WHERE id=?",[param,param])
+                if (rest.affectedRows!=0) {
+                  res.json(rest)
+                }
+              }
+          }
+      }
+      
+     }else{
+      res.json("not delete")
+     }
+    
+  } catch (error) {
+    console.log(error);
+  }
+    
+};
