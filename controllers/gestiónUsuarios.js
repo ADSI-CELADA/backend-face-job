@@ -157,7 +157,7 @@ export const validateCode = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   const token = req.headers["token"];
-  const { password } = req.body;
+  const { password,passsnuevaaa } = req.body;
   const saltRounds = 10;
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(password, salt);
@@ -168,17 +168,61 @@ export const updatePassword = async (req, res) => {
       const passOld = await conexion.query(
         `SELECT password FROM cliente WHERE email = "${email}"`
       );
-      if (passOld != password) {
-        const [result] = await conexion.query(
+
+
+      if (passOld == hash) {
+        
+        const hashNuevo = bcrypt.hashSync(passsnuevaaa, salt);
+        if (passOld!=passsnuevaaa) {
+          const [result] = await conexion.query(
+         
           `UPDATE cliente SET password = ? WHERE email = "${email}"`,
-          [hash]
+          [hashNuevo]
         );
         if (result.affectedRows != 0) {
           return res.json({ result, data: "PASSWORD_UPDATE" });
         }
+        }else{
+          console.log("la contraseña nueva es igual a la antigua");
+        }
+        
+      }else{
+        console.log("la contraseña antigua no es igual a la antigua del formulario");
       }
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+
+/* modulo info nombre,apellido,numero,profesion*/
+
+export const updateInfo = async (req,res) =>{
+ 
+try { const token = req.headers["token"];
+  const { name, number, professional, lastname} = req.body
+ 
+
+console.log(name);
+  if (token) {
+    let correo = jwt.verify(token, TOKEN_SECRET);
+    let { email } = correo;
+    
+    const [result] = await conexion.query(
+    `UPDATE cliente SET name=?,number=?,profession=?,lastname=? where email=?`,[name,number,professional,lastname,email]
+    )
+    if (result.affectedRows !=0) {
+      return res.json({ result, data: "UPDATE_INFO"})
+    }
+  }
+} catch (error) {
+  console.log(error);
+}
+}
+
+
+
+
+
+
