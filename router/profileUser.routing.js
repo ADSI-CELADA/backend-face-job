@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { sendMail, validateCode, updatePassword,dataUser, sendMailEmail, validateCodeEmail, updatePasswordEmail, updateInfo } from "../controllers/gestiónUsuarios.js";
+import { sendMail, validateCode, updatePassword,dataUser, sendMailEmail, validateCodeEmail, updatePasswordEmail, updateInfo, deleteAccount } from "../controllers/gestiónUsuarios.js";
 
 export const profileUser = Router()
 
@@ -13,3 +13,4 @@ profileUser.post("/recoveryEmail/:email", validateCodeEmail)
 profileUser.put("/updatePassEmail/:email", updatePasswordEmail)
 profileUser.get('/dataUser',dataUser)
 profileUser.post('/updateInfoU',updateInfo)
+profileUser.delete('/deleteClient', deleteAccount )     

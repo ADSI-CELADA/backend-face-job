@@ -221,6 +221,95 @@ console.log(name);
 }
 }
 
+export const deleteAccount = async (req,res) =>{
+  /*const token = req.headers["token"];
+  const {passwordForm}  = req.body;
+  console.log(passwordForm);*/
+ 
+  try {
+    let id=0
+   /* if (token) {
+     /* let correo = jwt.verify(token, TOKEN_SECRET);
+      let { email } = correo;*/
+      let email="kebinochoa10@gmail.com"
+      let passwordForm="666"
+      const [result] = await conexion.query(
+        `SELECT password FROM cliente WHERE email = "${email}"`
+      );
+     let password=result[0].password
+      bcrypt.compare(passwordForm, password, async (error, isMatch) => {
+        if (!isMatch) {
+          return res.json({ data: "PASSWORD_ERROR" });
+        } else {
+          
+            const [response]=await conexion.query('SELECT email_cliente2,id_textos from megustatextos WHERE  email_cliente2=?',[email])
+              console.log(response);
+              id=result[0].id_textos
+          if (response.length>0) {
+            const [response]=conexion.query('DELETE FROM megustatextos WHERE email_cliente2=? ',[email])
+            if (response.affectedRows!=0) {
+             const [rest] = await conexion.query(
+                "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)-1 WHERE id=?",
+                [id,id]
+              );
+              if (rest.affectedRows == 1) {
+                res.json("bien dislike");
+              } else {
+                res.json("mal el dislike");
+              }
+              
+            }
+    
+        }
+          const [responseMg]= conexion.query('SELECT email_megusta FROM megusta WHERE email_megusta=?',[email])
+           if (responseMg.length >0) {
+            const [response]=conexion.query('DELETE FROM megusta WHERE email_megusta=?',[email])
+            if (response.affectedRows !=0) {
+              console.log('eliminado de la tabla  me gusta');
+              
+            } 
+           } 
+           const [responseCu]= conexion.query('SELECT emailcliente FROM comentarios_usuario WHERE emailcliente=?', [email])
+           if (responseCu.length >0) {
+            const [response]=conexion.query('DELETE FROM comentarios_usuario WHERE emailcliente=?',[email])
+            if (response.affectedRows !=0) {
+              console.log("eliminado de la tabla comentarios_usuario");
+              
+            }
+            
+           }
+           const [responsePc]=conexion.query('SELECT email3 FROM publicaciones_cliente WHERE email3', [email])
+           if (responsePc.length >0) {
+            const [response]= conexion.query('DELETE FROM publicaciones_cliente WHERE email3=? ', [email])
+            if (response.affectedRows !=0) {
+              console.log("eliminado de la tabla publicaciones_cliente");
+              
+            }
+           }
+           const [responsePubc]=conexion.query('SELECT email4 FROM publicacionestextos_cliente WHERE email4', [email])
+           if (responsePubc.length >0) {
+            const [response]= conexion.query('DELETE FROM publicacionestextos_cliente WHERE email4=?', [email])
+            if (response.affectedRows != 0) {
+              console.log("eliminado de la tabla publicacionestextos_cliente");
+              
+            }
+            
+           }
+
+
+        }
+      });
+  
+    
+  /*  }*/
+     
+
+
+
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 
