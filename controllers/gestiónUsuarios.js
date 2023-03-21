@@ -199,21 +199,22 @@ export const updatePassword = async (req, res) => {
 /* modulo info nombre,apellido,numero,profesion*/
 
 export const updateInfo = async (req,res) =>{
- 
-try { const token = req.headers["token"];
+ const token = req.headers["token"];
   const { name, number, professional, lastname} = req.body
- 
-
-console.log(name);
+  console.log(token
+);
+try { 
   if (token) {
     let correo = jwt.verify(token, TOKEN_SECRET);
     let { email } = correo;
-    
+   
     const [result] = await conexion.query(
     `UPDATE cliente SET name=?,number=?,profession=?,lastname=? where email=?`,[name,number,professional,lastname,email]
     )
     if (result.affectedRows !=0) {
       return res.json({ result, data: "UPDATE_INFO"})
+    }else{
+      return res.json({data:"UPDATE_NOT"})
     }
   }
 } catch (error) {
@@ -221,93 +222,128 @@ console.log(name);
 }
 }
 
+// Eliminar cuenta
+
 export const deleteAccount = async (req,res) =>{
-  /*const token = req.headers["token"];
-  const {passwordForm}  = req.body;
-  console.log(passwordForm);*/
- 
   try {
-    let id=0
-   /* if (token) {
-     /* let correo = jwt.verify(token, TOKEN_SECRET);
-      let { email } = correo;*/
-      let email="kebinochoa10@gmail.com"
-      let passwordForm="666"
+  const token = req.headers["token"];
+  const password  = req.body.password;
+  console.log(password);
+  console.log(token);
+    if (token) {
+      let correo = jwt.verify(token, TOKEN_SECRET);
+      let { email } = correo;
       const [result] = await conexion.query(
         `SELECT password FROM cliente WHERE email = "${email}"`
       );
-     let password=result[0].password
-      bcrypt.compare(passwordForm, password, async (error, isMatch) => {
-        if (!isMatch) {
+      
+      let passwordResult=result[0].password
+      bcrypt.compare(password, passwordResult, async (error, isMatch) => {
+      if (!isMatch) {
           return res.json({ data: "PASSWORD_ERROR" });
-        } else {
-          
-            const [response]=await conexion.query('SELECT email_cliente2,id_textos from megustatextos WHERE  email_cliente2=?',[email])
-              console.log(response);
-              id=result[0].id_textos
-          if (response.length>0) {
-            const [response]=conexion.query('DELETE FROM megustatextos WHERE email_cliente2=? ',[email])
-            if (response.affectedRows!=0) {
-             const [rest] = await conexion.query(
-                "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)-1 WHERE id=?",
-                [id,id]
-              );
-              if (rest.affectedRows == 1) {
-                res.json("bien dislike");
-              } else {
-                res.json("mal el dislike");
+      }else{  
+          const [responseMeGusta] = await conexion.query("SELECT * FROM megusta WHERE email_megusta = ?",[email])
+            if(responseMeGusta.length > 0){
+                for (let i = 0; i < responseMeGusta.length; i++) {
+                  let idMeGusta = responseMeGusta[i].id_megusta
+                  let estado = responseMeGusta[i].estado
+                  if (estado == "megusta") {
+                    const [deletMegustaImagen]= await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    if (deletMegustaImagen.affectedRows != 0) {
+                      console.log("se eliminaron me gustas imagen");
+                    }else{
+                      console.log("no habian me gustas imagen");
+                    }
+                    const [updatePublicacionesImagen]=await conexion.query(`UPDATE publicaciones SET likes = (SELECT likes FROM publicaciones WHERE id = ${idMeGusta})-1 WHERE id=?`,[idMeGusta])
+                    if (updatePublicacionesImagen.affectedRows != 0) {
+                      console.log("se actualizaron me gustas imagen");
+                    }else{
+                      console.log("no se actualizaron me gustas imagen");
+                    }
+                  }
+                  if (estado == "nomegusta") {
+                    const [deletMegustaImagen]= await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    if (deletMegustaImagen.affectedRows != 0) {
+                      console.log("se eliminaron me gustas imagen");
+                    }else{
+                      console.log("no habian me gustas imagen");
+                    }
+                  }
+                  await conexion.query("DELETE FROM comentarios_imagen WHERE idimagen = ?",[idMeGusta])  
+                }
+            }
+          const [responseMeGustaTexto] = await conexion.query("SELECT * FROM megustatextos WHERE email_cliente2 = ?",[email])  
+          if (responseMeGustaTexto.length > 0) {
+            for (let i = 0; i < responseMeGustaTexto.length; i++) {
+              let idMeGustaTextos = responseMeGustaTexto[i].id_textos
+              let estado = responseMeGustaTexto[i].estado
+              if (estado == "megusta") {
+                const [deletMegustatEXTO]=await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                if (deletMegustatEXTO.affectedRows != 0) {
+                  console.log("se eliminaron me gustas texto");
+                }else{
+                  console.log("no habian me gustas texto");
+                }
+                const [updatePublicacionesTexto]=await conexion.query(`UPDATE publicacionestextos SET likes = (SELECT likes FROM publicacionestextos WHERE id = ${idMeGustaTextos})-1 WHERE id=?`,[idMeGustaTextos])
+                if (updatePublicacionesTexto.affectedRows != 0) {
+                  console.log("se actualizaron me gustas texto");
+                }else{
+                  console.log("no se actualizaron me gustas texto");
+                }
               }
-              
+              if (estado == "nomegusta") {
+                const [deletMegustaTexto]=await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                if (deletMegustaTexto.affectedRows != 0) {
+                  console.log("se eliminaron me gustas imagen");
+                }else{
+                  console.log("no habian me gustas imagen");
+                }
+              }
+              await conexion.query("DELETE FROM comentarios_textos WHERE idtextos = ?",[idMeGustaTextos])  
             }
-    
-        }
-          const [responseMg]= conexion.query('SELECT email_megusta FROM megusta WHERE email_megusta=?',[email])
-           if (responseMg.length >0) {
-            const [response]=conexion.query('DELETE FROM megusta WHERE email_megusta=?',[email])
-            if (response.affectedRows !=0) {
-              console.log('eliminado de la tabla  me gusta');
-              
-            } 
-           } 
-           const [responseCu]= conexion.query('SELECT emailcliente FROM comentarios_usuario WHERE emailcliente=?', [email])
-           if (responseCu.length >0) {
-            const [response]=conexion.query('DELETE FROM comentarios_usuario WHERE emailcliente=?',[email])
-            if (response.affectedRows !=0) {
-              console.log("eliminado de la tabla comentarios_usuario");
-              
-            }
+          }
+          const [responsePublicacionesClienteImagen] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email])
+          if (responsePublicacionesClienteImagen.length > 0) {
             
-           }
-           const [responsePc]=conexion.query('SELECT email3 FROM publicaciones_cliente WHERE email3', [email])
-           if (responsePc.length >0) {
-            const [response]= conexion.query('DELETE FROM publicaciones_cliente WHERE email3=? ', [email])
-            if (response.affectedRows !=0) {
-              console.log("eliminado de la tabla publicaciones_cliente");
-              
+            for (let i = 0; i < responsePublicacionesClienteImagen.length; i++) {
+              let idPublicacion = responsePublicacionesClienteImagen[i].id2 
+              await conexion.query("DELETE FROM publicaciones_cliente WHERE email3 =?",[email])
+              await conexion.query("DELETE FROM comentarios_imagen WHERE idimagen=?",[idPublicacion])
+              await conexion.query("DELETE FROM publicaciones WHERE id=?",[idPublicacion])
             }
-           }
-           const [responsePubc]=conexion.query('SELECT email4 FROM publicacionestextos_cliente WHERE email4', [email])
-           if (responsePubc.length >0) {
-            const [response]= conexion.query('DELETE FROM publicacionestextos_cliente WHERE email4=?', [email])
-            if (response.affectedRows != 0) {
-              console.log("eliminado de la tabla publicacionestextos_cliente");
-              
-            }
+          }
+          const [responsePublicacionesClienteTexto] = await conexion.query("SELECT * FROM publicacionestextos_cliente WHERE email4 = ?",[email])
+          if (responsePublicacionesClienteTexto.length > 0) {
             
-           }
-
-
+            for (let i = 0; i < responsePublicacionesClienteTexto.length; i++) {
+              let idPublicacion = responsePublicacionesClienteTexto[i].id3
+              await conexion.query("DELETE FROM publicacionestextos_cliente WHERE email4 =?",[email])
+              await conexion.query("DELETE FROM comentarios_textos WHERE idtextos=?",[idPublicacion])
+              await conexion.query("DELETE FROM publicacionestextos WHERE id=?",[idPublicacion])
+            }
+          }
+          const [comentariosCliente] = await conexion.query("SELECT * FROM comentarios_usuario WHERE emailcliente = ?",[email])
+          if (comentariosCliente.length > 0) {
+            
+            for (let i = 0; i < comentariosCliente.length; i++) {
+              let idComentario = comentariosCliente[i].id_comentario3
+              await conexion.query("DELETE FROM comentarios_usuario WHERE emailcliente =?",[email])
+              await conexion.query("DELETE FROM comentarios_imagen WHERE id_comentario=?",[idComentario])
+              await conexion.query("DELETE FROM comentarios_textos WHERE id_comentario2=?",[idComentario])
+              await conexion.query("DELETE FROM comentarios WHERE id=?",[idComentario])
+            }
+          }
+          const [deleteClient]=await conexion.query("DELETE FROM cliente WHERE email = ?",[email])
+          if (deleteClient.affectedRows != 0) {
+            res.json({data:"eliminado"})
+          }
+          
         }
       });
-  
-    
-  /*  }*/
-     
-
-
-
+    }
   } catch (error) {
     console.log(error);
+    res.json(error)
   }
 }
 
