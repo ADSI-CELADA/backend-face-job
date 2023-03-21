@@ -228,8 +228,6 @@ export const deleteAccount = async (req,res) =>{
   try {
   const token = req.headers["token"];
   const password  = req.body.password;
-  console.log(password);
-  console.log(token);
     if (token) {
       let correo = jwt.verify(token, TOKEN_SECRET);
       let { email } = correo;
@@ -248,26 +246,14 @@ export const deleteAccount = async (req,res) =>{
                   let idMeGusta = responseMeGusta[i].id_megusta
                   let estado = responseMeGusta[i].estado
                   if (estado == "megusta") {
-                    const [deletMegustaImagen]= await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
-                    if (deletMegustaImagen.affectedRows != 0) {
-                      console.log("se eliminaron me gustas imagen");
-                    }else{
-                      console.log("no habian me gustas imagen");
-                    }
-                    const [updatePublicacionesImagen]=await conexion.query(`UPDATE publicaciones SET likes = (SELECT likes FROM publicaciones WHERE id = ${idMeGusta})-1 WHERE id=?`,[idMeGusta])
-                    if (updatePublicacionesImagen.affectedRows != 0) {
-                      console.log("se actualizaron me gustas imagen");
-                    }else{
-                      console.log("no se actualizaron me gustas imagen");
-                    }
+                    await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    
+                    await conexion.query(`UPDATE publicaciones SET likes = (SELECT likes FROM publicaciones WHERE id = ${idMeGusta})-1 WHERE id=?`,[idMeGusta])
+                    
                   }
                   if (estado == "nomegusta") {
-                    const [deletMegustaImagen]= await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
-                    if (deletMegustaImagen.affectedRows != 0) {
-                      console.log("se eliminaron me gustas imagen");
-                    }else{
-                      console.log("no habian me gustas imagen");
-                    }
+                    await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    
                   }
                   await conexion.query("DELETE FROM comentarios_imagen WHERE idimagen = ?",[idMeGusta])  
                 }
@@ -278,26 +264,14 @@ export const deleteAccount = async (req,res) =>{
               let idMeGustaTextos = responseMeGustaTexto[i].id_textos
               let estado = responseMeGustaTexto[i].estado
               if (estado == "megusta") {
-                const [deletMegustatEXTO]=await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
-                if (deletMegustatEXTO.affectedRows != 0) {
-                  console.log("se eliminaron me gustas texto");
-                }else{
-                  console.log("no habian me gustas texto");
-                }
-                const [updatePublicacionesTexto]=await conexion.query(`UPDATE publicacionestextos SET likes = (SELECT likes FROM publicacionestextos WHERE id = ${idMeGustaTextos})-1 WHERE id=?`,[idMeGustaTextos])
-                if (updatePublicacionesTexto.affectedRows != 0) {
-                  console.log("se actualizaron me gustas texto");
-                }else{
-                  console.log("no se actualizaron me gustas texto");
-                }
+                await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                
+                await conexion.query(`UPDATE publicacionestextos SET likes = (SELECT likes FROM publicacionestextos WHERE id = ${idMeGustaTextos})-1 WHERE id=?`,[idMeGustaTextos])
+                
               }
               if (estado == "nomegusta") {
-                const [deletMegustaTexto]=await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
-                if (deletMegustaTexto.affectedRows != 0) {
-                  console.log("se eliminaron me gustas imagen");
-                }else{
-                  console.log("no habian me gustas imagen");
-                }
+                await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                
               }
               await conexion.query("DELETE FROM comentarios_textos WHERE idtextos = ?",[idMeGustaTextos])  
             }
