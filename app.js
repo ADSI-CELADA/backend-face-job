@@ -10,7 +10,7 @@ import {UserRouter} from "./router/User.routing.js";
 import { PostsUserRouter } from "./router/PostsUser.routing.js";
 import { CatalogueRouter } from "./router/Catalogue.routing.js";
 import { profileUser } from "./router/profileUser.routing.js";
-
+import { PaymentRouter } from "./router/paymentPack.routing.js";
 
 
 const timeExp = 1000 * 60 * 60 * 24;
@@ -30,6 +30,7 @@ app.use(UserRouter)
 app.use(PostsUserRouter)
 app.use(CatalogueRouter)
 app.use(profileUser)
+app.use(PaymentRouter)
 
 
 // Server ->

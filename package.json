@@ -27,6 +27,7 @@
     "node-localstorage": "^2.2.1",
     "nodemailer": "^6.9.1",
     "store": "^2.0.12",
+    "stripe": "^11.17.0",
     "validator": "^13.9.0"
   },
   "devDependencies": {
