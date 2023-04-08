@@ -307,6 +307,9 @@ export const deleteAccount = async (req,res) =>{
               await conexion.query("DELETE FROM comentarios WHERE id=?",[idComentario])
             }
           }
+
+          await conexion.query("DELETE FROM profesionales_vistos WHERE email_cliente =?",[email])
+
           const [deleteClient]=await conexion.query("DELETE FROM cliente WHERE email = ?",[email])
           if (deleteClient.affectedRows != 0) {
             res.json({data:"eliminado"})
