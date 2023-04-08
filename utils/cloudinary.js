@@ -15,3 +15,13 @@ folder:'posts'
     
 
 }
+
+
+export const  uploadImageChat= async filePath =>{
+    return  await cloudinary.uploader.upload(filePath,{
+   folder:'Images Chat'
+    })
+       
+   
+   }
+

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 08-04-2023 a las 02:21:11
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Host: 127.0.0.1
+-- Generation Time: Apr 08, 2023 at 07:15 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `face_job`
+-- Database: `face_job`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -38,23 +38,24 @@ CREATE TABLE `cliente` (
   `codigo` int(30) DEFAULT NULL,
   `cod_paquete` varchar(1) DEFAULT NULL,
   `info_paquete` int(2) DEFAULT NULL,
-  `lastname` varchar(70) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `lastname` varchar(70) NOT NULL,
+  `namecomplete` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `cliente`
+-- Dumping data for table `cliente`
 --
 
-INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`, `profession`, `codigo`, `cod_paquete`, `info_paquete`, `lastname`) VALUES
-('anciano@gmail.com', 'Yaji', '2023-04-05', '1242141', '$2b$10$Y9GCco6/bjwcE3XYllwWM.daa89hyvTJvvnEzg4Jt9YOIxZenEC.i', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828571/posts/zxck2qaa8wcluo8ra4qi.jpg', 'programador', 0, '4', 0, 'Anciano'),
-('camilogomess10@gmail.com', 'camilo', '2023-03-12', '3128977187', '$2b$10$hRgWC.vxA4.G2XrxsXARBehVby1Nrw4FPuTZbaGwfEgUwKoErSu6u', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678657052/posts/ce3wifbdg93wf51d34pi.jpg', 'Profesor', 0, NULL, NULL, 'gomes'),
-('dabeats0914@gmail.com', 'David', '2023-04-04', '3015112641', '$2b$10$0mLUJmMTLENdK.en08Jq.O4iUZD7vgW75fRhYk.MQILQvTLMBn4KK', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680908740/posts/qrrasxnqharjpxdihp5c.jpg', 'programador', 0, '1', 0, 'Cuellar Velez'),
-('juanca@gmail.com', 'Juan', '2023-04-04', '31321', '$2b$10$tap1YB0f3oHP/FOzNgRFD.pLVul24BTPazmhe0HGTv49TiK5U9TY.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680749854/posts/tnuvc71ssw8btqei7ffd.png', 'programador', 0, '4', 0, 'Carlos'),
-('kebinochoa10@gmail.com', 'kebyn', '2023-03-11', '657567', '$2b$10$8xjiWGG6YW0dhj9rOKnxD.IzEuVOC4ZY24yt47hK/E2nzLsotbePS', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828409/posts/woz9emkuc0hivxq96w2v.jpg', 'Profesor', 0, '1', 2, 'ochoa'),
-('zed@gmail.com', 'zed', '0000-00-00', '4354', '$2b$10$R/XO00nx3OGhe.ynmtc3C./mQ5BSd87tQByUaOhQOTn0Fjq0P9hb.', 'https://res.cloudinary.com/dqrwt5fo7/image/upload/v1674674484/posts/kfslmtqtfmrxpnv2cw4w.jpg', 'programador', NULL, '2', 9, 'ryan');
+INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`, `profession`, `codigo`, `cod_paquete`, `info_paquete`, `lastname`, `namecomplete`) VALUES
+('anciano@gmail.com', 'Yaji', '2023-04-05', '1242141', '$2b$10$Y9GCco6/bjwcE3XYllwWM.daa89hyvTJvvnEzg4Jt9YOIxZenEC.i', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828571/posts/zxck2qaa8wcluo8ra4qi.jpg', 'programador', 0, '4', 0, 'Anciano', 'Yaji Anciano'),
+('camilogomess10@gmail.com', 'camilo', '2023-03-12', '3128977187', '$2b$10$hRgWC.vxA4.G2XrxsXARBehVby1Nrw4FPuTZbaGwfEgUwKoErSu6u', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678657052/posts/ce3wifbdg93wf51d34pi.jpg', 'Profesor', 0, '4', 0, 'gomes', 'camilo gomes'),
+('dabeats0914@gmail.com', 'David', '2023-04-04', '3015112641', '$2b$10$0mLUJmMTLENdK.en08Jq.O4iUZD7vgW75fRhYk.MQILQvTLMBn4KK', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680908740/posts/qrrasxnqharjpxdihp5c.jpg', 'programador', 0, '1', 0, 'Cuellar Velez', 'David Cuellar Velez'),
+('juanca@gmail.com', 'Juan', '2023-04-04', '31321', '$2b$10$tap1YB0f3oHP/FOzNgRFD.pLVul24BTPazmhe0HGTv49TiK5U9TY.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680749854/posts/tnuvc71ssw8btqei7ffd.png', 'programador', 0, '4', 0, 'Velez', 'Juan Velez'),
+('kebinochoa10@gmail.com', 'kebyn', '2023-03-11', '657567', '$2b$10$8xjiWGG6YW0dhj9rOKnxD.IzEuVOC4ZY24yt47hK/E2nzLsotbePS', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828409/posts/woz9emkuc0hivxq96w2v.jpg', 'Profesor', 0, '1', 2, 'ochoa', 'kebyn ochoa'),
+('zed@gmail.com', 'zed', '2023-03-12', '4354', '$2b$10$R/XO00nx3OGhe.ynmtc3C./mQ5BSd87tQByUaOhQOTn0Fjq0P9hb.', 'https://res.cloudinary.com/dqrwt5fo7/image/upload/v1674674484/posts/kfslmtqtfmrxpnv2cw4w.jpg', 'programador', 0, '2', 9, 'ryan', 'zed ryan');
 
 --
--- Disparadores `cliente`
+-- Triggers `cliente`
 --
 DELIMITER $$
 CREATE TRIGGER `paquete_default` BEFORE INSERT ON `cliente` FOR EACH ROW BEGIN
@@ -67,17 +68,17 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `comentarios`
+-- Table structure for table `comentarios`
 --
 
 CREATE TABLE `comentarios` (
   `id` int(20) NOT NULL,
   `comentario` varchar(100) DEFAULT NULL,
   `hora` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `comentarios`
+-- Dumping data for table `comentarios`
 --
 
 INSERT INTO `comentarios` (`id`, `comentario`, `hora`) VALUES
@@ -88,16 +89,16 @@ INSERT INTO `comentarios` (`id`, `comentario`, `hora`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `comentarios_imagen`
+-- Table structure for table `comentarios_imagen`
 --
 
 CREATE TABLE `comentarios_imagen` (
   `id_comentario` int(20) DEFAULT NULL,
   `idimagen` int(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `comentarios_imagen`
+-- Dumping data for table `comentarios_imagen`
 --
 
 INSERT INTO `comentarios_imagen` (`id_comentario`, `idimagen`) VALUES
@@ -107,27 +108,27 @@ INSERT INTO `comentarios_imagen` (`id_comentario`, `idimagen`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `comentarios_textos`
+-- Table structure for table `comentarios_textos`
 --
 
 CREATE TABLE `comentarios_textos` (
   `id_comentario2` int(20) DEFAULT NULL,
   `idtextos` int(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `comentarios_usuario`
+-- Table structure for table `comentarios_usuario`
 --
 
 CREATE TABLE `comentarios_usuario` (
   `id_comentario3` int(20) DEFAULT NULL,
   `emailcliente` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `comentarios_usuario`
+-- Dumping data for table `comentarios_usuario`
 --
 
 INSERT INTO `comentarios_usuario` (`id_comentario3`, `emailcliente`) VALUES
@@ -137,17 +138,17 @@ INSERT INTO `comentarios_usuario` (`id_comentario3`, `emailcliente`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `megusta`
+-- Table structure for table `megusta`
 --
 
 CREATE TABLE `megusta` (
   `id_megusta` int(20) DEFAULT NULL,
   `email_megusta` varchar(50) DEFAULT NULL,
   `estado` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `megusta`
+-- Dumping data for table `megusta`
 --
 
 INSERT INTO `megusta` (`id_megusta`, `email_megusta`, `estado`) VALUES
@@ -160,17 +161,17 @@ INSERT INTO `megusta` (`id_megusta`, `email_megusta`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `megustatextos`
+-- Table structure for table `megustatextos`
 --
 
 CREATE TABLE `megustatextos` (
   `id_textos` int(20) DEFAULT NULL,
   `email_cliente2` varchar(50) DEFAULT NULL,
   `estado` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `megustatextos`
+-- Dumping data for table `megustatextos`
 --
 
 INSERT INTO `megustatextos` (`id_textos`, `email_cliente2`, `estado`) VALUES
@@ -181,16 +182,32 @@ INSERT INTO `megustatextos` (`id_textos`, `email_cliente2`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `paquetes`
+-- Table structure for table `mensaje`
+--
+
+CREATE TABLE `mensaje` (
+  `id_mensajes` int(11) NOT NULL,
+  `remitente` varchar(70) DEFAULT NULL,
+  `receptor` varchar(70) DEFAULT NULL,
+  `mensaje` varchar(400) DEFAULT NULL,
+  `tipo` varchar(30) DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `link` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paquetes`
 --
 
 CREATE TABLE `paquetes` (
   `nombre_paquete` varchar(1) NOT NULL,
   `vistas_paquete` int(2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `paquetes`
+-- Dumping data for table `paquetes`
 --
 
 INSERT INTO `paquetes` (`nombre_paquete`, `vistas_paquete`) VALUES
@@ -202,16 +219,16 @@ INSERT INTO `paquetes` (`nombre_paquete`, `vistas_paquete`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `profesionales_vistos`
+-- Table structure for table `profesionales_vistos`
 --
 
 CREATE TABLE `profesionales_vistos` (
   `email_cliente` varchar(50) DEFAULT NULL,
   `email_visto` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `profesionales_vistos`
+-- Dumping data for table `profesionales_vistos`
 --
 
 INSERT INTO `profesionales_vistos` (`email_cliente`, `email_visto`) VALUES
@@ -227,7 +244,7 @@ INSERT INTO `profesionales_vistos` (`email_cliente`, `email_visto`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `publicaciones`
+-- Table structure for table `publicaciones`
 --
 
 CREATE TABLE `publicaciones` (
@@ -237,10 +254,10 @@ CREATE TABLE `publicaciones` (
   `description` varchar(100) DEFAULT NULL,
   `likes` int(10) DEFAULT 0,
   `comments` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `publicaciones`
+-- Dumping data for table `publicaciones`
 --
 
 INSERT INTO `publicaciones` (`id`, `tiempo`, `img`, `description`, `likes`, `comments`) VALUES
@@ -259,7 +276,7 @@ INSERT INTO `publicaciones` (`id`, `tiempo`, `img`, `description`, `likes`, `com
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `publicacionestextos`
+-- Table structure for table `publicacionestextos`
 --
 
 CREATE TABLE `publicacionestextos` (
@@ -269,10 +286,10 @@ CREATE TABLE `publicacionestextos` (
   `description` varchar(100) DEFAULT NULL,
   `likes` int(10) DEFAULT 0,
   `comments` int(11) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `publicacionestextos`
+-- Dumping data for table `publicacionestextos`
 --
 
 INSERT INTO `publicacionestextos` (`id`, `tiempo`, `textos`, `description`, `likes`, `comments`) VALUES
@@ -284,17 +301,17 @@ INSERT INTO `publicacionestextos` (`id`, `tiempo`, `textos`, `description`, `lik
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `publicacionestextos_cliente`
+-- Table structure for table `publicacionestextos_cliente`
 --
 
 CREATE TABLE `publicacionestextos_cliente` (
   `email4` varchar(50) DEFAULT NULL,
   `id3` int(20) DEFAULT NULL,
   `tiempo` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `publicacionestextos_cliente`
+-- Dumping data for table `publicacionestextos_cliente`
 --
 
 INSERT INTO `publicacionestextos_cliente` (`email4`, `id3`, `tiempo`) VALUES
@@ -305,17 +322,17 @@ INSERT INTO `publicacionestextos_cliente` (`email4`, `id3`, `tiempo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `publicaciones_cliente`
+-- Table structure for table `publicaciones_cliente`
 --
 
 CREATE TABLE `publicaciones_cliente` (
   `email3` varchar(50) DEFAULT NULL,
   `id2` int(20) DEFAULT NULL,
   `tiempo` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `publicaciones_cliente`
+-- Dumping data for table `publicaciones_cliente`
 --
 
 INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
@@ -327,182 +344,229 @@ INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
 ('dabeats0914@gmail.com', 50024, '2023-04-07 16:28:33'),
 ('dabeats0914@gmail.com', 50027, '2023-04-08 00:04:03');
 
+-- --------------------------------------------------------
+
 --
--- Índices para tablas volcadas
+-- Table structure for table `trabajos`
+--
+
+CREATE TABLE `trabajos` (
+  `mi_email` varchar(70) DEFAULT NULL,
+  `profecional_email` varchar(70) DEFAULT NULL,
+  `estado` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `cliente`
+-- Indexes for table `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`email`),
   ADD KEY `cod_paquete` (`cod_paquete`);
 
 --
--- Indices de la tabla `comentarios`
+-- Indexes for table `comentarios`
 --
 ALTER TABLE `comentarios`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `comentarios_imagen`
+-- Indexes for table `comentarios_imagen`
 --
 ALTER TABLE `comentarios_imagen`
   ADD KEY `id_comentario` (`id_comentario`),
   ADD KEY `idimagen` (`idimagen`);
 
 --
--- Indices de la tabla `comentarios_textos`
+-- Indexes for table `comentarios_textos`
 --
 ALTER TABLE `comentarios_textos`
   ADD KEY `id_comentario2` (`id_comentario2`),
   ADD KEY `idtextos` (`idtextos`);
 
 --
--- Indices de la tabla `comentarios_usuario`
+-- Indexes for table `comentarios_usuario`
 --
 ALTER TABLE `comentarios_usuario`
   ADD KEY `id_comentario3` (`id_comentario3`),
   ADD KEY `emailcliente` (`emailcliente`);
 
 --
--- Indices de la tabla `megusta`
+-- Indexes for table `megusta`
 --
 ALTER TABLE `megusta`
   ADD KEY `id_megusta` (`id_megusta`),
   ADD KEY `email_megusta` (`email_megusta`);
 
 --
--- Indices de la tabla `megustatextos`
+-- Indexes for table `megustatextos`
 --
 ALTER TABLE `megustatextos`
   ADD KEY `id_textos` (`id_textos`),
   ADD KEY `email_cliente2` (`email_cliente2`);
 
 --
--- Indices de la tabla `paquetes`
+-- Indexes for table `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`id_mensajes`),
+  ADD KEY `remitente` (`remitente`),
+  ADD KEY `receptor` (`receptor`);
+
+--
+-- Indexes for table `paquetes`
 --
 ALTER TABLE `paquetes`
   ADD PRIMARY KEY (`nombre_paquete`);
 
 --
--- Indices de la tabla `profesionales_vistos`
+-- Indexes for table `profesionales_vistos`
 --
 ALTER TABLE `profesionales_vistos`
   ADD KEY `email_cliente` (`email_cliente`);
 
 --
--- Indices de la tabla `publicaciones`
+-- Indexes for table `publicaciones`
 --
 ALTER TABLE `publicaciones`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `publicacionestextos`
+-- Indexes for table `publicacionestextos`
 --
 ALTER TABLE `publicacionestextos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `publicacionestextos_cliente`
+-- Indexes for table `publicacionestextos_cliente`
 --
 ALTER TABLE `publicacionestextos_cliente`
   ADD KEY `email4` (`email4`),
   ADD KEY `id3` (`id3`);
 
 --
--- Indices de la tabla `publicaciones_cliente`
+-- Indexes for table `publicaciones_cliente`
 --
 ALTER TABLE `publicaciones_cliente`
   ADD KEY `email3` (`email3`),
   ADD KEY `id2` (`id2`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- Indexes for table `trabajos`
+--
+ALTER TABLE `trabajos`
+  ADD KEY `mi_email` (`mi_email`),
+  ADD KEY `profecional_email` (`profecional_email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `comentarios`
+-- AUTO_INCREMENT for table `comentarios`
 --
 ALTER TABLE `comentarios`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30008;
 
 --
--- AUTO_INCREMENT de la tabla `publicaciones`
+-- AUTO_INCREMENT for table `mensaje`
+--
+ALTER TABLE `mensaje`
+  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `publicaciones`
 --
 ALTER TABLE `publicaciones`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50028;
 
 --
--- AUTO_INCREMENT de la tabla `publicacionestextos`
+-- AUTO_INCREMENT for table `publicacionestextos`
 --
 ALTER TABLE `publicacionestextos`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7028;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `cliente`
+-- Constraints for table `cliente`
 --
 ALTER TABLE `cliente`
   ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`cod_paquete`) REFERENCES `paquetes` (`nombre_paquete`);
 
 --
--- Filtros para la tabla `comentarios_imagen`
+-- Constraints for table `comentarios_imagen`
 --
 ALTER TABLE `comentarios_imagen`
   ADD CONSTRAINT `comentarios_imagen_ibfk_1` FOREIGN KEY (`id_comentario`) REFERENCES `comentarios` (`id`),
   ADD CONSTRAINT `comentarios_imagen_ibfk_2` FOREIGN KEY (`idimagen`) REFERENCES `publicaciones` (`id`);
 
 --
--- Filtros para la tabla `comentarios_textos`
+-- Constraints for table `comentarios_textos`
 --
 ALTER TABLE `comentarios_textos`
   ADD CONSTRAINT `comentarios_textos_ibfk_1` FOREIGN KEY (`id_comentario2`) REFERENCES `comentarios` (`id`),
   ADD CONSTRAINT `comentarios_textos_ibfk_2` FOREIGN KEY (`idtextos`) REFERENCES `publicacionestextos` (`id`);
 
 --
--- Filtros para la tabla `comentarios_usuario`
+-- Constraints for table `comentarios_usuario`
 --
 ALTER TABLE `comentarios_usuario`
   ADD CONSTRAINT `comentarios_usuario_ibfk_1` FOREIGN KEY (`id_comentario3`) REFERENCES `comentarios` (`id`),
   ADD CONSTRAINT `comentarios_usuario_ibfk_2` FOREIGN KEY (`emailcliente`) REFERENCES `cliente` (`email`);
 
 --
--- Filtros para la tabla `megusta`
+-- Constraints for table `megusta`
 --
 ALTER TABLE `megusta`
   ADD CONSTRAINT `megusta_ibfk_1` FOREIGN KEY (`id_megusta`) REFERENCES `publicaciones` (`id`),
   ADD CONSTRAINT `megusta_ibfk_2` FOREIGN KEY (`email_megusta`) REFERENCES `cliente` (`email`);
 
 --
--- Filtros para la tabla `megustatextos`
+-- Constraints for table `megustatextos`
 --
 ALTER TABLE `megustatextos`
   ADD CONSTRAINT `megustatextos_ibfk_1` FOREIGN KEY (`id_textos`) REFERENCES `publicacionestextos` (`id`),
   ADD CONSTRAINT `megustatextos_ibfk_2` FOREIGN KEY (`email_cliente2`) REFERENCES `cliente` (`email`);
 
 --
--- Filtros para la tabla `profesionales_vistos`
+-- Constraints for table `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD CONSTRAINT `mensaje_ibfk_1` FOREIGN KEY (`remitente`) REFERENCES `cliente` (`email`),
+  ADD CONSTRAINT `mensaje_ibfk_2` FOREIGN KEY (`receptor`) REFERENCES `cliente` (`email`);
+
+--
+-- Constraints for table `profesionales_vistos`
 --
 ALTER TABLE `profesionales_vistos`
   ADD CONSTRAINT `profesionales_vistos_ibfk_1` FOREIGN KEY (`email_cliente`) REFERENCES `cliente` (`email`);
 
 --
--- Filtros para la tabla `publicacionestextos_cliente`
+-- Constraints for table `publicacionestextos_cliente`
 --
 ALTER TABLE `publicacionestextos_cliente`
   ADD CONSTRAINT `publicacionestextos_cliente_ibfk_1` FOREIGN KEY (`email4`) REFERENCES `cliente` (`email`),
   ADD CONSTRAINT `publicacionestextos_cliente_ibfk_2` FOREIGN KEY (`id3`) REFERENCES `publicacionestextos` (`id`);
 
 --
--- Filtros para la tabla `publicaciones_cliente`
+-- Constraints for table `publicaciones_cliente`
 --
 ALTER TABLE `publicaciones_cliente`
   ADD CONSTRAINT `publicaciones_cliente_ibfk_1` FOREIGN KEY (`email3`) REFERENCES `cliente` (`email`),
   ADD CONSTRAINT `publicaciones_cliente_ibfk_2` FOREIGN KEY (`id2`) REFERENCES `publicaciones` (`id`);
+
+--
+-- Constraints for table `trabajos`
+--
+ALTER TABLE `trabajos`
+  ADD CONSTRAINT `trabajos_ibfk_1` FOREIGN KEY (`mi_email`) REFERENCES `cliente` (`email`),
+  ADD CONSTRAINT `trabajos_ibfk_2` FOREIGN KEY (`profecional_email`) REFERENCES `cliente` (`email`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
