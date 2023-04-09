@@ -52,14 +52,21 @@ export const createPostTextos = async (req, res) => {
         [email, id]
       );
       if (resulta.affectedRows != 0) {
+
+        const [users]=await conexion.query('SELECT email FROM cliente')
         let estado = "nomegusta";
-        const [respu] = await conexion.query(
-          "INSERT INTO megustatextos(id_textos,email_cliente2,estado) VALUES(?,?,?)",
-          [id, email, estado]
-        );
-        if (respu.affectedRows != 0) {
-          return res.json({ data: "BIEN", respu });
+        for (let i = 0; i < users.length; i++) {
+          let emailsUsers=users[i].email
+      
+           await conexion.query(
+            "INSERT INTO megustatextos(id_textos,email_cliente2,estado) VALUES(?,?,?)",
+            [id, emailsUsers, estado]
+          );
+          
         }
+        
+          return res.json({ data: "BIEN" });
+        
       } else {
         return res.json("ERROR");
       }
@@ -78,6 +85,7 @@ export const createPost = async (req, res) => {
     const { description } = req.body;
 
     let img;
+
     if (req.files.img) {
       const result = await uploadImage(req.files.img.tempFilePath);
       console.log(result);
@@ -88,6 +96,7 @@ export const createPost = async (req, res) => {
       "INSERT INTO publicaciones(img,description,likes)   VALUES (?,?,?)",
       [img, description, likes]
     );
+
     if (result.affectedRows != 0) {
       let id = result.insertId;
       const [resulta] = await conexion.query(
@@ -95,14 +104,28 @@ export const createPost = async (req, res) => {
         [email, id]
       );
       if (resulta.affectedRows != 0) {
-        let estado = "nomegusta";
-        const [respu] = await conexion.query(
-          "INSERT INTO megusta(id_megusta,email_megusta,estado) VALUES(?,?,?)",
-          [id, email, estado]
-        );
-        if (respu.affectedRows != 0) {
-          return res.json({ data: "BIEN", respu });
-        }
+      
+        const [users]=await conexion.query('SELECT email FROM cliente')
+          let estado = "nomegusta";
+          for (let i = 0; i < users.length; i++) {
+            let emailsUsers=users[i].email
+        
+             await conexion.query(
+              "INSERT INTO megusta(id_megusta,email_megusta,estado) VALUES(?,?,?)",
+              [id,emailsUsers, estado]
+            );
+            
+          }
+          
+            return res.json({ data: "BIEN" });
+          
+        
+
+
+
+
+
+       
       }
     } else {
       return res.json({ data: "ERROR", error });
@@ -479,10 +502,10 @@ export const userPosts = async (req, res) => {
     
     if (email==emails) {
       const [result] = await conexion.query(
-        " SELECT cliente.profession,publicaciones.img,publicaciones.comments,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
+        " SELECT cliente.profession,publicaciones.comments,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
         [email]
       );
-    
+    console.log(result);
      return res.json(result);
     }
    
@@ -494,7 +517,7 @@ export const userPosts = async (req, res) => {
       );
     
       
-       const [response]=await conexion.query('SELECT megusta.estado,megusta.id_megusta FROM megusta,publicaciones,cliente,publicaciones_cliente WHERE id_megusta=publicaciones.id AND cliente.email=email_megusta and email_megusta=? AND  publicaciones_cliente.id2=publicaciones.id AND publicaciones_cliente.email3=?;',[emails,email]) 
+       const [response]=await conexion.query('SELECT megusta.estado,megusta.id_megusta,publicaciones.tiempo FROM megusta,publicaciones,publicaciones_cliente WHERE publicaciones.id=megusta.id_megusta AND publicaciones.id=publicaciones_cliente.id2 AND publicaciones_cliente.email3=? AND email_megusta=? ORDER BY publicaciones.tiempo DESC;',[email,emails]) 
   
    
       
@@ -530,7 +553,7 @@ export const userPostsTextos = async (req, res) => {
         );
       
         
-         const [response]=await conexion.query('SELECT megustatextos.estado,megustatextos.id_textos FROM megustatextos,publicacionestextos,cliente,publicacionestextos_cliente WHERE id_textos=publicacionestextos.id AND cliente.email=email_cliente2 and email_cliente2=? AND  publicacionestextos_cliente.id3=publicacionestextos.id AND publicacionestextos_cliente.email4=?',[emails,email]) 
+        const [response]=await conexion.query('SELECT megustatextos.estado,megustatextos.id_textos,publicacionestextos.tiempo FROM megustatextos,publicacionestextos,publicacionestextos_cliente WHERE publicacionestextos.id=megustatextos.id_textos AND publicacionestextos.id=publicacionestextos_cliente.id3 AND publicacionestextos_cliente.email4=? AND megustatextos.email_cliente2=? ORDER BY publicacionestextos.tiempo DESC;',[email,emails]) 
     
      
         

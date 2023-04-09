@@ -4,6 +4,9 @@ import cors from "cors"
 import bodyParser from"body-parser"
 import {PORT_APP} from './config/config.js'
 import fileUpload from 'express-fileupload'
+import http from 'http'
+import { Server as SoketServer } from "socket.io";
+import { socketMessage } from "./utils/sockets.js";
 
 //Import Routers
 import {UserRouter} from "./router/User.routing.js";
@@ -12,8 +15,7 @@ import { CatalogueRouter } from "./router/Catalogue.routing.js";
 import { profileUser } from "./router/profileUser.routing.js";
 import { PaymentRouter } from "./router/paymentPack.routing.js";
 import { MessagesRouter } from "./router/Messages.Routes.js";
-import http from 'http'
-import { Server as SoketServer } from "socket.io";
+
 
 const timeExp = 1000 * 60 * 60 * 24;
 const app = express();
@@ -32,13 +34,10 @@ app.use(fileUpload({
   tempFileDir:'./upload'
 }))
 //soket io -->
-io.on('connection',(soket)=>{
-  soket.on('message',function(message){
-      soket.broadcast.emit('message',message)
-  }
+socketMessage(io)
 
-  )
-})
+
+
 
 
 

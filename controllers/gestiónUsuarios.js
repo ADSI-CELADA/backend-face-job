@@ -309,11 +309,27 @@ export const deleteAccount = async (req,res) =>{
           }
 
           await conexion.query("DELETE FROM profesionales_vistos WHERE email_cliente =?",[email])
-
-          const [deleteClient]=await conexion.query("DELETE FROM cliente WHERE email = ?",[email])
+       
+          const [deleteWorks]=await conexion.query('DELETE FROM trabajos WHERE mi_email=? or profecional_email=?',[email,email])
+          if (deleteWorks.affectedRows!=0) {
+            const [deleteMessage]=await conexion.query('DELETE FROM mensaje WHERE remitente=? or receptor=?',[email,email])
+            if (deleteMessage.affectedRows!=0) {
+              const [deleteClient]=await conexion.query("DELETE FROM cliente WHERE email = ?",[email])
           if (deleteClient.affectedRows != 0) {
+         
             res.json({data:"eliminado"})
           }
+             
+            }
+           
+          }else{
+            const [deleteClient]=await conexion.query("DELETE FROM cliente WHERE email = ?",[email])
+          if (deleteClient.affectedRows != 0) {
+         
+            res.json({data:"eliminado"})
+          }
+          }
+          
           
         }
       });

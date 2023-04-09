@@ -262,3 +262,23 @@ export const createNewChat=async (req,res)=>{
         console.log(error);
     }
 }
+
+
+
+export const sendReport=async (req,res)=>{
+    try {
+        const token=req.headers["token"]
+        const {id}=req.params
+        const {report}=req.body
+        if (token) {
+        let correo=jwt.verify(token,TOKEN_SECRET)
+        let {email}=correo
+        const [result]=await conexion.query('INSERT INTO reportes(email_remitente,resportado_email,razon) VALUES (?,?,?)',[email,id,report])
+        if (result.affectedRows!=0) {
+            res.json('reportado')
+        }
+    }
+    } catch (error) {
+        console.log(error);
+    }
+}

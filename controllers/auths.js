@@ -25,6 +25,28 @@ export const createUserClient = async (req, res) => {
         [email, name, date, number, hash, iconUser, profession, codigo,lastname,name+" "+lastname]
       );
       if (result.affectedRow != 0) {
+        const [ids]=await conexion.query('SELECT publicaciones.id FROM publicaciones')
+        const [idsTexts]=await conexion.query('SELECT publicacionestextos.id FROM publicacionestextos;')
+        let estado = "nomegusta";
+        for (let i = 0; i < ids.length; i++) {
+         let  idImagen=ids[i].id
+        await conexion.query(
+          "INSERT INTO megusta(id_megusta,email_megusta,estado) VALUES(?,?,?)",
+          [idImagen,email, estado]
+        )
+       
+        }
+        for (let i = 0; i < idsTexts.length; i++) {
+          let  idTexto=idsTexts[i].id
+          await conexion.query(
+           "INSERT INTO megustatextos(id_textos,email_cliente2,estado) VALUES(?,?,?)",
+           [idTexto, email, estado]
+         );
+        
+         }
+       
+          
+
         return res.json({ data: "INSERT_OK" });
       } else {
         return res.json({ data: "ERROR", error });
