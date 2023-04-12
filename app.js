@@ -52,7 +52,8 @@ app.use(PaymentRouter)
 
 
 // Server -->
-server.listen(PORT_APP, () => {
-  console.log(`Server running FACE-JOB ${PORT_APP}`);
+app.set('port',process.env.PORT_APP || PORT_APP);
+server.listen(app.get('port'), () => {
+  console.log(`Server running FACE-JOB ${app.get('port')}`);
 });
 

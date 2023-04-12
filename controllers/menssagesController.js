@@ -142,10 +142,11 @@ export const newsWorks=async(req,res)=>{
                 
                     if (resulti.length>0) {
                         profecionals.push(resulti[0])
-                        const [resultado]= await conexion.query("SELECT DATE_FORMAT(fecha,'%H:%i:%s') AS hora,mensaje FROM mensaje WHERE remitente=? AND receptor=? or receptor=? AND remitente=? ORDER BY fecha DESC LIMIT 1",[email,parametro,email,parametro])
+             /*cambie aqui */            const [resultado]= await conexion.query("SELECT DATE_FORMAT(fecha,'%H:%i:%s') AS hora,mensaje,remitente FROM mensaje WHERE remitente=? AND receptor=? or receptor=? AND remitente=? ORDER BY fecha DESC LIMIT 1",[email,parametro,email,parametro])
                         if (resultado.length>0) {
                             profecionals[i].mensaje=resultado[0].mensaje 
                             profecionals[i].hora=resultado[0].hora
+        /*cambie aqui */    profecionals[i].remitente=resultado[0].remitente
                            let horas=profecionals[i].hora.split(":",2)
                           
                            let horasFinal=`${horas[0]}:${horas[1]}`
@@ -159,7 +160,7 @@ export const newsWorks=async(req,res)=>{
                         
                     }
                 }
-           
+             
                 res.json(profecionals)
         
         }
