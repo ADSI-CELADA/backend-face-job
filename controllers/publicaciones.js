@@ -78,6 +78,7 @@ export const createPostTextos = async (req, res) => {
   }
 };
 
+
 export const createPost = async (req, res) => {
   try {
     const { email } = req.params;
@@ -85,7 +86,6 @@ export const createPost = async (req, res) => {
     const { description } = req.body;
 
     let img;
-
     if (req.files.img) {
       const result = await uploadImage(req.files.img.tempFilePath);
       console.log(result);
@@ -96,7 +96,6 @@ export const createPost = async (req, res) => {
       "INSERT INTO publicaciones(img,description,likes)   VALUES (?,?,?)",
       [img, description, likes]
     );
-
     if (result.affectedRows != 0) {
       let id = result.insertId;
       const [resulta] = await conexion.query(
@@ -104,28 +103,14 @@ export const createPost = async (req, res) => {
         [email, id]
       );
       if (resulta.affectedRows != 0) {
-      
-        const [users]=await conexion.query('SELECT email FROM cliente')
-          let estado = "nomegusta";
-          for (let i = 0; i < users.length; i++) {
-            let emailsUsers=users[i].email
-        
-             await conexion.query(
-              "INSERT INTO megusta(id_megusta,email_megusta,estado) VALUES(?,?,?)",
-              [id,emailsUsers, estado]
-            );
-            
-          }
-          
-            return res.json({ data: "BIEN" });
-          
-        
-
-
-
-
-
-       
+        let estado = "nomegusta";
+        const [respu] = await conexion.query(
+          "INSERT INTO megusta(id_megusta,email_megusta,estado) VALUES(?,?,?)",
+          [id, email, estado]
+        );
+        if (respu.affectedRows != 0) {
+          return res.json({ data: "BIEN", respu });
+        }
       }
     } else {
       return res.json({ data: "ERROR", error });
@@ -134,6 +119,8 @@ export const createPost = async (req, res) => {
     res.status(404).json({ message: "ERROR 404" });
   }
 };
+
+
 
 export const likesImg = async (req, res) => {
   const token= req.headers["token"];
@@ -499,29 +486,56 @@ export const userPosts = async (req, res) => {
       
       let correo=jwt.verify(token,TOKEN_SECRET)
       const emails=correo.email
-    
+ 
     if (email==emails) {
       const [result] = await conexion.query(
         " SELECT cliente.profession,publicaciones.comments,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
         [email]
       );
-    console.log(result);
      return res.json(result);
     }
    
     if(email!=emails){
-     
-      const [resultu] = await conexion.query(
+   const [resultu] = await conexion.query(
         " SELECT cliente.profession,publicaciones.comments,publicaciones.img,publicaciones.description,publicaciones.likes,publicaciones.id,cliente.email,cliente.name,cliente.iconUser,publicaciones_cliente.tiempo,megusta.estado FROM cliente,publicaciones,publicaciones_cliente,megusta WHERE publicaciones_cliente.email3=cliente.email && publicaciones_cliente.id2=publicaciones.id && cliente.email=megusta.email_megusta && publicaciones_cliente.id2=megusta.id_megusta && publicaciones_cliente.email3=? ORDER BY publicaciones_cliente.tiempo DESC",
         [email]
       );
-    
       
-       const [response]=await conexion.query('SELECT megusta.estado,megusta.id_megusta,publicaciones.tiempo FROM megusta,publicaciones,publicaciones_cliente WHERE publicaciones.id=megusta.id_megusta AND publicaciones.id=publicaciones_cliente.id2 AND publicaciones_cliente.email3=? AND email_megusta=? ORDER BY publicaciones.tiempo DESC;',[email,emails]) 
+      const [response]=await conexion.query('SELECT megusta.estado,megusta.id_megusta,publicaciones.tiempo FROM megusta,publicaciones,publicaciones_cliente WHERE publicaciones.id=megusta.id_megusta AND publicaciones.id=publicaciones_cliente.id2 AND publicaciones_cliente.email3=? AND email_megusta=? ORDER BY publicaciones.tiempo DESC;',[email,emails]) 
   
-   
+      if (response.length==0) {
+        for (let i = 0; i < resultu.length; i++) {
+          response.push({id_megusta:resultu[i].id,estado:"nomegusta",tiempo:resultu[i].tiempo})
+        }
+        return res.json({data1:resultu,data2:response});
+      }
       
-      return res.json({data1:resultu,data2:response});
+      if (response.length!=0) {
+            let array2=[]
+        for (let i = 0; i < resultu.length; i++) {
+          let change=false
+           for (let k = 0; k < response.length; k++) {
+            if (resultu[i].id==response[k].id_megusta) {
+              array2.push({id_megusta:resultu[i].id,estado:response[k].estado,tiempo:resultu[i].tiempo})
+              change=true
+            }
+            
+           }
+           if (change==false) {
+           
+              array2.push({id_megusta:resultu[i].id,estado:"nomegusta",tiempo:resultu[i].tiempo})
+           }
+          }
+          
+      
+     return res.json({data1:resultu,data2:array2});
+      }
+   
+        
+
+       
+
+      
     }
     
   
@@ -555,9 +569,38 @@ export const userPostsTextos = async (req, res) => {
         
         const [response]=await conexion.query('SELECT megustatextos.estado,megustatextos.id_textos,publicacionestextos.tiempo FROM megustatextos,publicacionestextos,publicacionestextos_cliente WHERE publicacionestextos.id=megustatextos.id_textos AND publicacionestextos.id=publicacionestextos_cliente.id3 AND publicacionestextos_cliente.email4=? AND megustatextos.email_cliente2=? ORDER BY publicacionestextos.tiempo DESC;',[email,emails]) 
     
-     
+     /*---------------------------------------------------------------*/
+     if (response.length==0) {
+      for (let i = 0; i < resultu.length; i++) {
+        response.push({id_textos:resultu[i].id,estado:"nomegusta",tiempo:resultu[i].tiempo})
+      }
+      return res.json({data1:resultu,data2:response});
+    }
+    
+    if (response.length!=0) {
+          let array2=[]
+      for (let i = 0; i < resultu.length; i++) {
+        let change=false
+         for (let k = 0; k < response.length; k++) {
+          if (resultu[i].id==response[k].id_textos) {
+            array2.push({id_textos:resultu[i].id,estado:response[k].estado,tiempo:resultu[i].tiempo})
+            change=true
+          }
+          
+         }
+         if (change==false) {
+         
+            array2.push({id_textos:resultu[i].id,estado:"nomegusta",tiempo:resultu[i].tiempo})
+         }
+        }
         
-        return res.json({data1:resultu,data2:response});
+    
+   return res.json({data1:resultu,data2:array2});
+    }
+ 
+     /*---------------------------------------------------------------- */
+        
+      
       }
     
   } catch (error) {

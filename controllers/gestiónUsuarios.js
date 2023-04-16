@@ -241,21 +241,21 @@ export const deleteAccount = async (req,res) =>{
           return res.json({ data: "PASSWORD_ERROR" });
       }else{  
           const [responseMeGusta] = await conexion.query("SELECT * FROM megusta WHERE email_megusta = ?",[email])
+          
             if(responseMeGusta.length > 0){
                 for (let i = 0; i < responseMeGusta.length; i++) {
                   let idMeGusta = responseMeGusta[i].id_megusta
                   let estado = responseMeGusta[i].estado
                   if (estado == "megusta") {
-                    await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    await conexion.query("DELETE FROM megusta WHERE email_megusta = ?",[email])
                     
                     await conexion.query(`UPDATE publicaciones SET likes = (SELECT likes FROM publicaciones WHERE id = ${idMeGusta})-1 WHERE id=?`,[idMeGusta])
                     
                   }
                   if (estado == "nomegusta") {
-                    await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idMeGusta])
+                    await conexion.query("DELETE FROM megusta WHERE email_megusta = ?",[email])
                     
                   }
-                  await conexion.query("DELETE FROM comentarios_imagen WHERE idimagen = ?",[idMeGusta])  
                 }
             }
           const [responseMeGustaTexto] = await conexion.query("SELECT * FROM megustatextos WHERE email_cliente2 = ?",[email])  
@@ -264,47 +264,65 @@ export const deleteAccount = async (req,res) =>{
               let idMeGustaTextos = responseMeGustaTexto[i].id_textos
               let estado = responseMeGustaTexto[i].estado
               if (estado == "megusta") {
-                await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                await conexion.query("DELETE FROM megustatextos WHERE email_cliente2 = ?",[email])
                 
                 await conexion.query(`UPDATE publicacionestextos SET likes = (SELECT likes FROM publicacionestextos WHERE id = ${idMeGustaTextos})-1 WHERE id=?`,[idMeGustaTextos])
                 
               }
               if (estado == "nomegusta") {
-                await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idMeGustaTextos])
+                await conexion.query("DELETE FROM megustatextos WHERE email_cliente2 = ?",[email])
                 
-              }
-              await conexion.query("DELETE FROM comentarios_textos WHERE idtextos = ?",[idMeGustaTextos])  
+              } 
             }
           }
+          
+          const [comentariosCliente] = await conexion.query("SELECT * FROM comentarios_usuario WHERE emailcliente = ?",[email])
+          if (comentariosCliente.length > 0) {
+            
+            for (let i = 0; i < comentariosCliente.length; i++) {
+              let idComentario = comentariosCliente[i].id_comentario3
+              console.log(idComentario);
+              await conexion.query("DELETE FROM comentarios_textos WHERE id_comentario2=?",[idComentario])
+              await conexion.query("DELETE FROM comentarios_imagen WHERE id_comentario=?",[idComentario])
+              await conexion.query("DELETE FROM comentarios_usuario WHERE emailcliente =?",[email])
+              await conexion.query("DELETE FROM comentarios WHERE id=?",[idComentario])
+              const [comentarioImagen] = await conexion.query("SELECT * FROM comentarios_imagen WHERE id_comentario = ?",[idComentario])
+              if (comentarioImagen.length > 0) {
+                let idPublicacion = comentarioImagen[0].idimagen
+                await conexion.query(`UPDATE publicaciones SET comments = (SELECT comments FROM publicaciones WHERE id = ${idPublicacion})-1 WHERE id=?`,[idPublicacion]) 
+              }
+              const [comentarioTexto] = await conexion.query("SELECT * FROM comentarios_textos WHERE id_comentario2 = ?",[idComentario])
+              if (comentarioTexto.length > 0) {
+                let idPublicacionTexto = comentarioTexto[0].idimagen
+                await conexion.query(`UPDATE publicacionestextos SET comments = (SELECT comments FROM publicacionestextos WHERE id = ${idPublicacionTexto})-1 WHERE id=?`,[idPublicacionTexto]) 
+              }
+              
+              
+            }
+          }
+
           const [responsePublicacionesClienteImagen] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email])
           if (responsePublicacionesClienteImagen.length > 0) {
             
             for (let i = 0; i < responsePublicacionesClienteImagen.length; i++) {
               let idPublicacion = responsePublicacionesClienteImagen[i].id2 
               await conexion.query("DELETE FROM publicaciones_cliente WHERE email3 =?",[email])
+              await conexion.query("DELETE FROM megusta WHERE id_megusta = ?",[idPublicacion])
+              await conexion.query("DELETE FROM megustatextos WHERE id_textos = ?",[idPublicacion])
               await conexion.query("DELETE FROM comentarios_imagen WHERE idimagen=?",[idPublicacion])
+              await conexion.query("DELETE FROM comentarios_textos WHERE idtextos=?",[idPublicacion])
               await conexion.query("DELETE FROM publicaciones WHERE id=?",[idPublicacion])
             }
           }
+
+
           const [responsePublicacionesClienteTexto] = await conexion.query("SELECT * FROM publicacionestextos_cliente WHERE email4 = ?",[email])
           if (responsePublicacionesClienteTexto.length > 0) {
             
             for (let i = 0; i < responsePublicacionesClienteTexto.length; i++) {
               let idPublicacion = responsePublicacionesClienteTexto[i].id3
               await conexion.query("DELETE FROM publicacionestextos_cliente WHERE email4 =?",[email])
-              await conexion.query("DELETE FROM comentarios_textos WHERE idtextos=?",[idPublicacion])
               await conexion.query("DELETE FROM publicacionestextos WHERE id=?",[idPublicacion])
-            }
-          }
-          const [comentariosCliente] = await conexion.query("SELECT * FROM comentarios_usuario WHERE emailcliente = ?",[email])
-          if (comentariosCliente.length > 0) {
-            
-            for (let i = 0; i < comentariosCliente.length; i++) {
-              let idComentario = comentariosCliente[i].id_comentario3
-              await conexion.query("DELETE FROM comentarios_usuario WHERE emailcliente =?",[email])
-              await conexion.query("DELETE FROM comentarios_imagen WHERE id_comentario=?",[idComentario])
-              await conexion.query("DELETE FROM comentarios_textos WHERE id_comentario2=?",[idComentario])
-              await conexion.query("DELETE FROM comentarios WHERE id=?",[idComentario])
             }
           }
 
