@@ -86,9 +86,11 @@ try {
     if (token) {
         let correo=jwt.verify(token,TOKEN_SECRET)
         let {email}=correo
-        const [result]=await conexion.query('DELETE FROM mensaje WHERE remitente=? AND receptor=? OR remitente=? and receptor=?',[email,id,id,email])
-        if (result.affectedRows!=0) {
+       
+           
            if (report==0) {
+            const [result]=await conexion.query('DELETE FROM mensaje WHERE remitente=? AND receptor=? OR remitente=? and receptor=?',[email,id,id,email])
+       
             let nuevoEstado='Eliminado'
             const [resulti]=await conexion.query('UPDATE trabajos SET estado=? WHERE mi_email=? AND profecional_email=? OR mi_email=? AND profecional_email=?',[nuevoEstado,email,id,id,email])
             if (resulti.affectedRows!=0) {
@@ -105,9 +107,7 @@ try {
                 res.json('not delete and report')
             }
         }
-        }else{
-            res.json('error ')
-        }
+        
     }
    
     
@@ -274,7 +274,7 @@ export const sendReport=async (req,res)=>{
         if (token) {
         let correo=jwt.verify(token,TOKEN_SECRET)
         let {email}=correo
-        const [result]=await conexion.query('INSERT INTO reportes(email_remitente,resportado_email,razon) VALUES (?,?,?)',[email,id,report])
+        const [result]=await conexion.query('INSERT INTO reportes(email_remitente,reportado_email,razon) VALUES (?,?,?)',[email,id,report])
         if (result.affectedRows!=0) {
             res.json('reportado')
         }

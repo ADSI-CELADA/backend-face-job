@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2023 at 09:57 PM
+-- Generation Time: Apr 17, 2023 at 03:13 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -39,20 +39,22 @@ CREATE TABLE `cliente` (
   `cod_paquete` varchar(1) DEFAULT NULL,
   `info_paquete` int(2) DEFAULT NULL,
   `lastname` varchar(70) NOT NULL,
-  `namecomplete` varchar(100) DEFAULT NULL
+  `namecomplete` varchar(100) DEFAULT NULL,
+  `rol` varchar(20) DEFAULT 'Cliente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cliente`
 --
 
-INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`, `profession`, `codigo`, `cod_paquete`, `info_paquete`, `lastname`, `namecomplete`) VALUES
-('anciano@gmail.com', 'Yaji', '2023-04-05', '1242141', '$2b$10$Y9GCco6/bjwcE3XYllwWM.daa89hyvTJvvnEzg4Jt9YOIxZenEC.i', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828571/posts/zxck2qaa8wcluo8ra4qi.jpg', 'programador', 0, '1', 3, 'Anciano', 'Yaji Anciano'),
-('camilogomess10@gmail.com', 'camilo', '2023-03-12', '3128977187', '$2b$10$hRgWC.vxA4.G2XrxsXARBehVby1Nrw4FPuTZbaGwfEgUwKoErSu6u', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678657052/posts/ce3wifbdg93wf51d34pi.jpg', 'Profesor', 0, '1', 2, 'gomes', 'camilo gomes'),
-('dabeats0914@gmail.com', 'David', '2023-04-04', '3015112641', '$2b$10$0mLUJmMTLENdK.en08Jq.O4iUZD7vgW75fRhYk.MQILQvTLMBn4KK', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680908740/posts/qrrasxnqharjpxdihp5c.jpg', 'programador', 0, '1', 0, 'Cuellar Velez', 'David Cuellar Velez'),
-('juanca@gmail.com', 'Juan', '2023-04-04', '31321', '$2b$10$tap1YB0f3oHP/FOzNgRFD.pLVul24BTPazmhe0HGTv49TiK5U9TY.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680749854/posts/tnuvc71ssw8btqei7ffd.png', 'programador', 0, '4', 0, 'Velez', 'Juan Velez'),
-('kebinochoa10@gmail.com', 'kebyn', '2023-03-11', '657567', '$2b$10$8xjiWGG6YW0dhj9rOKnxD.IzEuVOC4ZY24yt47hK/E2nzLsotbePS', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828409/posts/woz9emkuc0hivxq96w2v.jpg', 'Profesor', 0, '1', 2, 'ochoa', 'kebyn ochoa'),
-('zed@gmail.com', 'zed', '2023-03-12', '4354', '$2b$10$R/XO00nx3OGhe.ynmtc3C./mQ5BSd87tQByUaOhQOTn0Fjq0P9hb.', 'https://res.cloudinary.com/dqrwt5fo7/image/upload/v1674674484/posts/kfslmtqtfmrxpnv2cw4w.jpg', 'programador', 0, '2', 8, 'ryan', 'zed ryan');
+INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`, `profession`, `codigo`, `cod_paquete`, `info_paquete`, `lastname`, `namecomplete`, `rol`) VALUES
+('anciano@gmail.com', 'Yaji', '2023-04-05', '1242141', '$2b$10$Y9GCco6/bjwcE3XYllwWM.daa89hyvTJvvnEzg4Jt9YOIxZenEC.i', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828571/posts/zxck2qaa8wcluo8ra4qi.jpg', 'Diseñador grafico', 0, '1', 3, 'Anciano', 'Yaji Anciano', 'Cliente'),
+('camilogomess10@gmail.com', 'camilo', '2023-03-12', '2345425646', '$2b$10$hRgWC.vxA4.G2XrxsXARBehVby1Nrw4FPuTZbaGwfEgUwKoErSu6u', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678657052/posts/ce3wifbdg93wf51d34pi.jpg', 'Coach personal', 0, '1', 1, 'gomez', 'camilo gomes', 'Cliente'),
+('dabeats0914@gmail.com', 'David', '2023-04-04', '3015112641', '$2b$10$0mLUJmMTLENdK.en08Jq.O4iUZD7vgW75fRhYk.MQILQvTLMBn4KK', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680908740/posts/qrrasxnqharjpxdihp5c.jpg', 'Desarrollador de software', 4746, '1', 1, 'Cuellar Velez', 'David Cuellar Velez', 'Cliente'),
+('face-job-admin@facejob.com', 'face', '2023-04-17', '32423423423', '$2b$10$rYFu1f28ITlAuZm3HYm58.3kgGcsjrnFzzUuV1Nq7tFkScnvq99Py', '', 'Face-job', 0, '4', 3, 'job', 'face job', 'ADMIN'),
+('juanca@gmail.com', 'Juan', '2023-04-04', '3019874512', '$2b$10$tap1YB0f3oHP/FOzNgRFD.pLVul24BTPazmhe0HGTv49TiK5U9TY.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680749854/posts/tnuvc71ssw8btqei7ffd.png', 'Desarrollador de aplicaciones moviles', 0, '2', 10, 'Carlos', 'Juan Velez', 'Cliente'),
+('kebinochoa10@gmail.com', 'Kebyn', '2023-03-11', '31321', '$2b$10$8xjiWGG6YW0dhj9rOKnxD.IzEuVOC4ZY24yt47hK/E2nzLsotbePS', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680828409/posts/woz9emkuc0hivxq96w2v.jpg', 'Diseñador de interiores', 0, '4', 0, 'ochoa', 'kebyn ochoa', 'Cliente'),
+('zed@gmail.com', 'zed', '2023-03-12', '3147896352', '$2b$10$R/XO00nx3OGhe.ynmtc3C./mQ5BSd87tQByUaOhQOTn0Fjq0P9hb.', 'https://res.cloudinary.com/dqrwt5fo7/image/upload/v1674674484/posts/kfslmtqtfmrxpnv2cw4w.jpg', 'Fotografo', 0, '2', 4, 'ryan', 'zed ryan', 'Cliente');
 
 --
 -- Triggers `cliente`
@@ -82,9 +84,11 @@ CREATE TABLE `comentarios` (
 --
 
 INSERT INTO `comentarios` (`id`, `comentario`, `hora`) VALUES
-(30000, 'dfgd', '2023-01-25 20:06:34'),
-(30001, 'hola', '2023-04-06 19:57:48'),
-(30002, 'qwrrq', '2023-04-07 19:15:45');
+(30000, 'dfgd', '2023-01-26 01:06:34'),
+(30001, 'hola', '2023-04-07 00:57:48'),
+(30002, 'qwrrq', '2023-04-08 00:15:45'),
+(30013, 'holaaa', '2023-04-14 22:37:56'),
+(30014, 'qwerqqtqt', '2023-04-14 22:38:59');
 
 -- --------------------------------------------------------
 
@@ -144,24 +148,8 @@ CREATE TABLE `megusta` (
 --
 
 INSERT INTO `megusta` (`id_megusta`, `email_megusta`, `estado`) VALUES
-(50030, 'camilogomess10@gmail.com', 'megusta'),
-(50030, 'dabeats0914@gmail.com', 'nomegusta'),
-(50030, 'kebinochoa10@gmail.com', 'megusta'),
-(50030, 'zed@gmail.com', 'nomegusta'),
-(50030, 'anciano@gmail.com', 'nomegusta'),
-(50030, 'juanca@gmail.com', 'nomegusta'),
-(50031, 'camilogomess10@gmail.com', 'megusta'),
-(50031, 'dabeats0914@gmail.com', 'nomegusta'),
-(50031, 'kebinochoa10@gmail.com', 'nomegusta'),
-(50031, 'zed@gmail.com', 'nomegusta'),
-(50031, 'anciano@gmail.com', 'nomegusta'),
-(50031, 'juanca@gmail.com', 'nomegusta'),
-(50032, 'camilogomess10@gmail.com', 'megusta'),
-(50032, 'dabeats0914@gmail.com', 'nomegusta'),
-(50032, 'kebinochoa10@gmail.com', 'megusta'),
-(50032, 'zed@gmail.com', 'nomegusta'),
-(50032, 'anciano@gmail.com', 'megusta'),
-(50032, 'juanca@gmail.com', 'nomegusta');
+(50056, 'zed@gmail.com', 'nomegusta'),
+(50058, 'camilogomess10@gmail.com', 'nomegusta');
 
 -- --------------------------------------------------------
 
@@ -180,25 +168,12 @@ CREATE TABLE `megustatextos` (
 --
 
 INSERT INTO `megustatextos` (`id_textos`, `email_cliente2`, `estado`) VALUES
-(7034, 'kebinochoa10@gmail.com', 'nomegusta'),
-(7035, 'anciano@gmail.com', 'megusta'),
-(7035, 'camilogomess10@gmail.com', 'megusta'),
-(7035, 'dabeats0914@gmail.com', 'nomegusta'),
-(7035, 'kebinochoa10@gmail.com', 'nomegusta'),
-(7035, 'zed@gmail.com', 'nomegusta'),
-(7035, 'juanca@gmail.com', 'nomegusta'),
-(7036, 'anciano@gmail.com', 'nomegusta'),
-(7036, 'camilogomess10@gmail.com', 'megusta'),
-(7036, 'dabeats0914@gmail.com', 'nomegusta'),
-(7036, 'kebinochoa10@gmail.com', 'nomegusta'),
-(7036, 'zed@gmail.com', 'nomegusta'),
-(7036, 'juanca@gmail.com', 'nomegusta'),
-(7037, 'anciano@gmail.com', 'megusta'),
-(7037, 'camilogomess10@gmail.com', 'nomegusta'),
-(7037, 'dabeats0914@gmail.com', 'nomegusta'),
-(7037, 'kebinochoa10@gmail.com', 'nomegusta'),
-(7037, 'zed@gmail.com', 'nomegusta'),
-(7037, 'juanca@gmail.com', 'nomegusta');
+(7040, 'anciano@gmail.com', 'megusta'),
+(7040, 'camilogomess10@gmail.com', 'nomegusta'),
+(7040, 'dabeats0914@gmail.com', 'nomegusta'),
+(7040, 'kebinochoa10@gmail.com', 'nomegusta'),
+(7040, 'zed@gmail.com', 'nomegusta'),
+(7040, 'juanca@gmail.com', 'nomegusta');
 
 -- --------------------------------------------------------
 
@@ -221,11 +196,9 @@ CREATE TABLE `mensaje` (
 --
 
 INSERT INTO `mensaje` (`id_mensajes`, `remitente`, `receptor`, `mensaje`, `tipo`, `fecha`, `link`) VALUES
-(47, 'camilogomess10@gmail.com', 'dabeats0914@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-04-09 19:05:50', 'NULL'),
-(48, 'dabeats0914@gmail.com', 'camilogomess10@gmail.com', 'Gracias por comunicarte', 'texto', '2023-04-09 19:05:50', 'NULL'),
-(49, 'camilogomess10@gmail.com', 'dabeats0914@gmail.com', 'hola', 'texto', '2023-04-09 19:05:59', 'NULL'),
-(52, 'anciano@gmail.com', 'kebinochoa10@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-04-09 19:47:18', 'NULL'),
-(53, 'kebinochoa10@gmail.com', 'anciano@gmail.com', 'Gracias por comunicarte', 'texto', '2023-04-09 19:47:18', 'NULL');
+(61, 'juanca@gmail.com', 'dabeats0914@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-04-15 21:24:24', 'NULL'),
+(62, 'dabeats0914@gmail.com', 'juanca@gmail.com', 'Gracias por comunicarte', 'texto', '2023-04-15 21:24:24', 'NULL'),
+(63, 'juanca@gmail.com', 'dabeats0914@gmail.com', 'qwewqerqrqrq', 'texto', '2023-04-15 21:24:32', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -277,7 +250,18 @@ INSERT INTO `profesionales_vistos` (`email_cliente`, `email_visto`) VALUES
 ('camilogomess10@gmail.com', 'dabeats0914@gmail.com'),
 ('anciano@gmail.com', 'kebinochoa10@gmail.com'),
 ('camilogomess10@gmail.com', 'anciano@gmail.com'),
-('anciano@gmail.com', 'camilogomess10@gmail.com');
+('anciano@gmail.com', 'camilogomess10@gmail.com'),
+('zed@gmail.com', 'juanca@gmail.com'),
+('zed@gmail.com', 'dabeats0914@gmail.com'),
+('zed@gmail.com', 'anciano@gmail.com'),
+('camilogomess10@gmail.com', 'zed@gmail.com'),
+('dabeats0914@gmail.com', 'kebinochoa10@gmail.com'),
+('zed@gmail.com', 'antonio@gmail.com'),
+('dabeats0914@gmail.com', 'anciano@gmail.com'),
+('dabeats0914@gmail.com', 'zed@gmail.com'),
+('dabeats0914@gmail.com', 'juanca@gmail.com'),
+('kebinochoa10@gmail.com', 'juanca@gmail.com'),
+('kebinochoa10@gmail.com', 'zed@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -299,16 +283,8 @@ CREATE TABLE `publicaciones` (
 --
 
 INSERT INTO `publicaciones` (`id`, `tiempo`, `img`, `description`, `likes`, `comments`) VALUES
-(50000, '2023-01-25 20:08:02', 'gdfg', 'dfgdfg', 0, 0),
-(50007, '2023-01-25 23:17:20', 'https://res.cloudinary.com/dqrwt5fo7/image/upload/v1674674237/posts/b0tv2xe99edsgqng4xjb.png', 'juego melito', 0, 0),
-(50010, '2023-03-12 04:10:23', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678576222/posts/nk6ktkzkv3fkl19orh34.png', 'fgdgdfgd', 0, 0),
-(50011, '2023-03-12 04:12:33', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678576352/posts/an427mqsiiipnzxdjlgj.png', 'melooo', 0, 0),
-(50012, '2023-03-12 04:14:03', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678576441/posts/k1i5uoe5cbehcxcthgva.png', 'melooo', 0, 0),
-(50017, '2023-03-13 02:45:00', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1678657499/posts/ln9cw9j1p5el49wzbchu.jpg', 'sdfsdf', 2, 0),
-(50023, '2023-04-06 02:56:11', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1680749770/posts/cr00pehqenknxcjzw89r.png', 'qwert', 0, 1),
-(50030, '2023-04-09 17:30:02', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1681061403/posts/ldhhhai60utuwmqu8wns.jpg', 'pues eso', 2, 0),
-(50031, '2023-04-09 17:30:48', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1681061448/posts/zkidiw448uluodm2couj.png', 'otra', 1, 0),
-(50032, '2023-04-09 17:31:10', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1681061470/posts/bva4rnzv3ga77fg0ajsb.jpg', 'sdfdsf', 3, 0);
+(50056, '2023-04-15 20:18:33', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1681589913/posts/iuetccyodypmdoybwalu.jpg', 'paisaje foto', 0, 0),
+(50058, '2023-04-17 01:04:40', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1681693482/posts/vkdtknpqhmn7xjphg4rx.png', 'pues eso', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -330,12 +306,7 @@ CREATE TABLE `publicacionestextos` (
 --
 
 INSERT INTO `publicacionestextos` (`id`, `tiempo`, `textos`, `description`, `likes`, `comments`) VALUES
-(7000, '2023-01-25 05:05:21', 'ewraawe', 'werawe', 0, 0),
-(7016, '2023-01-25 20:31:23', 'hgj', 'ghjgh', 0, 0),
-(7034, '2023-04-09 17:04:08', 'fsdfsdf', 'pues eso', 0, 0),
-(7035, '2023-04-09 18:03:12', 'fsdfsdf', 'sdfsdf', 2, 0),
-(7036, '2023-04-09 18:21:18', 'werwer', 'rwerwerqwr', 1, 0),
-(7037, '2023-04-09 18:21:28', '3', '3', 1, 0);
+(7040, '2023-04-15 00:17:41', 'hola baby, eieieiei', 'qwerty', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -354,11 +325,7 @@ CREATE TABLE `publicacionestextos_cliente` (
 --
 
 INSERT INTO `publicacionestextos_cliente` (`email4`, `id3`, `tiempo`) VALUES
-('zed@gmail.com', 7016, '2023-01-25 20:51:25'),
-('kebinochoa10@gmail.com', 7034, '2023-04-09 17:04:08'),
-('anciano@gmail.com', 7035, '2023-04-09 18:03:13'),
-('anciano@gmail.com', 7036, '2023-04-09 18:21:18'),
-('anciano@gmail.com', 7037, '2023-04-09 18:21:28');
+('anciano@gmail.com', 7040, '2023-04-15 00:17:41');
 
 -- --------------------------------------------------------
 
@@ -377,12 +344,8 @@ CREATE TABLE `publicaciones_cliente` (
 --
 
 INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
-('zed@gmail.com', 50007, '2023-01-25 23:17:20'),
-('camilogomess10@gmail.com', 50017, '2023-03-13 02:45:01'),
-('juanca@gmail.com', 50023, '2023-04-06 02:56:12'),
-('kebinochoa10@gmail.com', 50030, '2023-04-09 17:30:02'),
-('kebinochoa10@gmail.com', 50031, '2023-04-09 17:30:48'),
-('kebinochoa10@gmail.com', 50032, '2023-04-09 17:31:10');
+('zed@gmail.com', 50056, '2023-04-15 20:18:33'),
+('camilogomess10@gmail.com', 50058, '2023-04-17 01:04:40');
 
 -- --------------------------------------------------------
 
@@ -391,20 +354,12 @@ INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
 --
 
 CREATE TABLE `reportes` (
+  `id_reporte` int(11) NOT NULL,
   `email_remitente` varchar(70) DEFAULT NULL,
-  `resportado_email` varchar(70) DEFAULT NULL,
-  `razon` varchar(200) DEFAULT NULL,
+  `reportado_email` varchar(70) DEFAULT NULL,
+  `razon` varchar(300) DEFAULT NULL,
   `tiempo` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `reportes`
---
-
-INSERT INTO `reportes` (`email_remitente`, `resportado_email`, `razon`, `tiempo`) VALUES
-('anciano@gmail.com', 'camilogomess10@gmail.com', NULL, '2023-04-09 19:37:15'),
-('anciano@gmail.com', 'camilogomess10@gmail.com', 'es muy raro', '2023-04-09 19:40:31'),
-('anciano@gmail.com', 'camilogomess10@gmail.com', 'es rarito el man ese', '2023-04-09 19:45:56');
 
 -- --------------------------------------------------------
 
@@ -423,14 +378,10 @@ CREATE TABLE `trabajos` (
 --
 
 INSERT INTO `trabajos` (`mi_email`, `profecional_email`, `estado`) VALUES
-('kebinochoa10@gmail.com', 'camilogomess10@gmail.com', 'Eliminado'),
-('camilogomess10@gmail.com', 'kebinochoa10@gmail.com', 'Eliminado'),
-('camilogomess10@gmail.com', 'dabeats0914@gmail.com', 'trabajando'),
-('dabeats0914@gmail.com', 'camilogomess10@gmail.com', 'nuevo'),
-('anciano@gmail.com', 'camilogomess10@gmail.com', 'nuevo'),
-('camilogomess10@gmail.com', 'anciano@gmail.com', 'nuevo'),
-('anciano@gmail.com', 'kebinochoa10@gmail.com', 'nuevo'),
-('kebinochoa10@gmail.com', 'anciano@gmail.com', 'nuevo');
+('dabeats0914@gmail.com', 'kebinochoa10@gmail.com', 'Reportado'),
+('kebinochoa10@gmail.com', 'dabeats0914@gmail.com', 'Reportado'),
+('juanca@gmail.com', 'dabeats0914@gmail.com', 'nuevo'),
+('dabeats0914@gmail.com', 'juanca@gmail.com', 'nuevo');
 
 --
 -- Indexes for dumped tables
@@ -531,6 +482,14 @@ ALTER TABLE `publicaciones_cliente`
   ADD KEY `id2` (`id2`);
 
 --
+-- Indexes for table `reportes`
+--
+ALTER TABLE `reportes`
+  ADD PRIMARY KEY (`id_reporte`),
+  ADD KEY `email_remitente` (`email_remitente`),
+  ADD KEY `reportado_email` (`reportado_email`);
+
+--
 -- Indexes for table `trabajos`
 --
 ALTER TABLE `trabajos`
@@ -545,25 +504,31 @@ ALTER TABLE `trabajos`
 -- AUTO_INCREMENT for table `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30010;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30020;
 
 --
 -- AUTO_INCREMENT for table `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50033;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50059;
 
 --
 -- AUTO_INCREMENT for table `publicacionestextos`
 --
 ALTER TABLE `publicacionestextos`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7038;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7041;
+
+--
+-- AUTO_INCREMENT for table `reportes`
+--
+ALTER TABLE `reportes`
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -636,6 +601,13 @@ ALTER TABLE `publicacionestextos_cliente`
 ALTER TABLE `publicaciones_cliente`
   ADD CONSTRAINT `publicaciones_cliente_ibfk_1` FOREIGN KEY (`email3`) REFERENCES `cliente` (`email`),
   ADD CONSTRAINT `publicaciones_cliente_ibfk_2` FOREIGN KEY (`id2`) REFERENCES `publicaciones` (`id`);
+
+--
+-- Constraints for table `reportes`
+--
+ALTER TABLE `reportes`
+  ADD CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`email_remitente`) REFERENCES `cliente` (`email`),
+  ADD CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`reportado_email`) REFERENCES `cliente` (`email`);
 
 --
 -- Constraints for table `trabajos`

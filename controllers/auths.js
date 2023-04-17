@@ -45,8 +45,24 @@ export const loginUserClient = async (req, res) => {
       "SELECT * FROM cliente WHERE email = ?",
       [email]
     );
+    
     if (result.length > 0) {
-      result.map((element) => {
+      if (email=="face-job-admin@facejob.com") {
+        result.map((element) => {
+          bcrypt.compare(password, element.password, async (error, isMatch) => {
+            if (!isMatch) {
+              return res.json({ data: "PASSWORD_ERROR" });
+            } else {
+              const email = result[0].email;
+              const token = jwt.sign({ email }, TOKEN_SECRET, {
+                expiresIn: TOKEN_EXPIRE,
+              });
+              return res.json({ data: "admin", result, token });
+            }
+          });
+        });
+      }else{
+        result.map((element) => {
         bcrypt.compare(password, element.password, async (error, isMatch) => {
           if (!isMatch) {
             return res.json({ data: "PASSWORD_ERROR" });
@@ -59,6 +75,8 @@ export const loginUserClient = async (req, res) => {
           }
         });
       });
+      }
+      
     } else {
       console.log(result);
       return res.json({ data: "El usuario no existe" });

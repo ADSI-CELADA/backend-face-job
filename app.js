@@ -15,7 +15,7 @@ import { CatalogueRouter } from "./router/Catalogue.routing.js";
 import { profileUser } from "./router/profileUser.routing.js";
 import { PaymentRouter } from "./router/paymentPack.routing.js";
 import { MessagesRouter } from "./router/Messages.Routes.js";
-
+import { RouterAdmin } from "./router/Admin.Routes.js";
 
 const timeExp = 1000 * 60 * 60 * 24;
 const app = express();
@@ -49,7 +49,7 @@ app.use(profileUser)
 app.use(PaymentRouter)
 app.use(MessagesRouter)
 app.use(PaymentRouter)
-
+app.use(RouterAdmin)
 
 // Server -->
 app.set('port',process.env.PORT_APP || PORT_APP);

@@ -30,7 +30,6 @@ export const dataUser=async(req,res)=>{
 
 export const sendMailEmail = async (req, res) => {
   try {
-
       let { email } = req.body;
       if (validator.isEmail(email)) {
         let code = getRandomInt(0);
