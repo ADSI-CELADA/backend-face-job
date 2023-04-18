@@ -8,7 +8,7 @@ export const createUserClient = async (req, res) => {
     let { email, name,lastname, date, number, password, iconUser, profession, codigo} =
       req.body;
     codigo = 0;
-    iconUser = ""
+    iconUser = "https://res.cloudinary.com/de2sdukuk/image/upload/v1681834064/Logo_st4un7.png"
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hash = bcrypt.hashSync(password, salt);
