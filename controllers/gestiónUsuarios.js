@@ -33,7 +33,7 @@ export const sendMailEmail = async (req, res) => {
       let { email } = req.body;
       if (validator.isEmail(email)) {
         let code = getRandomInt(0);
-        let response = nodemailerPass(email, code);
+        let response = nodemailerPass(email, code,1);
         const [result] = await conexion.query(
           `UPDATE cliente SET codigo = ? WHERE email = "${email}"`,
           [code]
@@ -61,7 +61,7 @@ export const sendMail = async (req, res) => {
       let { email } = correo;
       if (validator.isEmail(email)) {
         let code = getRandomInt(0);
-        let response = nodemailerPass(email, code);
+        let response = nodemailerPass(email, code,1);
         const [result] = await conexion.query(
           `UPDATE cliente SET codigo = ? WHERE email = "${email}"`,
           [code]
