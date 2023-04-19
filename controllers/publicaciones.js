@@ -2,7 +2,7 @@ import conexion from "../database/db.js";
 import { uploadImage } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_CODE, TOKEN_EXPIRE, TOKEN_SECRET } from "../config/config.js";
-import { response } from "express";
+
 
 export const imagenPerfil = async (req, res) => {
   try {
