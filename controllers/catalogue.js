@@ -146,81 +146,128 @@ export const postCategories = async (req,res) =>{
 
     let email1;
     let consultPrueba;
+    let consultPruebas;
     let persona;
+    let personas;
     do {
-      [email1] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de software' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email1] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de software' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email1.length > 0) {
         persona = email1[0].email
+        if (email1.length > 1) {
+           personas = email1[1].email
+          
+        }
       }
-      [consultPrueba] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona])
+      [consultPrueba] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona]);
+       [consultPruebas] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas]);
       i++
-    } while (consultPrueba.length == 0  && i < 5);
+    } while (consultPrueba.length == 0 && consultPruebas.length == 0 && i < 5);
 
     let email2;
     let consultPrueba2;
+    let consultPruebas2;
     let persona2;
+    let personas2;
     do {
-      [email2] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador grafico' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email2] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador grafico' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email2.length > 0) {
         persona2 = email2[0].email
+        if (email2.length > 1) {
+          personas2 = email2[1].email
+         
+        }
+        
       }
-      [consultPrueba2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona2])
+      [consultPrueba2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona2]);
+       [consultPruebas2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas2]);
       j++
-    } while (consultPrueba2.length == 0 && j < 5);
+    } while (consultPrueba2.length == 0 && consultPruebas2.length == 0 && j < 5);
 
     let email3;
     let consultPrueba3;
+    let consultPruebas3;
     let persona3;
+    let personas3;
     do {
-      [email3] =await conexion.query("SELECT email FROM cliente WHERE profession='Coach personal' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email3] =await conexion.query("SELECT email FROM cliente WHERE profession='Coach personal' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email3.length > 0) {
         persona3 = email3[0].email
+        if (email3.length > 1) {
+          personas3 = email3[1].email
+          
+        }
+        
       }
-      [consultPrueba3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona3])
+      [consultPrueba3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona3]);
+      [consultPruebas3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas3]);
       k++
-    } while (consultPrueba3.length == 0 && k < 5);
+    } while (consultPrueba3.length == 0 && consultPruebas3.length == 0  && k < 5);
     
     let email4;
     let consultPrueba4;
     let persona4;
+    let consultPruebas4;
+    let personas4;
     do {
-      [email4] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de aplicaciones moviles' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email4] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de aplicaciones moviles' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email4.length > 0) {
         persona4 = email4[0].email
+        if (email4.length > 1) {
+          personas4 = email4[1].email
+          
+        }
+        
       }
-      [consultPrueba4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona4])
+      [consultPrueba4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona4]);
+      [consultPruebas4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas4]);
       l++
-    } while (consultPrueba4.length == 0 && l < 5);
+    } while (consultPrueba4.length == 0 && consultPruebas4.length == 0 && l < 5);
     
     let email5;
     let consultPrueba5;
     let persona5;
+    let consultPruebas5;
+    let personas5;
     do {
-      [email5] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador de interiores' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email5] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador de interiores' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email5.length > 0) {
         persona5 = email5[0].email
+        if (email5.length > 1) {
+          personas5 = email5[1].email
+         
+        }
+        
       }
-      [consultPrueba5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona5])
+      [consultPrueba5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona5]);
+       [consultPruebas5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas5]);
       p++
-    } while (consultPrueba5.length == 0 && l < 5);
+    } while (consultPrueba5.length == 0 && consultPruebas5.length == 0 && l < 5);
 
     let email6;
     let consultPrueba6;
     let persona6;
+    let consultPruebas6;
+    let personas6;
     do {
-      [email6] =await conexion.query("SELECT email FROM cliente WHERE profession='Fotografo' AND email != ? ORDER BY rand() LIMIT 1",[email]);
+      [email6] =await conexion.query("SELECT email FROM cliente WHERE profession='Fotografo' AND email != ? ORDER BY rand() LIMIT 2",[email]);
       if (email6.length > 0) {
         persona6 = email6[0].email
+        if (email6.length > 1) {
+          personas6 = email6[1].email
+          
+        }
+        
       }
-      [consultPrueba6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona6])
+      [consultPrueba6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona6]);
+      [consultPruebas6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona6]);
       m++
-    } while (consultPrueba6.length == 0 && l < 5);
+    } while (consultPrueba6.length == 0 && consultPruebas6.length == 0 && l < 5);
 
-    emails.push(persona,persona2,persona3,persona4,persona5,persona6)
+    emails.push(persona,personas,persona2,personas2,persona3,personas3,persona4,personas4,persona5,personas5,persona6,personas6)
 
     for (let i = 0; i < emails.length; i++) {
       emailProfile = emails[i]
-      const [resultPost] = await conexion.query("SELECT cliente.email,cliente.name,cliente.profession,cliente.iconUser,publicaciones.id,publicaciones.img,publicaciones.description FROM publicaciones INNER JOIN publicaciones_cliente ON publicaciones.id = publicaciones_cliente.id2 INNER JOIN cliente ON publicaciones_cliente.email3 = cliente.email WHERE cliente.email = ? ORDER BY rand() LIMIT 1;",[emailProfile])
+      const [resultPost] = await conexion.query("SELECT cliente.email,cliente.name,cliente.profession,cliente.iconUser,publicaciones.id,publicaciones.img,publicaciones.description FROM publicaciones INNER JOIN publicaciones_cliente ON publicaciones.id = publicaciones_cliente.id2 INNER JOIN cliente ON publicaciones_cliente.email3 = cliente.email WHERE cliente.email = ? ORDER BY publicaciones.likes DESC LIMIT 1",[emailProfile])
       posts.push(resultPost[0])
     }
     res.json(posts)
@@ -228,7 +275,7 @@ export const postCategories = async (req,res) =>{
   } else {
     let emails = []
     let posts = []
-    let email;
+    let emailProfile;
     let i =0;
     let j =0;
     let k =0;
@@ -238,57 +285,128 @@ export const postCategories = async (req,res) =>{
 
     let email1;
     let consultPrueba;
+    let consultPruebas;
+    let persona;
+    let personas;
     do {
-      [email1] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de software' ORDER BY rand() LIMIT 1");
-      [consultPrueba] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email1[0].email])
+      [email1] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de software' ORDER BY rand() LIMIT 2",);
+      if (email1.length > 0) {
+        persona = email1[0].email
+        if (email1.length > 1) {
+           personas = email1[1].email
+          
+        }
+      }
+      [consultPrueba] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona]);
+       [consultPruebas] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas]);
       i++
-    } while (consultPrueba.length == 0  && i < 5);
+    } while (consultPrueba.length == 0 && consultPruebas.length == 0 && i < 5);
 
     let email2;
     let consultPrueba2;
+    let consultPruebas2;
+    let persona2;
+    let personas2;
     do {
-      [email2] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador grafico' ORDER BY rand() LIMIT 1");
-      [consultPrueba2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email2[0].email])
+      [email2] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador grafico' ORDER BY rand() LIMIT 2",);
+      if (email2.length > 0) {
+        persona2 = email2[0].email
+        if (email2.length > 1) {
+          personas2 = email2[1].email
+         
+        }
+        
+      }
+      [consultPrueba2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona2]);
+       [consultPruebas2] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas2]);
       j++
-    } while (consultPrueba2.length == 0 && j < 5);
+    } while (consultPrueba2.length == 0 && consultPruebas2.length == 0 && j < 5);
 
     let email3;
     let consultPrueba3;
+    let consultPruebas3;
+    let persona3;
+    let personas3;
     do {
-      [email3] =await conexion.query("SELECT email FROM cliente WHERE profession='Coach personal' ORDER BY rand() LIMIT 1");
-      [consultPrueba3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email3[0].email])
+      [email3] =await conexion.query("SELECT email FROM cliente WHERE profession='Coach personal' ORDER BY rand() LIMIT 2",);
+      if (email3.length > 0) {
+        persona3 = email3[0].email
+        if (email3.length > 1) {
+          personas3 = email3[1].email
+          
+        }
+        
+      }
+      [consultPrueba3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona3]);
+      [consultPruebas3] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas3]);
       k++
-    } while (consultPrueba3.length == 0 && k < 5);
+    } while (consultPrueba3.length == 0 && consultPruebas3.length == 0  && k < 5);
     
     let email4;
     let consultPrueba4;
+    let persona4;
+    let consultPruebas4;
+    let personas4;
     do {
-      [email4] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de aplicaciones moviles' ORDER BY rand() LIMIT 1");
-      [consultPrueba4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email4[0].email])
+      [email4] =await conexion.query("SELECT email FROM cliente WHERE profession='Desarrollador de aplicaciones moviles' ORDER BY rand() LIMIT 2",);
+      if (email4.length > 0) {
+        persona4 = email4[0].email
+        if (email4.length > 1) {
+          personas4 = email4[1].email
+          
+        }
+        
+      }
+      [consultPrueba4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona4]);
+      [consultPruebas4] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas4]);
       l++
-    } while (consultPrueba4.length == 0 && l < 5);
+    } while (consultPrueba4.length == 0 && consultPruebas4.length == 0 && l < 5);
     
     let email5;
     let consultPrueba5;
+    let persona5;
+    let consultPruebas5;
+    let personas5;
     do {
-      [email5] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador de interiores' ORDER BY rand() LIMIT 1");
-      [consultPrueba5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email5[0].email])
+      [email5] =await conexion.query("SELECT email FROM cliente WHERE profession='Diseñador de interiores' ORDER BY rand() LIMIT 2",);
+      if (email5.length > 0) {
+        persona5 = email5[0].email
+        if (email5.length > 1) {
+          personas5 = email5[1].email
+         
+        }
+        
+      }
+      [consultPrueba5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona5]);
+       [consultPruebas5] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[personas5]);
       p++
-    } while (consultPrueba5.length == 0 && l < 5);
+    } while (consultPrueba5.length == 0 && consultPruebas5.length == 0 && l < 5);
 
     let email6;
     let consultPrueba6;
+    let persona6;
+    let consultPruebas6;
+    let personas6;
     do {
-      [email6] =await conexion.query("SELECT email FROM cliente WHERE profession='Fotografo' ORDER BY rand() LIMIT 1");
-      [consultPrueba6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[email6[0].email])
+      [email6] =await conexion.query("SELECT email FROM cliente WHERE profession='Fotografo' ORDER BY rand() LIMIT 2",);
+      if (email6.length > 0) {
+        persona6 = email6[0].email
+        if (email6.length > 1) {
+          personas6 = email6[1].email
+          
+        }
+        
+      }
+      [consultPrueba6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona6]);
+      [consultPruebas6] = await conexion.query("SELECT * FROM publicaciones_cliente WHERE email3 = ?",[persona6]);
       m++
-    } while (consultPrueba6.length == 0 && l < 5);
+    } while (consultPrueba6.length == 0 && consultPruebas6.length == 0 && l < 5);
 
-    emails.push(email1[0].email,email2[0].email,email3[0].email,email4[0].email,email5[0].email,email6[0].email)
+    emails.push(persona,personas,persona2,personas2,persona3,personas3,persona4,personas4,persona5,personas5,persona6,personas6)
 
     for (let i = 0; i < emails.length; i++) {
-      email = emails[i]
-      const [resultPost] = await conexion.query("SELECT cliente.email,cliente.name,cliente.profession,cliente.iconUser,publicaciones.id,publicaciones.img,publicaciones.description FROM publicaciones INNER JOIN publicaciones_cliente ON publicaciones.id = publicaciones_cliente.id2 INNER JOIN cliente ON publicaciones_cliente.email3 = cliente.email WHERE cliente.email = ? ORDER BY rand() LIMIT 1;",[email])
+      emailProfile = emails[i]
+      const [resultPost] = await conexion.query("SELECT cliente.email,cliente.name,cliente.profession,cliente.iconUser,publicaciones.id,publicaciones.img,publicaciones.description FROM publicaciones INNER JOIN publicaciones_cliente ON publicaciones.id = publicaciones_cliente.id2 INNER JOIN cliente ON publicaciones_cliente.email3 = cliente.email WHERE cliente.email = ? ORDER BY publicaciones.likes DESC LIMIT 1",[emailProfile])
       posts.push(resultPost[0])
     }
     res.json(posts)
