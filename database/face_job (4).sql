@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-05-2023 a las 18:45:17
+-- Tiempo de generación: 03-05-2023 a las 17:19:56
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -48,7 +48,7 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`, `profession`, `codigo`, `cod_paquete`, `info_paquete`, `lastname`, `namecomplete`, `rol`) VALUES
-('AlejandraHernan@gmail.com', 'Alejandra ', '2000-08-21', '3113456789', '$2b$10$K/c8M8PXVu0pGW.J0RQQneJwC2IDvvYzffwtQi4JGYGPZKHA3W1EC', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341096/defaults/Fotos%20de%20perfil/pexels-spencer-selover-428321_apqszj.jpg', 'Desarrollador de software', 0, '4', 3, 'Hernández', 'Alejandra  Hernández', 'Cliente'),
+('AlejandraHernan@gmail.com', 'Alejandra ', '2000-08-21', '3113456789', '$2b$10$K/c8M8PXVu0pGW.J0RQQneJwC2IDvvYzffwtQi4JGYGPZKHA3W1EC', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341096/defaults/Fotos%20de%20perfil/pexels-spencer-selover-428321_apqszj.jpg', 'Desarrollador de software', 0, '1', 5, 'Hernández', 'Alejandra  Hernández', 'Cliente'),
 ('AnaRojas2002@gmail.com', 'Ana María', '2002-01-17', '3112345678', '$2b$10$qeYlad4TW9CnjohR56kyAeOCUbhAqqpDSODsZK/BPDw/qkEZE4XlO', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341087/defaults/Fotos%20de%20perfil/pexels-daniel-xavier-1239291_e5a2qv.jpg', 'Diseñador de interiores', 0, '4', 2, 'Rojaas', 'Ana María Rojaas', 'Cliente'),
 ('AndreaMontoya@gmail.com', 'Andrea ', '2002-07-27', '3175678901', '$2b$10$0sd8kLfjYhRCcKGKwwZFKe8xEtsBbnSfzRMK57MORTM6.mcr4QmP.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341084/defaults/Fotos%20de%20perfil/pexels-hannah-nelson-1065084_copxej.jpg', 'Coach personal', 0, '4', 3, 'Montoya', 'Andrea  Montoya', 'Cliente'),
 ('AndresFelipe@gmail.com', 'Andres Felipe', '1999-10-20', '3172345678', '$2b$10$G.AgFT.xgBpws2xo1kEdG.mqKmlbSr4YQwd2anHUpgJ81m4FazEma', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341081/defaults/Fotos%20de%20perfil/pexels-justin-shaifer-1222271_ysvggd.jpg', 'Fotografo', 0, '4', 3, 'Sanchez', 'Andres Felipe Sanchez', 'Cliente'),
@@ -64,7 +64,7 @@ INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`,
 ('JoseManuel@gmail.com', 'José Manuel', '2002-07-18', '3139012345', '$2b$10$lpnwUMt8nAQUSo.WRpmbJOp6flP4M5JRSNC3t214eKa9SwAQR/Emi', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341070/defaults/Fotos%20de%20perfil/pexels-nathan-cowley-1300402_se3yjg.jpg', 'Desarrollador de software', 0, '4', 3, 'López', 'José Manuel López', 'Cliente'),
 ('JosePerea@gmail.com', 'Jose Antonio', '2003-08-30', '3199012345', '$2b$10$yEgduDGuhArJZmtkhYgpjufU.b7lM4KPRqBRtxlwAl8pnuOGe5SXG', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341069/defaults/Fotos%20de%20perfil/pexels-royal-anwar-450214_uy1trx.jpg', 'Diseñador grafico', 0, '4', 3, 'Perea', 'Jose Antonio Perea', 'Cliente'),
 ('JuanPabloM@gmail.com', 'Juan Pablo', '2002-10-15', '3178901234', '$2b$10$HR1xuXAJywJDu6frx6EZsO5CTu2cyOEVq4oD6nD82f13eL796G.5a', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341069/defaults/Fotos%20de%20perfil/pexels-jeffrey-reed-769745_w16r8s.jpg', 'Diseñador de interiores', 0, '4', 3, 'Muñoz', 'Juan Pablo Muñoz', 'Cliente'),
-('LauraMartinez@gmail.com', 'Laura', '2002-08-13', '3189876543', '$2b$10$rJozsTbkv.EApCEAkiggx.POUGtAXGeFw8FXTkF.sPhJjkVW5IPOm', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341073/defaults/Fotos%20de%20perfil/pexels-min-an-713312_n2ju7z.jpg', 'Diseñador de interiores', 0, '4', 3, 'Martínez', 'Laura Martínez', 'Cliente'),
+('LauraMartinez@gmail.com', 'Laura', '2002-08-13', '3189876543', '$2b$10$rJozsTbkv.EApCEAkiggx.POUGtAXGeFw8FXTkF.sPhJjkVW5IPOm', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341073/defaults/Fotos%20de%20perfil/pexels-min-an-713312_n2ju7z.jpg', 'Diseñador de interiores', 0, '4', 0, 'Martínez', 'Laura Martínez', 'Cliente'),
 ('LuisMiguel2001@gmail.com', 'Luis Miguel', '2001-11-08', ' 3190123456', '$2b$10$.WyjHrcfwZglLgyvgt.vHuCiQsTHV21ih3FYuqYocTck.Ebjc3rWO', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341066/defaults/Fotos%20de%20perfil/pexels-andrea-piacquadio-3778680_gkwoad.jpg', 'Desarrollador de aplicaciones moviles', 0, '4', 2, 'Guitiérrez', 'Luis Miguel Gutiérrez Guitiérrez', 'Cliente'),
 ('MariaFernanda@gmail.com', 'Maria Fernanda', '2002-06-12', '3169012345', '$2b$10$adC.4qXF9IcL5ZUTiDjog.RnCy0fD.OAnQmTDEL5O.02SSyTosoT.', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341071/defaults/Fotos%20de%20perfil/pexels-pixabay-354951_nxzipd.jpg', 'Fotografo', 0, '4', 3, 'Suarez', 'Maria Fernanda Suarez', 'Cliente'),
 ('NataliaTorres01@gmail.com', 'Natalia', '2001-12-18', '3189012345', '$2b$10$7pb5gTXh.EQDfO79f0QHGeItKNsSSXwXZwP8Kad0jZ5nTZV5cGFYq', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341068/defaults/Fotos%20de%20perfil/pexels-anastasiya-gepp-2036646_sbdlxv.jpg', 'Coach personal', 0, '4', 3, 'Torres', 'Natalia Torres', 'Cliente'),
@@ -174,7 +174,43 @@ INSERT INTO `megusta` (`id_megusta`, `email_megusta`, `estado`) VALUES
 (50080, 'LuisMiguel2001@gmail.com', 'nomegusta'),
 (50081, 'PaulaRodriguez@gmail.com', 'nomegusta'),
 (50082, 'PaulaRodriguez@gmail.com', 'nomegusta'),
-(50083, 'PaulaRodriguez@gmail.com', 'nomegusta');
+(50083, 'PaulaRodriguez@gmail.com', 'nomegusta'),
+(50084, 'ValenGomez01@gmail.com', 'nomegusta'),
+(50085, 'ValenGomez01@gmail.com', 'nomegusta'),
+(50086, 'ValenGomez01@gmail.com', 'nomegusta'),
+(50087, 'DianaHerrera@gmail.com', 'nomegusta'),
+(50088, 'DianaHerrera@gmail.com', 'nomegusta'),
+(50089, 'DianaHerrera@gmail.com', 'nomegusta'),
+(50090, 'CarlosAndres@gmail.com', 'nomegusta'),
+(50091, 'CarlosAndres@gmail.com', 'nomegusta'),
+(50092, 'CarlosAndres@gmail.com', 'nomegusta'),
+(50093, 'SantiagoGonzales@gmail.com', 'nomegusta'),
+(50094, 'SantiagoGonzales@gmail.com', 'nomegusta'),
+(50095, 'SantiagoGonzales@gmail.com', 'nomegusta'),
+(50096, 'AndreaMontoya@gmail.com', 'nomegusta'),
+(50097, 'AndreaMontoya@gmail.com', 'nomegusta'),
+(50098, 'AndreaMontoya@gmail.com', 'nomegusta'),
+(50099, 'NataliaTorres01@gmail.com', 'nomegusta'),
+(50100, 'NataliaTorres01@gmail.com', 'nomegusta'),
+(50101, 'NataliaTorres01@gmail.com', 'nomegusta'),
+(50102, 'AlejandraHernan@gmail.com', 'nomegusta'),
+(50103, 'AlejandraHernan@gmail.com', 'nomegusta'),
+(50104, 'AlejandraHernan@gmail.com', 'nomegusta'),
+(50105, 'CamilaRamirez@gmail.com', 'nomegusta'),
+(50106, 'CamilaRamirez@gmail.com', 'nomegusta'),
+(50107, 'CamilaRamirez@gmail.com', 'nomegusta'),
+(50108, 'JoseManuel@gmail.com', 'nomegusta'),
+(50109, 'JoseManuel@gmail.com', 'nomegusta'),
+(50110, 'JoseManuel@gmail.com', 'nomegusta'),
+(50111, 'DiegoArango@gmail.com', 'nomegusta'),
+(50112, 'DiegoArango@gmail.com', 'nomegusta'),
+(50113, 'DiegoArango@gmail.com', 'nomegusta'),
+(50114, 'IsabelRestrepo@gmail.com', 'nomegusta'),
+(50115, 'IsabelRestrepo@gmail.com', 'nomegusta'),
+(50116, 'IsabelRestrepo@gmail.com', 'nomegusta'),
+(50117, 'MariaFernanda@gmail.com', 'nomegusta'),
+(50118, 'MariaFernanda@gmail.com', 'nomegusta'),
+(50119, 'MariaFernanda@gmail.com', 'nomegusta');
 
 -- --------------------------------------------------------
 
@@ -217,7 +253,11 @@ CREATE TABLE `mensaje` (
 
 INSERT INTO `mensaje` (`id_mensajes`, `remitente`, `receptor`, `mensaje`, `tipo`, `fecha`, `link`) VALUES
 (120, 'LuisMiguel2001@gmail.com', 'ValenGomez01@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-05-02 12:27:28', 'NULL'),
-(121, 'ValenGomez01@gmail.com', 'LuisMiguel2001@gmail.com', 'Gracias por comunicarte', 'texto', '2023-05-02 12:27:28', 'NULL');
+(121, 'ValenGomez01@gmail.com', 'LuisMiguel2001@gmail.com', 'Gracias por comunicarte', 'texto', '2023-05-02 12:27:28', 'NULL'),
+(122, 'LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-05-03 12:46:11', 'NULL'),
+(123, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'Gracias por comunicarte', 'texto', '2023-05-03 12:46:11', 'NULL'),
+(124, 'LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'hola', 'texto', '2023-05-03 12:47:03', 'NULL'),
+(125, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'holaa', 'texto', '2023-05-03 12:47:10', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -264,7 +304,13 @@ INSERT INTO `profesionales_vistos` (`email_cliente`, `email_visto`) VALUES
 ('zed@gmail.com', 'danaeslo2004@gmail.com'),
 ('LuisMiguel2001@gmail.com', 'ValenGomez01@gmail.com'),
 ('AnaRojas2002@gmail.com', 'zed@gmail.com'),
-('DavidTorres@gmail.com', 'AnaRojas2002@gmail.com');
+('DavidTorres@gmail.com', 'AnaRojas2002@gmail.com'),
+('LauraMartinez@gmail.com', 'ValenGomez01@gmail.com'),
+('LauraMartinez@gmail.com', 'JoseManuel@gmail.com'),
+('LauraMartinez@gmail.com', 'DiegoArango@gmail.com'),
+('AlejandraHernan@gmail.com', 'CamilaRamirez@gmail.com'),
+('AlejandraHernan@gmail.com', 'DiegoArango@gmail.com'),
+('AlejandraHernan@gmail.com', 'JoseManuel@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -304,7 +350,43 @@ INSERT INTO `publicaciones` (`id`, `tiempo`, `img`, `description`, `likes`, `com
 (50080, '2023-05-02 16:30:43', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345224/defaults/Desarrollador%20de%20aplicaciones%20moviles/3_kyb9wr.png', 'Interfaz de bienvenida a una aplicacion de banco', 0, 0),
 (50081, '2023-05-02 16:34:53', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345224/defaults/Desarrollador%20de%20aplicaciones%20moviles/7_tztwqg.png', 'Informacion de equipo', 0, 0),
 (50082, '2023-05-02 16:36:18', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345224/defaults/Desarrollador%20de%20aplicaciones%20moviles/6_wlz5rj.png', 'Interfaz de asistente de marketing', 0, 0),
-(50083, '2023-05-02 16:37:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Desarrollador%20de%20aplicaciones%20moviles/4_urvqks.png', 'Interfaz de notas y tareas', 0, 0);
+(50083, '2023-05-02 16:37:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Desarrollador%20de%20aplicaciones%20moviles/4_urvqks.png', 'Interfaz de notas y tareas', 0, 0),
+(50084, '2023-05-03 11:37:30', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345209/defaults/Dise%C3%B1o%20interiores/1_gbawpf.png', 'La casa mamamia', 0, 0),
+(50085, '2023-05-03 11:38:17', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345209/defaults/Dise%C3%B1o%20interiores/12_mjc1mr.png', 'Sala con concepto abierto', 0, 0),
+(50086, '2023-05-03 11:38:17', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345210/defaults/Dise%C3%B1o%20interiores/5_sqhtxh.png', 'Fachada moderna', 0, 0),
+(50087, '2023-05-03 11:41:56', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Desarrollador%20de%20aplicaciones%20moviles/8_lxkg8t.png', 'Interfaz relations company', 0, 0),
+(50088, '2023-05-03 11:42:54', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1683113203/defaults/Desarrollador%20de%20aplicaciones%20moviles/13_t9b0mu.png', 'Interfaz balance', 0, 0),
+(50089, '2023-05-03 11:42:55', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Desarrollador%20de%20aplicaciones%20moviles/9_w4whng.png', 'Interfaz porcentaje', 0, 0),
+(50090, '2023-05-03 11:47:38', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345217/defaults/Coach%20personal/10_opw1gi.png', 'Cuerpo sano y saludable', 0, 0),
+(50091, '2023-05-03 11:48:44', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345218/defaults/Coach%20personal/11_fp4oqh.png', 'Entrenamiento personal online', 0, 0),
+(50092, '2023-05-03 11:49:18', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345218/defaults/Coach%20personal/1_zgbvd1.png', 'Transforma tu cuerpo', 0, 0),
+(50093, '2023-05-03 11:52:40', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345218/defaults/Coach%20personal/12_phtqf6.png', 'Studio fitness en tu ciudad', 0, 0),
+(50094, '2023-05-03 11:54:29', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345219/defaults/Coach%20personal/3_dmgu2q.png', 'Mejora tu nivel de condicion fisica para mejor', 0, 0),
+(50095, '2023-05-03 11:55:45', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345219/defaults/Coach%20personal/2_obpmaq.png', 'Haz que tu cuerpo este en forma y saludable', 0, 0),
+(50096, '2023-05-03 11:59:30', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345221/defaults/Coach%20personal/8_nt9huu.png', 'Entrena para estar saludable', 0, 0),
+(50097, '2023-05-03 12:01:02', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345222/defaults/Coach%20personal/6_hjm4ce.png', 'Sencilla experiencia fitness para todos', 0, 0),
+(50098, '2023-05-03 12:01:58', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345228/defaults/Coach%20personal/5_uutzmq.png', 'Fitness coach', 0, 0),
+(50099, '2023-05-03 13:57:53', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345220/defaults/Coach%20personal/4_cpxy4q.png', 'Construye un cuerpo saludable', 0, 0),
+(50100, '2023-05-03 13:59:01', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345220/defaults/Coach%20personal/7_y9zbvv.png', 'Tu salud es única', 0, 0),
+(50101, '2023-05-03 14:00:32', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345221/defaults/Coach%20personal/9_meh9rz.png', 'Libera a tu atleta interno', 0, 0),
+(50102, '2023-05-03 14:03:32', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345206/defaults/Desarrollador%20de%20Software/7_nrtnj1.png', 'Oficio remoto', 0, 0),
+(50103, '2023-05-03 14:05:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345213/defaults/Desarrollador%20de%20Software/9_yfzwtp.png', 'Las mejores viviendas acogedoras', 0, 0),
+(50104, '2023-05-03 14:14:32', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345226/defaults/Desarrollador%20de%20Software/2_viik9e.png', 'Es hora del mundo virtual', 0, 0),
+(50105, '2023-05-03 14:19:16', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345205/defaults/Desarrollador%20de%20Software/8_fhq43k.png', 'Crea contenido en un solo click', 0, 0),
+(50106, '2023-05-03 14:20:08', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345205/defaults/Desarrollador%20de%20Software/12_pnif49.png', 'Rutina diaria de cuidado de la piel', 0, 0),
+(50107, '2023-05-03 14:21:06', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345205/defaults/Desarrollador%20de%20Software/3_bprwgg.png', 'Plataforma de seguimiento financiero', 0, 0),
+(50108, '2023-05-03 14:25:02', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345204/defaults/Desarrollador%20de%20Software/4_awg1bw.png', 'Boom digital', 0, 0),
+(50109, '2023-05-03 14:25:53', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345204/defaults/Desarrollador%20de%20Software/5_r5vynt.png', 'Facilita la gestión de su negocio', 0, 0),
+(50110, '2023-05-03 14:27:46', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345205/defaults/Desarrollador%20de%20Software/6_jc4wdz.png', 'Pon en marcha tu cartera de criptomonedas', 0, 0),
+(50111, '2023-05-03 14:53:22', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345203/defaults/Desarrollador%20de%20Software/1_zcgf50.png', 'Ideas pretenciosas ilimitadas', 0, 0),
+(50112, '2023-05-03 14:54:27', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345203/defaults/Desarrollador%20de%20Software/10_cog1pa.png', 'Ahorros futuros', 0, 0),
+(50113, '2023-05-03 14:55:11', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345203/defaults/Desarrollador%20de%20Software/11_fzjfmq.png', 'Conquistar el comercio', 0, 0),
+(50114, '2023-05-03 14:58:25', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345219/defaults/Fotografo/4_f5cwr8.png', 'Mi equipo de trabajo', 0, 0),
+(50115, '2023-05-03 14:59:47', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345220/defaults/Fotografo/3_m6zizg.png', 'Detalles vintage', 0, 0),
+(50116, '2023-05-03 15:02:02', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Fotografo/12_byfauv.png', 'Body fit sesion', 0, 0),
+(50117, '2023-05-03 15:05:15', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345211/defaults/Fotografo/1_qs38sj.png', 'Mis herramientas de trabajo', 0, 0),
+(50118, '2023-05-03 15:13:58', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345212/defaults/Fotografo/10_ciwdif.png', 'Mascara de mohai', 0, 0),
+(50119, '2023-05-03 15:15:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345213/defaults/Fotografo/11_ecz0vt.png', 'Seta de porcelana', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -375,7 +457,43 @@ INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
 ('LuisMiguel2001@gmail.com', 50080, '2023-05-02 16:30:43'),
 ('PaulaRodriguez@gmail.com', 50081, '2023-05-02 16:34:53'),
 ('PaulaRodriguez@gmail.com', 50082, '2023-05-02 16:36:18'),
-('PaulaRodriguez@gmail.com', 50083, '2023-05-02 16:37:05');
+('PaulaRodriguez@gmail.com', 50083, '2023-05-02 16:37:05'),
+('ValenGomez01@gmail.com', 50084, '2023-05-03 11:37:30'),
+('ValenGomez01@gmail.com', 50085, '2023-05-03 11:38:17'),
+('ValenGomez01@gmail.com', 50086, '2023-05-03 11:38:17'),
+('DianaHerrera@gmail.com', 50087, '2023-05-03 11:41:56'),
+('DianaHerrera@gmail.com', 50088, '2023-05-03 11:42:54'),
+('DianaHerrera@gmail.com', 50089, '2023-05-03 11:42:55'),
+('CarlosAndres@gmail.com', 50090, '2023-05-03 11:47:38'),
+('CarlosAndres@gmail.com', 50091, '2023-05-03 11:48:44'),
+('CarlosAndres@gmail.com', 50092, '2023-05-03 11:49:18'),
+('SantiagoGonzales@gmail.com', 50093, '2023-05-03 11:52:40'),
+('SantiagoGonzales@gmail.com', 50094, '2023-05-03 11:54:29'),
+('SantiagoGonzales@gmail.com', 50095, '2023-05-03 11:55:45'),
+('AndreaMontoya@gmail.com', 50096, '2023-05-03 11:59:30'),
+('AndreaMontoya@gmail.com', 50097, '2023-05-03 12:01:02'),
+('AndreaMontoya@gmail.com', 50098, '2023-05-03 12:01:58'),
+('NataliaTorres01@gmail.com', 50099, '2023-05-03 13:57:53'),
+('NataliaTorres01@gmail.com', 50100, '2023-05-03 13:59:01'),
+('NataliaTorres01@gmail.com', 50101, '2023-05-03 14:00:32'),
+('AlejandraHernan@gmail.com', 50102, '2023-05-03 14:03:32'),
+('AlejandraHernan@gmail.com', 50103, '2023-05-03 14:05:05'),
+('AlejandraHernan@gmail.com', 50104, '2023-05-03 14:14:32'),
+('CamilaRamirez@gmail.com', 50105, '2023-05-03 14:19:16'),
+('CamilaRamirez@gmail.com', 50106, '2023-05-03 14:20:08'),
+('CamilaRamirez@gmail.com', 50107, '2023-05-03 14:21:06'),
+('JoseManuel@gmail.com', 50108, '2023-05-03 14:25:02'),
+('JoseManuel@gmail.com', 50109, '2023-05-03 14:25:53'),
+('JoseManuel@gmail.com', 50110, '2023-05-03 14:27:46'),
+('DiegoArango@gmail.com', 50111, '2023-05-03 14:53:22'),
+('DiegoArango@gmail.com', 50112, '2023-05-03 14:54:27'),
+('DiegoArango@gmail.com', 50113, '2023-05-03 14:55:11'),
+('IsabelRestrepo@gmail.com', 50114, '2023-05-03 14:58:25'),
+('IsabelRestrepo@gmail.com', 50115, '2023-05-03 14:59:47'),
+('IsabelRestrepo@gmail.com', 50116, '2023-05-03 15:02:02'),
+('MariaFernanda@gmail.com', 50117, '2023-05-03 15:05:15'),
+('MariaFernanda@gmail.com', 50118, '2023-05-03 15:13:58'),
+('MariaFernanda@gmail.com', 50119, '2023-05-03 15:15:05');
 
 -- --------------------------------------------------------
 
@@ -390,6 +508,13 @@ CREATE TABLE `reportes` (
   `razon` varchar(300) DEFAULT NULL,
   `tiempo` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `reportes`
+--
+
+INSERT INTO `reportes` (`id_reporte`, `email_remitente`, `reportado_email`, `razon`, `tiempo`) VALUES
+(3, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'comportamiento inadecuado\r\n', '2023-05-03 12:47:52');
 
 -- --------------------------------------------------------
 
@@ -409,7 +534,9 @@ CREATE TABLE `trabajos` (
 
 INSERT INTO `trabajos` (`mi_email`, `profecional_email`, `estado`) VALUES
 ('LuisMiguel2001@gmail.com', 'ValenGomez01@gmail.com', 'nuevo'),
-('ValenGomez01@gmail.com', 'LuisMiguel2001@gmail.com', 'nuevo');
+('ValenGomez01@gmail.com', 'LuisMiguel2001@gmail.com', 'nuevo'),
+('LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'Reportado'),
+('ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'Reportado');
 
 --
 -- Índices para tablas volcadas
@@ -538,13 +665,13 @@ ALTER TABLE `comentarios`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50084;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50120;
 
 --
 -- AUTO_INCREMENT de la tabla `publicacionestextos`
@@ -556,7 +683,7 @@ ALTER TABLE `publicacionestextos`
 -- AUTO_INCREMENT de la tabla `reportes`
 --
 ALTER TABLE `reportes`
-  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
