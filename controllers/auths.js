@@ -83,3 +83,8 @@ export const loginUserClient = async (req, res) => {
     }
   } catch (error) {}
 };
+
+export const getAllUsers = async (req, res) => {
+    const [result] = await conexion.query("SELECT * FROM cliente");
+    return res.json({result})
+}
