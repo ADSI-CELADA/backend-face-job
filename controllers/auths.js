@@ -86,5 +86,5 @@ export const loginUserClient = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     const [result] = await conexion.query("SELECT * FROM cliente");
-    return res.json({result})
+    return res.json({result : result})
 }
