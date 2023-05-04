@@ -18,7 +18,7 @@ import { MessagesRouter } from "./router/Messages.Routes.js";
 import { RouterAdmin } from "./router/Admin.Routes.js";
 
 const timeExp = 1000 * 60 * 60 * 24;
-const app = express();
+export const app = express();
 const server=http.createServer(app)
 const io=new SoketServer(server,{
   cors:{
@@ -27,6 +27,7 @@ const io=new SoketServer(server,{
 })
 app.use(cors())
 app.use(json())
+app.use(express.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 app.use(fileUpload({
