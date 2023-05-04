@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-05-2023 a las 17:19:56
+-- Tiempo de generación: 04-05-2023 a las 18:45:39
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -54,6 +54,7 @@ INSERT INTO `cliente` (`email`, `name`, `age`, `number`, `password`, `iconUser`,
 ('AndresFelipe@gmail.com', 'Andres Felipe', '1999-10-20', '3172345678', '$2b$10$G.AgFT.xgBpws2xo1kEdG.mqKmlbSr4YQwd2anHUpgJ81m4FazEma', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341081/defaults/Fotos%20de%20perfil/pexels-justin-shaifer-1222271_ysvggd.jpg', 'Fotografo', 0, '4', 3, 'Sanchez', 'Andres Felipe Sanchez', 'Cliente'),
 ('CamilaRamirez@gmail.com', 'Camila ', '2001-10-07', '3126789012', '$2b$10$YS1NKEUL8dI91EqgWzkemepWrFvk6QNe0IfUhkF5z4cQ53ju//BLG', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341078/defaults/Fotos%20de%20perfil/pexels-daniel-xavier-1102341_yaeu2g.jpg', 'Desarrollador de software', 0, '4', 3, 'Ramírez', 'Camila  Ramírez', 'Cliente'),
 ('CarlosAndres@gmail.com', 'Carlos Andrés', '2001-07-18', '3159012345', '$2b$10$qMHxENosayDHPCTEk3H5oefs0UNOUC9F/cbCsNXKBp1PrFNIKr5sO', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341081/defaults/Fotos%20de%20perfil/pexels-burst-374044_phdyzm.jpg', 'Coach personal', 0, '4', 3, 'Ramírez', 'Carlos Andrés Ramírez', 'Cliente'),
+('danaeslo2004@gmail.com', 'Danna', '2004-11-28', '3508637649', '$2b$10$oo240Z1S7kiL0OiBlnb5R.jaqEdFJtxOAtwqRwm8sMxOUJ106mhv2', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1683215106/posts/k25skdjwyc3kgtncah5n.jpg', 'Diseñador grafico', 0, '4', 0, 'Estrada', 'Danna Estrada', 'Cliente'),
 ('DanielaVargas@gmail.com', 'Daniela', '1998-09-09', '3132345678', '$2b$10$9GfdDskFW1LbIs.RReUwc.8sb.jWNxmq9DEmFTaNoTlFOiIkC12f2', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341075/defaults/Fotos%20de%20perfil/pexels-pixabay-415263_urjt4q.jpg', 'Diseñador grafico', 0, '4', 3, 'Vargas', 'Daniela Vargas', 'Cliente'),
 ('DavidTorres@gmail.com', 'David', '2001-05-20', '3135678901', '$2b$10$regBpdVb1PdpqMf9sBdQquWflQcj94U9kGoeuARHWQRAUYNLXBrH2', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341080/defaults/Fotos%20de%20perfil/pexels-stefan-stefancik-91227_frtzki.jpg', 'Desarrollador de aplicaciones moviles', 0, '4', 2, 'Torres', 'David Torres', 'Cliente'),
 ('DianaHerrera@gmail.com', 'Diana', '2002-06-10', '3146789012', '$2b$10$UgmmirZR4HPdABz5ubMP0O309.H1LG74wqSNM/qB4VE.OY.KwSz1q', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682341074/defaults/Fotos%20de%20perfil/pexels-fauxels-3184405_hr8220.jpg', 'Desarrollador de aplicaciones moviles', 0, '4', 3, 'Herrera', 'Diana Herrera', 'Cliente'),
@@ -210,7 +211,25 @@ INSERT INTO `megusta` (`id_megusta`, `email_megusta`, `estado`) VALUES
 (50116, 'IsabelRestrepo@gmail.com', 'nomegusta'),
 (50117, 'MariaFernanda@gmail.com', 'nomegusta'),
 (50118, 'MariaFernanda@gmail.com', 'nomegusta'),
-(50119, 'MariaFernanda@gmail.com', 'nomegusta');
+(50119, 'MariaFernanda@gmail.com', 'nomegusta'),
+(50120, 'AndresFelipe@gmail.com', 'nomegusta'),
+(50121, 'AndresFelipe@gmail.com', 'nomegusta'),
+(50122, 'AndresFelipe@gmail.com', 'nomegusta'),
+(50123, 'zed@gmail.com', 'nomegusta'),
+(50124, 'zed@gmail.com', 'nomegusta'),
+(50125, 'zed@gmail.com', 'nomegusta'),
+(50126, 'JavierRojas@gmail.com', 'nomegusta'),
+(50127, 'JavierRojas@gmail.com', 'nomegusta'),
+(50128, 'JavierRojas@gmail.com', 'nomegusta'),
+(50129, 'SofiaGarcia@gmail.com', 'nomegusta'),
+(50130, 'SofiaGarcia@gmail.com', 'nomegusta'),
+(50131, 'SofiaGarcia@gmail.com', 'nomegusta'),
+(50133, 'JosePerea@gmail.com', 'nomegusta'),
+(50134, 'JosePerea@gmail.com', 'nomegusta'),
+(50135, 'JosePerea@gmail.com', 'nomegusta'),
+(50136, 'DanielaVargas@gmail.com', 'nomegusta'),
+(50137, 'DanielaVargas@gmail.com', 'nomegusta'),
+(50138, 'DanielaVargas@gmail.com', 'nomegusta');
 
 -- --------------------------------------------------------
 
@@ -257,7 +276,18 @@ INSERT INTO `mensaje` (`id_mensajes`, `remitente`, `receptor`, `mensaje`, `tipo`
 (122, 'LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-05-03 12:46:11', 'NULL'),
 (123, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'Gracias por comunicarte', 'texto', '2023-05-03 12:46:11', 'NULL'),
 (124, 'LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'hola', 'texto', '2023-05-03 12:47:03', 'NULL'),
-(125, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'holaa', 'texto', '2023-05-03 12:47:10', 'NULL');
+(125, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'holaa', 'texto', '2023-05-03 12:47:10', 'NULL'),
+(126, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'Hola me gustaria trabajar contigo', 'texto', '2023-05-04 14:22:40', 'NULL'),
+(127, 'CamilaRamirez@gmail.com', 'danaeslo2004@gmail.com', 'Gracias por comunicarte', 'texto', '2023-05-04 14:22:40', 'NULL'),
+(128, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'hola', 'texto', '2023-05-04 14:26:25', 'NULL'),
+(129, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'hola', 'texto', '2023-05-04 14:26:26', 'NULL'),
+(130, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'hola', 'texto', '2023-05-04 14:26:28', 'NULL'),
+(131, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'hoal', 'texto', '2023-05-04 14:26:30', 'NULL'),
+(132, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'ajaja', 'texto', '2023-05-04 14:26:31', 'NULL'),
+(133, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'a', 'texto', '2023-05-04 14:26:31', 'NULL'),
+(134, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'ajsasa', 'texto', '2023-05-04 14:26:32', 'NULL'),
+(135, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'sasasa', 'texto', '2023-05-04 14:26:33', 'NULL'),
+(136, 'danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'sasas', 'texto', '2023-05-04 14:26:34', 'NULL');
 
 -- --------------------------------------------------------
 
@@ -310,7 +340,10 @@ INSERT INTO `profesionales_vistos` (`email_cliente`, `email_visto`) VALUES
 ('LauraMartinez@gmail.com', 'DiegoArango@gmail.com'),
 ('AlejandraHernan@gmail.com', 'CamilaRamirez@gmail.com'),
 ('AlejandraHernan@gmail.com', 'DiegoArango@gmail.com'),
-('AlejandraHernan@gmail.com', 'JoseManuel@gmail.com');
+('AlejandraHernan@gmail.com', 'JoseManuel@gmail.com'),
+('danaeslo2004@gmail.com', 'JavierRojas@gmail.com'),
+('danaeslo2004@gmail.com', 'DanielaVargas@gmail.com'),
+('danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -386,7 +419,25 @@ INSERT INTO `publicaciones` (`id`, `tiempo`, `img`, `description`, `likes`, `com
 (50116, '2023-05-03 15:02:02', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345225/defaults/Fotografo/12_byfauv.png', 'Body fit sesion', 0, 0),
 (50117, '2023-05-03 15:05:15', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345211/defaults/Fotografo/1_qs38sj.png', 'Mis herramientas de trabajo', 0, 0),
 (50118, '2023-05-03 15:13:58', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345212/defaults/Fotografo/10_ciwdif.png', 'Mascara de mohai', 0, 0),
-(50119, '2023-05-03 15:15:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345213/defaults/Fotografo/11_ecz0vt.png', 'Seta de porcelana', 0, 0);
+(50119, '2023-05-03 15:15:05', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345213/defaults/Fotografo/11_ecz0vt.png', 'Seta de porcelana', 0, 0),
+(50120, '2023-05-04 11:43:37', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345213/defaults/Fotografo/2_b64r7p.png', 'Calido como el amor', 0, 0),
+(50121, '2023-05-04 11:44:15', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345215/defaults/Fotografo/6_wz1ogd.png', 'Corsel de porcelana', 0, 0),
+(50122, '2023-05-04 11:45:37', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345216/defaults/Fotografo/9_x3uide.png', 'Una cruda realidad', 0, 0),
+(50123, '2023-05-04 11:51:27', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345215/defaults/Fotografo/7_fyotgk.png', 'Mi compañero de trabajo', 0, 0),
+(50124, '2023-05-04 11:52:12', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345216/defaults/Fotografo/8_f6qnwe.png', 'Todo cuuerpo es perfecto', 0, 0),
+(50125, '2023-05-04 11:53:13', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1683200545/defaults/Fotografo/pexels-kyle-loftus-2510428_ljoo6e.jpg', 'Una sesion de trabajo', 0, 0),
+(50126, '2023-05-04 13:01:08', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345207/defaults/Dise%C3%B1o%20Grafico/6_ljvvvp.png', 'Arte animal', 0, 0),
+(50127, '2023-05-04 13:01:44', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345206/defaults/Dise%C3%B1o%20Grafico/12_lpczs0.png', 'Diseño de portada para album', 0, 0),
+(50128, '2023-05-04 13:02:24', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345206/defaults/Dise%C3%B1o%20Grafico/2_ekptiy.png', 'Diseño digital', 0, 0),
+(50129, '2023-05-04 13:23:51', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345214/defaults/Dise%C3%B1o%20Grafico/1_sum5jf.png', 'Transito', 0, 0),
+(50130, '2023-05-04 13:23:52', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345208/defaults/Dise%C3%B1o%20Grafico/9_rfgiq2.png', 'Oficina', 0, 0),
+(50131, '2023-05-04 13:25:12', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345205/defaults/Dise%C3%B1o%20Grafico/10_cwo9y6.png', 'Compras', 0, 0),
+(50133, '2023-05-04 13:31:52', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345207/defaults/Dise%C3%B1o%20Grafico/4_dq2det.png', 'Vector oficina', 0, 0),
+(50134, '2023-05-04 13:32:46', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345208/defaults/Dise%C3%B1o%20Grafico/8_za7ofr.png', 'Vector repartidor', 0, 0),
+(50135, '2023-05-04 13:34:25', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345208/defaults/Dise%C3%B1o%20Grafico/7_cimhb2.png', 'Vector mirando a la luna', 0, 0),
+(50136, '2023-05-04 13:38:33', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345206/defaults/Dise%C3%B1o%20Grafico/11_oanlxm.png', 'Comunicacion', 0, 0),
+(50137, '2023-05-04 13:39:04', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345207/defaults/Dise%C3%B1o%20Grafico/3_klpeit.png', 'Correo', 0, 0),
+(50138, '2023-05-04 13:39:22', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682345209/defaults/Dise%C3%B1o%20Grafico/5_ujj2j1.png', 'Reunion', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -493,7 +544,25 @@ INSERT INTO `publicaciones_cliente` (`email3`, `id2`, `tiempo`) VALUES
 ('IsabelRestrepo@gmail.com', 50116, '2023-05-03 15:02:02'),
 ('MariaFernanda@gmail.com', 50117, '2023-05-03 15:05:15'),
 ('MariaFernanda@gmail.com', 50118, '2023-05-03 15:13:58'),
-('MariaFernanda@gmail.com', 50119, '2023-05-03 15:15:05');
+('MariaFernanda@gmail.com', 50119, '2023-05-03 15:15:05'),
+('AndresFelipe@gmail.com', 50120, '2023-05-04 11:43:37'),
+('AndresFelipe@gmail.com', 50121, '2023-05-04 11:44:15'),
+('AndresFelipe@gmail.com', 50122, '2023-05-04 11:45:37'),
+('zed@gmail.com', 50123, '2023-05-04 11:51:27'),
+('zed@gmail.com', 50124, '2023-05-04 11:52:12'),
+('zed@gmail.com', 50125, '2023-05-04 11:53:13'),
+('JavierRojas@gmail.com', 50126, '2023-05-04 13:01:08'),
+('JavierRojas@gmail.com', 50127, '2023-05-04 13:01:44'),
+('JavierRojas@gmail.com', 50128, '2023-05-04 13:02:24'),
+('SofiaGarcia@gmail.com', 50129, '2023-05-04 13:23:51'),
+('SofiaGarcia@gmail.com', 50130, '2023-05-04 13:23:52'),
+('SofiaGarcia@gmail.com', 50131, '2023-05-04 13:25:12'),
+('JosePerea@gmail.com', 50133, '2023-05-04 13:31:52'),
+('JosePerea@gmail.com', 50134, '2023-05-04 13:32:46'),
+('JosePerea@gmail.com', 50135, '2023-05-04 13:34:25'),
+('DanielaVargas@gmail.com', 50136, '2023-05-04 13:38:33'),
+('DanielaVargas@gmail.com', 50137, '2023-05-04 13:39:04'),
+('DanielaVargas@gmail.com', 50138, '2023-05-04 13:39:22');
 
 -- --------------------------------------------------------
 
@@ -508,13 +577,6 @@ CREATE TABLE `reportes` (
   `razon` varchar(300) DEFAULT NULL,
   `tiempo` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `reportes`
---
-
-INSERT INTO `reportes` (`id_reporte`, `email_remitente`, `reportado_email`, `razon`, `tiempo`) VALUES
-(3, 'ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'comportamiento inadecuado\r\n', '2023-05-03 12:47:52');
 
 -- --------------------------------------------------------
 
@@ -535,8 +597,10 @@ CREATE TABLE `trabajos` (
 INSERT INTO `trabajos` (`mi_email`, `profecional_email`, `estado`) VALUES
 ('LuisMiguel2001@gmail.com', 'ValenGomez01@gmail.com', 'nuevo'),
 ('ValenGomez01@gmail.com', 'LuisMiguel2001@gmail.com', 'nuevo'),
-('LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'Reportado'),
-('ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'Reportado');
+('LauraMartinez@gmail.com', 'ValenGomez01@gmail.com', 'Eliminado'),
+('ValenGomez01@gmail.com', 'LauraMartinez@gmail.com', 'Eliminado'),
+('danaeslo2004@gmail.com', 'CamilaRamirez@gmail.com', 'Eliminado'),
+('CamilaRamirez@gmail.com', 'danaeslo2004@gmail.com', 'Eliminado');
 
 --
 -- Índices para tablas volcadas
@@ -665,13 +729,13 @@ ALTER TABLE `comentarios`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id_mensajes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50120;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50139;
 
 --
 -- AUTO_INCREMENT de la tabla `publicacionestextos`
@@ -683,7 +747,7 @@ ALTER TABLE `publicacionestextos`
 -- AUTO_INCREMENT de la tabla `reportes`
 --
 ALTER TABLE `reportes`
-  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
