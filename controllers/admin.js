@@ -24,31 +24,31 @@ try {
 }
 
 
-export const solucion=async(req,res)=>{
-try {
-    const token=req.headers['token']
-    const {email_reporte,email_reportado,id}=req.body
+export const solucion = async (req, res) => {
+  try {
+    const token = req.headers['token']
+    const { email_reporte, email_reportado, id } = req.body
     if (token) {
-        let correo=jwt.verify(token,TOKEN_SECRET)
-        let {email}=correo
-        if (email=="face-job-admin@facejob.com") {
-            
-            let nuevoEstado='Eliminado'
-            const [resulti]=await conexion.query('UPDATE trabajos SET estado=? WHERE mi_email=? AND profecional_email=? OR mi_email=? AND profecional_email=?',[nuevoEstado,email_reporte,email_reportado,email_reportado,email_reporte])
-           if (resulti.affectedRows!=0) {
-            const [result]=await conexion.query('DELETE FROM reportes WHERE reportes.id_reporte=?',[id])
-            if (result.affectedRows!=0) {
-                res.json("reporte solucionado")
-            }else{
-                res.json("mal solucion")
-            }
-           }
+      let correo = jwt.verify(token, TOKEN_SECRET)
+      let { email } = correo
+      if (email == "face-job-admin@facejob.com") {
+
+        let nuevoEstado = 'Eliminado'
+        const [resulti] = await conexion.query('UPDATE trabajos SET estado=? WHERE mi_email=? AND profecional_email=? OR mi_email=? AND profecional_email=?', [nuevoEstado, email_reporte, email_reportado, email_reportado, email_reporte])
+        if (resulti.affectedRows != 0) {
+          const [result] = await conexion.query('DELETE FROM reportes WHERE reportes.id_reporte=?', [id])
+          if (result.affectedRows != 0) {
+            res.json("reporte solucionado")
+          } else {
+            res.json("mal solucion")
+          }
         }
+      }
     }
-    
-} catch (error) {
-    console.log(error);
-}
+
+  } catch (error) {
+    return res.json({ error })
+  }
 }
 
 
