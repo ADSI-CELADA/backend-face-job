@@ -3,10 +3,12 @@ import sinon from "sinon"
 import jwt from "jsonwebtoken"
 import jest from "jest-mock"
 import conexion from "../database/db.js";
+import bcrypt from "bcrypt"
 import { app } from "../app.js";
 import { expect } from "@jest/globals"
 import { messagesUsers, reports, solucion, deleteAccountAdmin } from "../controllers/admin.js"
 import { TOKEN_EXPIRE, TOKEN_SECRET } from "../config/config.js";
+import { createUserClient } from "../controllers/auths.js";
 
 // ! Messages API error all testing, expect a status code 200 OK but is received a 404
 
@@ -254,6 +256,140 @@ describe('1. Controller auth', () => {
             expect(res.json).toHaveBeenCalledWith(new Error("Unauthorized"));
         });
     }); */
+});
+
+describe('2. Controller auth', () => {
+
+    describe('Login API', () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                body: {
+                    email: 'santiagocelada13@gmail.com',
+                    name: 'John',
+                    lastname: 'Doe',
+                    date: '1990-01-01',
+                    number: '1234567890',
+                    password: 'password',
+                    iconUser: '',
+                    profession: 'Developer',
+                    codigo: 0,
+                },
+            };
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ json: sinon.spy() }),
+            };
+            next = sinon.spy();
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return if user does not exist', async () => {
+            const res = await request(app)
+                .post('/loginCliente')
+                .send({ email: 'noUser@example.com', password: 'password123' });
+            expect(res.statusCode).toBe(200);
+        });
+
+
+        test('should return "logueado" and a token if user is logged in successfully', async () => {
+            const res = await request(app)
+                .post('/loginCliente')
+                .send({ email: 'santiagocelada13@gmail.com', password: '1234' });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.token).toBe(res.body.token);
+        });
+
+        test('should return "PASSWORD_ERROR" if password is incorrect', async () => {
+            const res = await request(app)
+                .post('/loginCliente')
+                .send({ email: 'santiagocelada13@gmail.com', password: '12345' });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.data).toBe(res.body.data);
+        });
+
+        test('should return "admin" and a token if admin user is logged in successfully', async () => {
+            const res = await request(app)
+                .post('/loginCliente')
+                .send({ email: 'face-job-admin@facejob.com', password: '666' });
+            expect(res.statusCode).toBe(200);
+            expect(res.body.token).toBe(res.body.token);
+        });
+
+        test('should create a new user', async () => {
+            const queryStub = sinon.stub().resolves([[{ email: 'test@example.com' }]]);
+            const insertStub = sinon.stub().resolves({ affectedRow: 1 });
+            const conexion = { query: queryStub };
+            const bcryptStub = sinon.stub(bcrypt, 'hashSync').returns('hashedPassword');
+
+            await createUserClient(req, res);
+
+            expect(queryStub.calledOnceWithExactly('SELECT * FROM cliente WHERE email = ?', ['test@example.com'])).toBe;
+            expect(insertStub.calledOnceWithExactly('INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo,lastname,namecomplete) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?,?)', ['test@example.com', 'John', '1990-01-01', '1234567890', 'hashedPassword', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682083366/usericon_eqm409.jpg', 'Developer', 0, 'Doe', 'John Doe'])).toBeTruthy;
+            expect(bcryptStub.calledOnceWithExactly('password', sinon.match.any)).toBe;
+            expect(res.json.calledOnceWithExactly({ data: 'INSERT_OK' })).toBeTruthy;
+        });
+    });
+
+    describe('Register API', () => {
+
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                body: {
+                    email: 'santiagocelada13@gmail.com',
+                    name: 'John',
+                    lastname: 'Doe',
+                    date: '1990-01-01',
+                    number: '1234567890',
+                    password: 'password',
+                    iconUser: '',
+                    profession: 'Developer',
+                    codigo: 0,
+                },
+            };
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ json: sinon.spy() }),
+            };
+            next = sinon.spy();
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return an error if the email already exists', async () => {
+            const queryStub = sinon.stub().resolves([[{ email: 'test@example.com' }]]);
+            const conexion = { query: queryStub };
+
+            await createUserClient(req, res);
+
+            expect(queryStub.calledOnceWithExactly('SELECT * FROM cliente WHERE email = ?', ['test@example.com'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly({ data: 'ya existe el correo' })).toBeTruthy;
+        });
+
+        test('should return an error if there is an error inserting the user', async () => {
+            const queryStub = sinon.stub().resolves([]);
+            const insertStub = sinon.stub().rejects(new Error('Database error'));
+            const conexion = { query: queryStub };
+            const bcryptStub = sinon.stub(bcrypt, 'hashSync').returns('hashedPassword');
+
+            await createUserClient(req, res);
+
+            expect(queryStub.calledOnceWithExactly('SELECT * FROM cliente WHERE email = ?', ['test@example.com'])).toBeTruthy;
+            expect(insertStub.calledOnceWithExactly('INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo,lastname,namecomplete) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?,?)', ['test@example.com', 'John', '1990-01-01', '1234567890', 'hashedPassword', 'https://res.cloudinary.com/de2sdukuk/image/upload/v1682083366/usericon_eqm409.jpg', 'Developer', 0, 'Doe', 'John Doe'])).toBeTruthy;
+            expect(bcryptStub.calledOnceWithExactly('password', sinon.match.any)).toBeTruthy;
+            expect(res.status.calledOnceWithExactly(404)).toBeTruthy;
+            expect(res.status().json.calledOnceWithExactly({ message: 'ERROR 404', error: sinon.match.instanceOf(Error) })).toBeTruthy;
+        });
+    });
+
 });
 
 
