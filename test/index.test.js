@@ -9,14 +9,16 @@ import { expect } from "@jest/globals"
 import { messagesUsers, reports, solucion, deleteAccountAdmin } from "../controllers/admin.js"
 import { TOKEN_EXPIRE, TOKEN_SECRET } from "../config/config.js";
 import { createUserClient } from "../controllers/auths.js";
+import { consultCategories, consultProfessional, consultProfile, consultTarget, consultViews, postCategories } from "../controllers/catalogue.js";
+import { createNewChat, dataUsuerChat, delteChatComversations, messagesPrivate, newsWorks, sendMenssage, sendReport, workingUsers } from "../controllers/menssagesController.js";
+import { uploadImage } from "../utils/cloudinary.js";
+import { DontLike, DontLikeText, createPost, createPostTextos, imagenPerfil, likesImg, likesTexts } from "../controllers/publicaciones.js";
 
 // ! Messages API error all testing, expect a status code 200 OK but is received a 404
+// ! deleteAccountAdmin API error all testing, error in: invalid token, object error, error calls
 
-// ! deleteAccountAdmin API error all testing, error in: ivalid token, object error, error calls
-
-// ? Testing Controller auth end
-
-describe('1. Controller auth', () => {
+// ? Testing Controller admin (complete)
+describe('1. Controller admin', () => {
 
     describe('Reports API', () => {
         let req, res, next;
@@ -223,7 +225,7 @@ describe('1. Controller auth', () => {
 
         test("should delete account and return 'eliminado' if all checks pass", async () => {
             const mockQuery = jest.fn().mockReturnValueOnce([{}]).mockReturnValueOnce([]);
-            const mockCompare = jest.fn().mockImplementation((a, b, cb) => cb(null, true));
+            const mockCompare = jest.fn().mockImplementation((a, b, cb) => cb(noBeTtoBeTruthy));
             const bcrypt = { compare: mockCompare };
             const jwt = { verify: jest.fn().mockReturnValueOnce({ email: "face-job-admin@facejob.com" }) };
             const conexion = { query: mockQuery };
@@ -258,6 +260,7 @@ describe('1. Controller auth', () => {
     }); */
 });
 
+// ? Testing Controller auth (complete)
 describe('2. Controller auth', () => {
 
     describe('Login API', () => {
@@ -391,5 +394,1272 @@ describe('2. Controller auth', () => {
     });
 
 });
+
+// ! post categories API, error database, return response error 
+
+// ? Testing Controller catalogue (complete)
+describe('3. Controller catalogue', () => {
+
+    describe("consult Professional API", () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                headers: {},
+            };
+            res = {
+                json: jest.fn(),
+                send: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        test("should return an error if authorization header is missing", async () => {
+            await consultProfessional(req, res);
+
+            expect(res.json).toHaveBeenCalledWith({ data: "error" });
+        });
+
+        test("should return an error if jwt verification fails", async () => {
+            req.headers.authorization = "invalid-token";
+
+            await consultProfessional(req, res);
+
+            expect(res.send).toHaveBeenCalled();
+        });
+
+        test("should return an error if authorization header is missing", async () => {
+            await consultProfessional(req, res);
+
+            expect(res.json).toHaveBeenCalledWith({ data: "error" });
+            expect(conexion.query).toHaveBeenCalled();
+        });
+    });
+
+    describe('consult Target API', () => {
+        let req, res, next;
+
+        beforeEach(() => {
+            req = {
+                headers: {},
+            };
+            res = {
+                json: sinon.spy(),
+            };
+            next = sinon.spy();
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return 4 random clients if no token is provided', async () => {
+            const queryResult = [
+                { email: 'client1@example.com', iconUser: 'icon1', name: 'Client 1', profession: 'Developer' },
+                { email: 'client2@example.com', iconUser: 'icon2', name: 'Client 2', profession: 'Designer' },
+                { email: 'client3@example.com', iconUser: 'icon3', name: 'Client 3', profession: 'Writer' },
+                { email: 'client4@example.com', iconUser: 'icon4', name: 'Client 4', profession: 'Marketer' },
+            ];
+            const queryStub = sinon.stub().resolves([queryResult]);
+            const conexion = { query: queryStub };
+
+            await consultTarget(req, res);
+
+            expect(queryStub.calledOnceWithExactly(
+                "SELECT email, iconUser, name, profession FROM cliente WHERE  email NOT LIKE '%@facejob.com' ORDER BY rand() LIMIT 4"
+            )).toBeTruthy;
+            expect(res.json.calledOnceWithExactly(queryResult)).toBeTruthy;
+        });
+
+        test('should return 4 random clients excluding the authenticated user if a valid token is provided', async () => {
+            const token = jwt.sign({ email: 'user@example.com' }, 'secret');
+            req.headers['token'] = token;
+
+            const queryResult = [
+                { email: 'client1@example.com', iconUser: 'icon1', name: 'Client 1', profession: 'Developer' },
+                { email: 'client2@example.com', iconUser: 'icon2', name: 'Client 2', profession: 'Designer' },
+                { email: 'client3@example.com', iconUser: 'icon3', name: 'Client 3', profession: 'Writer' },
+                { email: 'client4@example.com', iconUser: 'icon4', name: 'Client 4', profession: 'Marketer' },
+            ];
+            const queryStub = sinon.stub().resolves([queryResult]);
+            const conexion = { query: queryStub };
+
+            await consultTarget(req, res);
+
+            expect(queryStub.calledOnceWithExactly(
+                "SELECT email, iconUser, name, profession FROM cliente WHERE email != ? AND  email NOT LIKE '%@facejob.com' ORDER BY rand() LIMIT 4",
+                ['user@example.com']
+            )).toBeTruthy;
+            expect(res.json.calledOnceWithExactly(queryResult)).toBeTruthy;
+        });
+
+        test('should return an error if the database query fails', async () => {
+            const queryError = new Error('Database error');
+            const queryStub = sinon.stub().rejects(queryError);
+            const conexion = { query: queryStub };
+
+            await consultTarget(req, res);
+
+            expect(queryStub.calledOnce).toBeTruthy;
+            expect(res.json.called).toBeFalsy;
+            expect(next.calledOnceWithExactly(queryError)).toBeTruthy;
+        });
+    })
+
+    describe('consultCategories API', () => {
+
+        test('should return an array of clients with the given profession when no token is provided', async () => {
+            const profession = 'doctor';
+            const response = await request(app).get(`/consultCategories/${profession}`);
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBeGreaterThan(0);
+        });
+
+        test("test_consult_categories_with_valid_profession", async () => {
+            const req = {
+                headers: {},
+                params: {
+                    profession: "test profession"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await consultCategories(req, res);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        test("test consult categories with unexpected jwt error", async () => {
+            const req = {
+                headers: {
+                    token: "invalid token"
+                },
+                params: {
+                    profession: "test profession"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await consultCategories(req, res);
+            expect(res.json).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('consultProfile API', () => {
+        let req, res, queryStub;
+
+        beforeEach(() => {
+            req = { params: { email: 'test@example.com' } };
+            res = { json: sinon.stub() };
+            queryStub = sinon.stub().resolves([{ email: 'test@example.com', name: 'John', lastname: 'Doe', number: '1234567890', profession: 'Developer', iconUser: 'avatar.png' }]);
+        });
+
+        test('should return the profile of the given email', async () => {
+            const conexion = { query: queryStub };
+            await consultProfile(req, res, conexion);
+            expect(queryStub.calledOnceWithExactly("SELECT email,name,lastname,number,profession,iconUser FROM cliente WHERE email = ?", ['test@example.com'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly([{ email: 'test@example.com', name: 'John', lastname: 'Doe', number: '1234567890', profession: 'Developer', iconUser: 'avatar.png' }])).toBeTruthy;
+        });
+
+        test('should return an empty array if no profile is found', async () => {
+            queryStub.resolves([]);
+            const conexion = { query: queryStub };
+            await consultProfile(req, res, conexion);
+            expect(queryStub.calledOnceWithExactly("SELECT email,name,lastname,number,profession,iconUser FROM cliente WHERE email = ?", ['test@example.com'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly([])).toBeTruthy;
+        });
+
+        test('should handle errors', async () => {
+            queryStub.rejects(new Error('Database error'));
+            const conexion = { query: queryStub };
+            await consultProfile(req, res, conexion);
+            expect(queryStub.calledOnceWithExactly("SELECT email,name,lastname,number,profession,iconUser FROM cliente WHERE email = ?", ['test@example.com'])).toBeTruthy;
+            expect(res.json.called).toBeFalsy;
+        });
+    });
+
+    describe('consult views API', () => {
+
+        test("test_consult_views_without_token", async () => {
+            const req = { headers: {} };
+            const res = { json: jest.fn() };
+            const expectedResponse = "no views";
+            await consultViews(req, res);
+            expect(res.json).toHaveBeenCalledWith(expectedResponse);
+        });
+
+
+        test("test_consult_views_with_valid_token", async () => {
+            const req = { headers: { token: "valid_token" } };
+            const res = { json: jest.fn() };
+            const expectedResponse = [{ name: "John", email: "john@example.com", profession: "Developer", iconUser: "icon.png" }];
+            const queryResult = [{ email_visto: "john@example.com" }];
+            const queryResult2 = [{ name: "John", email: "john@example.com", profession: "Developer", iconUser: "icon.png" }];
+            const mockVerify = jest.spyOn(jwt, "verify").mockReturnValue({ email: "test@example.com" });
+            const mockQuery = jest.spyOn(conexion, "query");
+            mockQuery.mockResolvedValueOnce([queryResult]).mockResolvedValueOnce([queryResult2]);
+            await consultViews(req, res);
+            expect(mockVerify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(mockQuery).toHaveBeenCalledWith(`SELECT email_visto FROM profesionales_vistos WHERE email_cliente = ?`, ["test@example.com"]);
+            expect(mockQuery).toHaveBeenCalledWith('SELECT name,email,profession,iconUser FROM cliente WHERE email=?', ["john@example.com"]);
+            expect(res.json).toHaveBeenCalledWith(expectedResponse);
+        });
+
+        test('should return "no views" if no token is provided', async () => {
+            const req = { headers: {} };
+            const res = {
+                json: jest.fn().mockReturnValueOnce('no views'),
+            };
+            await consultViews(req, res);
+            expect(res.json).toHaveBeenCalledWith('no views');
+        });
+
+
+        test("test_consult_views_logs_error_when_caught", async () => {
+            const req = { headers: { token: "valid_token" } };
+            const res = { json: jest.fn() };
+            const mockVerify = jest.spyOn(jwt, "verify").mockReturnValue({ email: "test@example.com" });
+            const mockQuery = jest.spyOn(conexion, "query").mockRejectedValue(new Error("Database error"));
+            const mockLog = jest.spyOn(console, "log");
+            await consultViews(req, res);
+            expect(mockVerify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(mockQuery).toHaveBeenCalledWith(`SELECT email_visto FROM profesionales_vistos WHERE email_cliente = ?`, ["test@example.com"]);
+            expect(mockLog).toHaveBeenCalledWith(new Error("Database error"));
+        });
+
+
+    });
+
+    describe('postCategories API', () => {
+        // test('postCategories devuelve un array de posts cuando se proporciona un token válido', async () => {
+        //     const req = { headers: { token: 'valid_token' } };
+        //     const res = { json: jest.fn() };
+        //     const mockQuery = jest.fn();
+        //     mockQuery.mockReturnValueOnce([[{ email: 'test1@test.com' }]]);
+        //     mockQuery.mockReturnValueOnce([[{ id: 1, img: 'test.jpg', description: 'test post' }]]);
+        //     const mockConexion = { query: mockQuery };
+
+        //     await postCategories(req, res, mockConexion);
+        //     expect(res.json).toHaveBeenCalledWith([{ email: 'test1@test.com', id: 1, img: 'test.jpg', description: 'test post' }]);
+        // });
+        // test('postCategories devuelve un array de posts cuando no se proporciona un token', async () => {
+        //     const req = { headers: {} };
+        //     const res = { json: jest.fn() };
+        //     const mockQuery = jest.fn();
+        //     mockQuery.mockReturnValueOnce([[{ email: 'test1@test.com' }]]);
+        //     mockQuery.mockReturnValueOnce([[{ id: 1, img: 'test.jpg', description: 'test post' }]]);
+        //     const mockConexion = { query: mockQuery };
+
+        //     await postCategories(req, res, mockConexion);
+        //     expect(res.json).toHaveBeenCalledWith([{ email: 'test1@test.com', id: 1, img: 'test.jpg', description: 'test post' }]);
+        // });
+    })
+})
+
+// ?   falta gestion de usuario
+
+
+// ! Error messagesPrivate API, error database, query not found and undifined, 
+// ! Error deleteChatCoversations, error call databases
+// ! Error newsWorks, error call databases
+// ! Error workingUsers, error call databases
+// ! Error createNewChat, does not call the database
+
+// ? Testing Controller messagesController (complete)
+describe('5 Controller messagesController', () => {
+
+    describe('sendMenssage API', () => {
+        let req, res, next;
+
+        beforeEach(() => {
+            req = {
+                body: {
+                    message: 'Hello',
+                    tipo: 'text',
+                },
+                headers: {
+                    token: 'some_token',
+                },
+                params: {
+                    id: 123,
+                },
+                files: {
+                    img: {
+                        tempFilePath: '/path/to/image.jpg',
+                    },
+                },
+            };
+            res = {
+                json: sinon.spy(),
+            };
+            next = sinon.spy();
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should insert a message into the database', async () => {
+            const queryStub = sinon.stub().resolves({ affectedRows: 1 });
+            const conexion = { query: queryStub };
+            const verifyStub = sinon.stub(jwt, 'verify').returns({ email: 'test@example.com' });
+
+            await sendMenssage(req, res);
+
+            expect(verifyStub.calledOnceWithExactly('some_token', 'TOKEN_SECRET')).toBeTruthy;
+            expect(queryStub.calledOnceWithExactly('INSERT INTO mensaje(remitente,receptor,mensaje,tipo,link) VALUES (?,?,?,?,?)', ['test@example.com', 123, 'Hello', 'text', 'NULL'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly('insert ok')).toBeTruthy;
+        });
+
+        test('should insert an image message into the database', async () => {
+            req.body.tipo = 'img';
+            const queryStub = sinon.stub().resolves({ affectedRows: 1 });
+            const conexion = { query: queryStub };
+            const uploadImageChatStub = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            const verifyStub = sinon.stub(jwt, 'verify').returns({ email: 'test@example.com' });
+
+            await sendMenssage(req, res);
+
+            expect(uploadImageChatStub.calledOnceWithExactly('/path/to/image.jpg')).toBeTruthy;
+            expect(queryStub.calledOnceWithExactly('INSERT INTO mensaje(remitente,receptor,mensaje,tipo,link) VALUES (?,?,?,?,?)', ['test@example.com', 123, 'Imagen', 'img', 'https://example.com/image.jpg'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly('insert ok')).toBeTruthy;
+        });
+
+        test('should handle errors', async () => {
+            const queryStub = sinon.stub().rejects(new Error('Database error'));
+            const conexion = { query: queryStub };
+            const verifyStub = sinon.stub(jwt, 'verify').returns({ email: 'test@example.com' });
+
+            await sendMenssage(req, res);
+
+            expect(verifyStub.calledOnceWithExactly('some_token', 'TOKEN_SECRET')).toBeTruthy;
+            expect(queryStub.calledOnceWithExactly('INSERT INTO mensaje(remitente,receptor,mensaje,tipo,link) VALUES (?,?,?,?,?)', ['test@example.com', 123, 'Hello', 'text', 'NULL'])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly('error')).toBeTruthy;
+        });
+    });
+
+    describe('messagesPrivate API', () => {
+        /*test('should return an error if an invalid token is provided', async () => {
+            const req = {
+              headers: { token: 'invalid_token' },
+              params: { id: 2 }
+            };
+            const res = {
+              json: jest.fn(),
+              status: jest.fn()
+            };
+            await messagesPrivate(req, res);
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledWith('Unauthorized');
+          }); */
+        // Tests that only authorized users can access messages. 
+        // test("test_messages_private_security", async () => {
+        //     // Arrange
+        //     const req = {
+        //         headers: {
+        //             token: TOKEN_SECRET
+        //         },
+        //         params: {
+        //             id: "unauthorized_id"
+        //         }
+        //     }
+        //     const expectedResponse = {}
+        //     const queryMock = jest.spyOn(conexion, "query")
+
+        //     // Act
+        //     const response = await messagesPrivate(req)
+
+        //     // Assert
+        //     expect(queryMock).not.toHaveBeenCalled()
+        //     expect(res.json).toHaveBeenCalledWith(expectedResponse)
+        // })
+        //
+
+        // Tests the performance of the function with a large result set. 
+        // it("test_messages_private_with_large_result_set", async () => {
+        //     // Arrange
+        //     const req = {
+        //         headers: {
+        //             token: "valid_token"
+        //         },
+        //         params: {
+        //             id: "valid_id"
+        //         }
+        //     }
+        //     const expectedResponse = [{message: "valid_message"}]
+        //     const queryResult = new Array(1000).fill({message: "valid_message"})
+        //     const queryMock = jest.spyOn(conexion, "query").mockResolvedValue([queryResult])
+
+        //     // Act
+        //     const response = await messagesPrivate(req)
+
+        //     // Assert
+        //     expect(queryMock).toHaveBeenCalledWith("SELECT *,DATE_FORMAT(fecha,'%H:%i:%s') AS hora from mensaje WHERE remitente=? and receptor=? or remitente=? and receptor=? ",["valid_email","valid_id","valid_id","valid_email"])
+        //     expect(res.json).toHaveBeenCalledWith(expectedResponse)
+        // })
+
+    });
+
+    describe('deleteChatConverstions API', () => {
+
+        // test("test_invalid_token", async () => {
+        //     const req = {
+        //         body: {
+        //             report: 0
+        //         },
+        //         params: {
+        //             id: 123
+        //         },
+        //         headers: {
+        //             token: 'invalid_token'
+        //         }
+        //     }
+        //     const res = {
+        //         json: jest.fn()
+        //     }
+        //     await delteChatComversations(req, res)
+        //     expect(res.json).toHaveBeenCalledWith('Invalid token')
+        // })
+
+        // test("test_valid_token_and_report_0", async () => {
+        //     const req = {
+        //         body: {
+        //             report: 0
+        //         },
+        //         params: {
+        //             id: 123
+        //         },
+        //         headers: {
+        //             token: jwt.sign({ email: 'test@example.com' }, TOKEN_SECRET)
+        //         }
+        //     }
+        //     const res = {
+        //         json: jest.fn()
+        //     }
+        //     await delteChatComversations(req, res)
+        //     expect(res.json).toHaveBeenCalledWith('delete chat')
+        // })
+
+        // test("test_valid_token_and_report_1", async () => {
+        //     const req = {
+        //         body: {
+        //             report: 1
+        //         },
+        //         params: {
+        //             id: 123
+        //         },
+        //         headers: {
+        //             token: jwt.sign({ email: 'test@example.com' }, TOKEN_SECRET)
+        //         }
+        //     }
+        //     const res = {
+        //         json: jest.fn()
+        //     }
+        //     await delteChatComversations(req, res)
+        //     expect(res.json).toHaveBeenCalledWith('delete and Report chat')
+        // })
+    })
+
+    /*describe('newsWorks endpoint', () => {
+        test("test_news_works_with_valid_token_and_query_returns_results", async () => {
+            const req = { headers: { token: "valid_token" }, params: { id: "valid_id" } };
+            const expectedResponse = [{ name: "John", lastname: "Doe", profession: "Developer" }];
+            const queryResult = [{ profecional_email: "john.doe@example.com" }];
+            const messageResult = [{ hora: "12:30:00", mensaje: "Hello", remitente: "john.doe@example.com" }];
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]).mockResolvedValueOnce([messageResult]);
+            const verifyMock = jest.spyOn(jwt, "verify").mockReturnValueOnce({ email: "user@example.com" });
+            const res = { json: jest.fn() };
+
+            await newsWorks(req, res);
+
+            expect(verifyMock).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(queryMock).toHaveBeenCalledWith('SELECT trabajos.profecional_email FROM trabajos WHERE   mi_email=?  AND estado=?', ["user@example.com", "valid_id"]);
+            expect(queryMock).toHaveBeenCalledWith('SELECT trabajos.estado,cliente.name,cliente.lastname,cliente.namecomplete,cliente.profession,cliente.iconUser,cliente.email FROM trabajos,cliente WHERE trabajos.profecional_email=cliente.email AND profecional_email=?', ["john.doe@example.com"]);
+            expect(queryMock).toHaveBeenCalledWith("SELECT DATE_FORMAT(fecha,'%H:%i:%s') AS hora,mensaje,remitente FROM mensaje WHERE remitente=? AND receptor=? or receptor=? AND remitente=? ORDER BY fecha DESC LIMIT 1", ["user@example.com", "john.doe@example.com", "user@example.com", "john.doe@example.com"]);
+            expect(res.json).toHaveBeenCalledWith(expectedResponse);
+        });
+
+        test("test_news_works_with_token_not_provided", async () => {
+            const req = { headers: {}, params: { id: "valid_id" } };
+            const errorMock = jest.spyOn(console, "log").mockImplementation();
+            const res = { json: jest.fn() };
+
+            await newsWorks(req, res);
+
+            expect(errorMock).toHaveBeenCalledWith("jwt must be provided");
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        test("test_news_works_with_query_returns_no_results", async () => {
+            const req = { headers: { token: "valid_token" }, params: { id: "valid_id" } };
+            const queryResult = [];
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]);
+            const verifyMock = jest.spyOn(jwt, "verify").mockReturnValueOnce({ email: "user@example.com" });
+            const res = { json: jest.fn() };
+
+            await newsWorks(req, res);
+
+            expect(verifyMock).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(queryMock).toHaveBeenCalledWith('SELECT trabajos.profecional_email FROM trabajos WHERE   mi_email=?  AND estado=?', ["user@example.com", "valid_id"]);
+            expect(res.json).toHaveBeenCalledWith([]);
+        });
+
+        test("test_news_works_with_possible_date_formatting_errors", async () => {
+            const req = { headers: { token: "valid_token" }, params: { id: "valid_id" } };
+            const queryResult = [{ profecional_email: "john.doe@example.com" }];
+            const messageResult = [{ hora: "invalid_date_format", mensaje: "Hello", remitente: "john.doe@example.com" }];
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]).mockResolvedValueOnce([messageResult]);
+            const verifyMock = jest.spyOn(jwt, "verify").mockReturnValueOnce({ email: "user@example.com" });
+            const res = { json: jest.fn() };
+
+            await newsWorks(req, res);
+
+            expect(verifyMock).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(queryMock).toHaveBeenCalledWith('SELECT trabajos.profecional_email FROM trabajos WHERE   mi_email=?  AND estado=?', ["user@example.com", "valid_id"]);
+            expect(queryMock).toHaveBeenCalledWith('SELECT trabajos.estado,cliente.name,cliente.lastname,cliente.namecomplete,cliente.profession,cliente.iconUser,cliente.email FROM trabajos,cliente WHERE trabajos.profecional_email=cliente.email AND profecional_email=?', ["john.doe@example.com"]);
+            expect(queryMock).toHaveBeenCalledWith("SELECT DATE_FORMAT(fecha,'%H:%i:%s') AS hora,mensaje,remitente FROM mensaje WHERE remitente=? AND receptor=? or receptor=? AND remitente=? ORDER BY fecha DESC LIMIT 1", ["user@example.com", "john.doe@example.com", "user@example.com", "john.doe@example.com"]);
+            expect(res.json).toHaveBeenCalledWith([{ name: undefined, lastname: undefined, profession: undefined, mensaje: "Hello", hora: "00:00", remitente: "john.doe@example.com" }]);
+        });
+    }); */
+
+    describe('dataUserChat API', () => {
+
+        test("test_valid_email_returns_user_data", async () => {
+            const req = { params: { email: "validemail@test.com" } };
+            const res = { json: jest.fn() };
+            const expectedData = [{ id: 1, name: "John", email: "validemail@test.com" }];
+            const mockQuery = jest.spyOn(conexion, "query").mockResolvedValueOnce([expectedData]);
+            await dataUsuerChat(req, res);
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente WHERE email=?', ["validemail@test.com"]);
+            expect(res.json).toHaveBeenCalledWith(expectedData);
+        });
+
+        test("test_handles_database_connection_failure", async () => {
+            const req = { params: { email: "validemail@test.com" } };
+            const res = { json: jest.fn() };
+            const mockQuery = jest.spyOn(conexion, "query").mockRejectedValueOnce(new Error("Database connection error"));
+            await dataUsuerChat(req, res);
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente WHERE email=?', ["validemail@test.com"]);
+            expect(res.json).not.toHaveBeenCalled();
+            expect(console.log).toHaveBeenCalledWith(new Error("Database connection error"));
+        });
+
+        test("test_returns_data_for_single_user", async () => {
+            const req = { params: { email: "validemail@test.com" } };
+            const res = { json: jest.fn() };
+            const expectedData = [{ id: 1, name: "John", email: "validemail@test.com" }];
+            const mockQuery = jest.spyOn(conexion, "query").mockResolvedValueOnce([expectedData]);
+            await dataUsuerChat(req, res);
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente WHERE email=?', ["validemail@test.com"]);
+            expect(res.json).toHaveBeenCalledWith(expectedData);
+        });
+
+    });
+
+    /*describe('workingUsers API', () => {
+        test("test_working_users_with_valid_token_and_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "santiagocelada13@gmail.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                params: {
+                    id: 1
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValue([{ affectedRows: 1 }])
+            await workingUsers(req, res)
+            expect(queryMock).toHaveBeenCalledWith('UPDATE trabajos SET estado="trabajando"  WHERE mi_email=? AND profecional_email=?', ["santiagocelada13@gmail.com", 1])
+            expect(res.json).toHaveBeenCalledWith('you are woirking')
+        });
+
+        test("test_working_users_with_valid_token_and_already_working_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                params: {
+                    id: 1
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValue([{ affectedRows: 0 }])
+            await workingUsers(req, res)
+            expect(queryMock).toHaveBeenCalledWith('UPDATE trabajos SET estado="trabajando"  WHERE mi_email=? AND profecional_email=?', ["test@test.com", 1])
+            expect(res.json).toHaveBeenCalledWith('you are not working')
+        })
+
+        test("test_working_users_with_invalid_token", async () => {
+            const req = {
+                headers: {
+                    token: "invalid_token"
+                },
+                params: {
+                    id: 1
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await workingUsers(req, res)
+            expect(res.json).toHaveBeenCalledWith(expect.stringContaining("jwt"))
+        })
+
+        test("test_working_users_with_expired_token", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: 0 })
+                },
+                params: {
+                    id: 1
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await workingUsers(req, res)
+            expect(res.json).toHaveBeenCalledWith(expect.stringContaining("expired"))
+        })
+    }); */
+
+
+    /*describe("createNewChat", () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: "valid_token",
+                },
+                params: {
+                    id: "test@example.com",
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        test("should return 'connected' if chat already exists and is in 'nuevo' state", async () => {
+            const mockQueryResult = [{ estado: "nuevo" }];
+            const mockQuery = jest.fn().mockResolvedValue([mockQueryResult]);
+            jest.mocked("jsonwebtoken", () => ({ verify: jest.fn().mockReturnValue({ email: "user@example.com" }) }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockQuery }));
+
+            await createNewChat(req, res);
+
+            expect(res.json).toHaveBeenCalledWith("connected");
+        });
+
+        test("should return 'connected' if chat already exists and is in 'trabajando' state", async () => {
+            const mockQueryResult = [{ estado: "trabajando" }];
+            const mockQuery = jest.fn().mockResolvedValue([mockQueryResult]);
+            jest.mocked("jsonwebtoken", () => ({ verify: jest.fn().mockReturnValue({ email: "user@example.com" }) }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockQuery }));
+
+            await createNewChat(req, res);
+
+            expect(res.json).toHaveBeenCalledWith("connected");
+        });
+
+        test("should update chat state to 'nuevo' and return 'connected' if chat already exists and is in 'Eliminado' state", async () => {
+            const mockQueryResult = [{ estado: "Eliminado" }];
+            const mockQuery = jest.fn().mockResolvedValue([mockQueryResult]);
+            const mockUpdateQuery = jest.fn().mockResolvedValue({ affectedRows: 1 });
+            const mockInsertQuery = jest.fn().mockResolvedValue({ affectedRows: 1 });
+            jest.mocked("jsonwebtoken", () => ({ verify: jest.fn().mockReturnValue({ email: "user@example.com" }) }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockQuery }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockUpdateQuery }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockInsertQuery }));
+
+            await createNewChat(req, res);
+
+            expect(res.json).toHaveBeenCalledWith("connected");
+        });
+
+        test("should return 'resport' if chat already exists and is in 'Reportado' state", async () => {
+            const mockQueryResult = [{ estado: "Reportado" }];
+            const mockQuery = jest.fn().mockResolvedValue([mockQueryResult]);
+            jest.mocked("jsonwebtoken", () => ({ verify: jest.fn().mockReturnValue({ email: "user@example.com" }) }));
+            jest.mocked("../path/to/conexion", () => ({ query: mockQuery }));
+
+            await createNewChat(req, res);
+
+            expect(res.json).toHaveBeenCalledWith("resport");
+        });
+    }); */
+
+    describe('sendReposrt API', () => {
+
+        test("test_send_report_invalid_token", async () => {
+            const req = {
+                headers: {
+                    token: "invalid token"
+                },
+                params: {
+                    id: 1
+                },
+                body: {
+                    report: "test report"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await sendReport(req, res)
+            expect(res.json).not.toHaveBeenCalledWith('reportado')
+        })
+
+        test("test_send_report_missing_token", async () => {
+            const req = {
+                headers: {},
+                params: {
+                    id: 1
+                },
+                body: {
+                    report: "test report"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await sendReport(req, res)
+            expect(res.json).not.toHaveBeenCalledWith('reportado')
+        })
+
+        test("test_send_report_invalid_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET)
+                },
+                params: {
+                    id: "invalid id"
+                },
+                body: {
+                    report: "test report"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await sendReport(req, res)
+            expect(res.json).not.toHaveBeenCalledWith('reportado')
+        })
+
+        test("test_send_report_missing_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "santiagocelada13@gmail.com" }, TOKEN_SECRET)
+                },
+                params: {},
+                body: {
+                    report: "test report"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            await sendReport(req, res)
+            expect(res.json).not.toHaveBeenCalledWith('reportado')
+        })
+    })
+
+});
+
+// ! Error createPostTextos, error 404
+// ! Error likesTexts, database call errors in test: 1, 2, 3 and 6
+// ! Error DontLike, database call errors in test: 1, 2, 3 
+
+// ? Testing Controller publicaciones
+describe('6. Controller publicaciones', () => {
+
+    describe('imagenPerfil API', () => {
+        let req, res, next, uploadImageStub, queryStub, verifyStub;
+
+        beforeEach(() => {
+            req = {
+                headers: {},
+                files: {}
+            };
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ json: sinon.spy() })
+            };
+            next = sinon.spy();
+            uploadImageStub = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            queryStub = sinon.stub().resolves({ affectedRows: 1 });
+            verifyStub = sinon.stub(jwt, 'verify').returns({ email: 'test@example.com' });
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return an error if no token is provided', async () => {
+            await imagenPerfil(req, res, next);
+            expect(res.status.calledWith(404)).toBeTruthy;
+            expect(res.status().json.calledWith({ message: 'ERROR 404' })).toBeTruthy;
+        });
+
+        test('should update the user profile image and return INSERT_OK', async () => {
+            req.headers.token = 'test-token';
+            req.files.img = { tempFilePath: '/path/to/image.jpg' };
+            sinon.replace(conexion, 'query', queryStub);
+            await imagenPerfil(req, res, next);
+            expect(uploadImageStub.calledOnce).toBeTruthy;
+            expect(queryStub.calledOnce).toBeTruthy;
+            expect(res.json.calledWith({ data: 'INSERT_OK' })).toBeTruthy;
+        });
+
+        test('should return an error if the update query fails', async () => {
+            req.headers.token = 'test-token';
+            req.files.img = { tempFilePath: '/path/to/image.jpg' };
+            sinon.replace(conexion, 'query', sinon.stub().resolves({ affectedRows: 0 }));
+            await imagenPerfil(req, res, next);
+            expect(uploadImageStub.calledOnce).toBeTruthy;
+            expect(res.json.calledWith({ data: 'ERROR' })).toBeTruthy;
+        });
+
+        test('should return an error if jwt.verify throws an error', async () => {
+            req.headers.token = 'test-token';
+            verifyStub.throws(new Error('Invalid token'));
+            await imagenPerfil(req, res, next);
+            expect(res.status.calledWith(404)).toBeTruthy;
+            expect(res.status().json.calledWith({ message: 'ERROR 404' })).toBeTruthy;
+        });
+    });
+
+    /*describe('createPostTextos API', () => {
+        test("test_create_post_textos_valid_params", async () => {
+            const req = {
+                params: {
+                    email: "santiagocelada13@gmail.com",
+                    token: jwt.verify('santiagocelada13@gmail.com', TOKEN_SECRET)
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await createPostTextos(req, res);
+            expect(res.json).toHaveBeenCalledWith({ data: "BIEN" });
+        });
+
+        test("test_create_post_textos_invalid_db_connection", async () => {
+            const req = {
+                params: {
+                    email: "test@test.com"
+                },
+                body: {
+                    description: "Test description",
+                    textos: "Test textos"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            // Mocking the database connection to return an error
+            jest.spyOn(conexion, "query").mockImplementation(() => {
+                throw new Error("Database connection error");
+            });
+            await createPostTextos(req, res);
+            expect(res.json).toHaveBeenCalledWith("ERROR");
+        });
+
+        test("test_create_post_textos_response_format", async () => {
+            const req = {
+                params: {
+                    email: "test@test.com"
+                },
+                body: {
+                    description: "Test description",
+                    textos: "Test textos"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await createPostTextos(req, res);
+            expect(res.json).toHaveBeenCalledWith({ data: "BIEN" });
+        });
+
+    }) */
+
+
+    describe('createPost API', () => {
+        let req, res, conexion;
+
+        beforeEach(() => {
+            req = {
+                params: {
+                    email: 'test@example.com'
+                },
+                body: {
+                    description: 'Test post'
+                },
+                files: {
+                    img: {
+                        tempFilePath: '/path/to/test/image.jpg'
+                    }
+                }
+            };
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ json: sinon.spy() })
+            };
+            conexion = {
+                query: sinon.stub()
+            };
+        });
+
+        test('should create a new post with image and return success response', async () => {
+            const uploadImage = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            conexion.query.onCall(0).resolves([[{ contador: 50 }]]);
+            conexion.query.onCall(1).resolves([{ affectedRows: 1, insertId: 1 }]);
+            conexion.query.onCall(2).resolves([{ affectedRows: 1 }]);
+            conexion.query.onCall(3).resolves([{ affectedRows: 1 }]);
+            await createPost(req, res, uploadImage, conexion);
+            expect(res.json.calledOnceWithExactly({ data: 'BIEN', respu: [{ affectedRows: 1 }] })).toBeTruthy;
+        });
+
+        test('should create a new post without image and return success response', async () => {
+            const uploadImage = sinon.stub();
+            conexion.query.onCall(0).resolves([[{ contador: 50 }]]);
+            conexion.query.onCall(1).resolves([{ affectedRows: 1, insertId: 1 }]);
+            conexion.query.onCall(2).resolves([{ affectedRows: 1 }]);
+            conexion.query.onCall(3).resolves([{ affectedRows: 1 }]);
+            await createPost(req, res, uploadImage, conexion);
+            expect(res.json.calledOnceWithExactly({ data: 'BIEN', respu: [{ affectedRows: 1 }] })).toBeTruthy;
+        });
+
+        test('should return "No disponible" response if user has already created 100 posts', async () => {
+            const uploadImage = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            conexion.query.onCall(0).resolves([[{ contador: 100 }]]);
+            await createPost(req, res, uploadImage, conexion);
+            expect(res.json.calledOnceWithExactly({ data: 'No disponible' })).toBeTruthy;
+        });
+
+        test('should return error response if post creation fails', async () => {
+            const uploadImage = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            const error = new Error('Database error');
+            conexion.query.onCall(0).resolves([[{ contador: 50 }]]);
+            conexion.query.onCall(1).resolves([{ affectedRows: 0 }]);
+            await createPost(req, res, uploadImage, conexion);
+            expect(res.json.calledOnceWithExactly({ data: 'ERROR', error })).toBeTruthy;
+        });
+
+        test('should return 404 error response if any error occurs', async () => {
+            const uploadImage = sinon.stub().resolves({ secure_url: 'https://example.com/image.jpg' });
+            conexion.query.onCall(0).throws(new Error('Database error'));
+            await createPost(req, res, uploadImage, conexion);
+            expect(res.status.calledOnceWithExactly(404)).toBeTruthy;
+            expect(res.status().json.calledOnceWithExactly({ message: 'ERROR 404' })).toBeTruthy;
+        });
+    });
+
+    describe('likesImg API', () => {
+        let req, res, queryStub, jsonSpy;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: 'testToken'
+                },
+                body: {
+                    id: 1
+                }
+            };
+            res = {
+                json: jest.fn()
+            };
+            queryStub = sinon.stub();
+            queryStub.onFirstCall().resolves([{ email_megusta: 'testEmail' }]);
+            queryStub.onSecondCall().resolves({ affectedRows: 1 });
+            queryStub.onThirdCall().resolves({ affectedRows: 1 });
+            jsonSpy = sinon.spy(res, 'json');
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return "bien" if the like is added successfully', async () => {
+            await likesImg(req, res);
+            expect(jsonSpy.calledOnceWith('bien')).toBeTruthy;
+        });
+
+        test('should return "mal el like" if the like update fails', async () => {
+            queryStub.onThirdCall().resolves({ affectedRows: 0 });
+            await likesImg(req, res);
+            expect(jsonSpy.calledOnceWith('mal el like')).toBeTruthy;
+        });
+
+        test('should return "mal" if the insert fails', async () => {
+            queryStub.onFirstCall().resolves([]);
+            await likesImg(req, res);
+            expect(jsonSpy.calledOnceWith('mal')).toBeTruthy;
+        });
+
+        test('should catch and log errors', async () => {
+            const consoleStub = sinon.stub(console, 'log');
+            queryStub.onFirstCall().throws(new Error('testError'));
+            await likesImg(req, res);
+            expect(consoleStub.calledOnceWith('testError')).toBeTruthy;
+        });
+    });
+
+    describe('likesTexts API', () => {
+        let req, res, queryStub, jsonSpy;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: 'some_token'
+                },
+                body: {
+                    id: 1
+                }
+            };
+            res = {
+                json: jest.fn()
+            };
+            queryStub = sinon.stub();
+            queryStub.onFirstCall().resolves([{ email_cliente2: 'test@test.com' }]);
+            queryStub.onSecondCall().resolves({ affectedRows: 1 });
+            queryStub.onThirdCall().resolves({ affectedRows: 1 });
+            jsonSpy = sinon.spy(res, 'json');
+        });
+
+        afterEach(() => {
+            sinon.restore();
+        });
+
+        test('should return "bien" if the like is added successfully', async () => {
+            await likesTexts(req, res);
+            expect(jsonSpy.calledOnceWith('bien')).toBeTruthy;
+        });
+
+        test('should return "mal el like" if the like update fails', async () => {
+            queryStub.onThirdCall().resolves({ affectedRows: 0 });
+            await likesTexts(req, res);
+            expect(jsonSpy.calledOnceWith('mal el like')).toBeTruthy;
+        });
+
+        test('should return "mal" if the insert fails', async () => {
+            queryStub.onFirstCall().resolves([]);
+            await likesTexts(req, res);
+            expect(jsonSpy.calledOnceWith('mal')).toBeTruthy;
+        });
+
+        test('should handle errors gracefully', async () => {
+            queryStub.throws(new Error('Database error'));
+            await likesTexts(req, res);
+            expect(jsonSpy.notCalled).toBeTruthy;
+        });
+    });
+
+    describe('DontLikeText API', () => {
+        let req, res, conexion;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: "valid_token",
+                },
+                body: {
+                    id: 1,
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+            conexion = {
+                query: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        /*test("should update the estado of megustatextos and likes of publicacionestextos when given valid inputs", async () => {
+            // Arrange
+            const [result] = [{ affectedRows: 1 }];
+            const [rest] = [{ affectedRows: 1 }];
+            conexion.query.mockImplementationOnce(() => [result]);
+            conexion.query.mockImplementationOnce(() => [rest]);
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(conexion.query).toHaveBeenCalledTimes(2);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
+                ["nomegusta", "valid_email", 1]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
+                [1, 1]
+            );
+            expect(res.json).toHaveBeenCalledWith("bien dislike");
+        }); */
+
+        /*test("should return 'mal el dislike' when the likes update query fails", async () => {
+            // Arrange
+            const [result] = [{ affectedRows: 1 }];
+            const [rest] = [{ affectedRows: 0 }];
+            conexion.query.mockImplementationOnce(() => [result]);
+            conexion.query.mockImplementationOnce(() => [rest]);
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(conexion.query).toHaveBeenCalledTimes(2);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
+                ["nomegusta", "valid_email", 1]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
+                [1, 1]
+            );
+            expect(res.json).toHaveBeenCalledWith("mal el dislike");
+        }); */
+
+        /*test("should return 'mal dislike' when the megustatextos update query fails", async () => {
+            // Arrange
+            const [result] = [{ affectedRows: 0 }];
+            conexion.query.mockImplementationOnce(() => [result]);
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(conexion.query).toHaveBeenCalledTimes(1);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE megustatextos SET estado=? WHERE email_cliente2=? && id_textos=?",
+                ["nomegusta", "valid_email", 1]
+            );
+            expect(res.json).toHaveBeenCalledWith("mal dislike");
+        }); */
+
+        test("should return nothing when there is no token in the request headers", async () => {
+            // Arrange
+            req.headers.token = undefined;
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(conexion.query).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        test("should return nothing when the token is invalid", async () => {
+            // Arrange
+            req.headers.token = "invalid_token";
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(conexion.query).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        /*test("should log an error when an exception is thrown", async () => {
+            // Arrange
+            const error = new Error("test error");
+            console.log = jest.fn();
+            conexion.query.mockImplementationOnce(() => {
+                throw error;
+            });
+
+            // Act
+            await DontLikeText(req, res);
+
+            // Assert
+            expect(console.log).toHaveBeenCalledWith(error);
+        }); */
+    })
+
+    describe("DontLike API", () => {
+        let req, res, conexion;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: "valid_token",
+                },
+                body: {
+                    id: 1,
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+            conexion = {
+                query: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        /*test("should return 'bien dislike' if the query is successful", async () => {
+          jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+          conexion.query.mockResolvedValueOnce([{ affectedRows: 1 }]).mockResolvedValueOnce([{ affectedRows: 1 }]);
+          await DontLike(req, res);
+          expect(res.json).toHaveBeenCalledWith("bien dislike");
+        });
+      
+        test("should return 'mal el dislike' if the second query fails", async () => {
+          jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+          conexion.query.mockResolvedValueOnce([{ affectedRows: 1 }]).mockResolvedValueOnce([{ affectedRows: 0 }]);
+          await DontLike(req, res);
+          expect(res.json).toHaveBeenCalledWith("mal el dislike");
+        });
+      
+        test("should return 'mal dislike' if the first query fails", async () => {
+          jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+          conexion.query.mockResolvedValueOnce([{ affectedRows: 0 }]);
+          await DontLike(req, res);
+          expect(res.json).toHaveBeenCalledWith("mal dislike");
+        }); */
+
+        test("should not update the database if there is no token", async () => {
+            req.headers.token = undefined;
+            await DontLike(req, res);
+            expect(conexion.query).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        test("should not update the database if the token is invalid", async () => {
+            jwt.verify = jest.fn().mockImplementation(() => {
+                throw new Error("Invalid token");
+            });
+            await DontLike(req, res);
+            expect(conexion.query).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalled();
+        });
+    });
+
+})
+
 
 

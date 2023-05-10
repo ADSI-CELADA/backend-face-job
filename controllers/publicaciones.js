@@ -68,8 +68,8 @@ export const createPostTextos = async (req, res) => {
     } else {
       return res.json("ERROR");
     }
-  } catch {
-    res.status(404).json({ message: "ERROR 404" });
+  } catch (error) {
+    return res.json({ message: "ERROR 404" });
   }
 };
 
