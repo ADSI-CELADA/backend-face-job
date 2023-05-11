@@ -13,11 +13,14 @@ import { consultCategories, consultProfessional, consultProfile, consultTarget, 
 import { createNewChat, dataUsuerChat, delteChatComversations, messagesPrivate, newsWorks, sendMenssage, sendReport, workingUsers } from "../controllers/menssagesController.js";
 import { uploadImage } from "../utils/cloudinary.js";
 import { DeletePost, DeletePostText, DontLike, DontLikeText, UpdateText, createPost, createPostTextos, deleteComments, deleteCommentsText, getComments, getCommentsText, imagenPerfil, insertComment, insertCommentText, likesImg, likesTexts, updateComments, userPosts, userPostsTextos } from "../controllers/publicaciones.js";
+import { dataUser, deleteAccount, sendMailEmail, updateInfo, updatePassword, updatePasswordEmail, validateCode, validateCodeEmail } from "../controllers/gestiónUsuarios.js";
+
+
+// ? Testing Controller admin (complete)
 
 // ! Messages API error all testing, expect a status code 200 OK but is received a 404
 // ! deleteAccountAdmin API error all testing, error in: invalid token, object error, error calls
 
-// ? Testing Controller admin (complete)
 describe('1. Controller admin', () => {
 
     describe('Reports API', () => {
@@ -395,9 +398,11 @@ describe('2. Controller auth', () => {
 
 });
 
-// ! post categories API, error database, return response error 
 
 // ? Testing Controller catalogue (complete)
+
+// ! post categories API, error database, return response error 
+
 describe('3. Controller catalogue', () => {
 
     describe("consult Professional API", () => {
@@ -661,8 +666,487 @@ describe('3. Controller catalogue', () => {
     })
 })
 
-// ?   falta gestion de usuario
+// ?   testing gestionDeUsuario (?)
 
+// ! Error datauser, Recived number of calls 0 Number of calls revived 0 of 1 or more
+// ! Error sendMail,  error calss
+// ! Error validateCodeEmail,  error calss
+// ! Error updatePassword,  error calss in all tests
+// ! Error updateInfo, error calss in all tests
+// ! Error deleteAccount, error calss of calls 0 
+
+describe('4. Controller gestionDeUsuario', () => {
+
+    /* describe('dataUser API', () => {
+
+        it("test_valid_token_returns_user_data", async () => {
+            const mockToken = jwt.sign({ email: "test@test.com" }, TOKEN_SECRET);
+            const mockResult = [{ id: 1, name: "Test User", email: "test@test.com" }];
+            const mockQuery = jest.fn().mockReturnValue([mockResult]);
+            const mockConexion = { query: mockQuery };
+            const mockReq = { headers: { token: mockToken } };
+            const mockRes = { json: jest.fn() };
+
+            await dataUser(mockReq, mockRes);
+
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente where email=?', ["test@test.com"]);
+            expect(mockRes.json).toHaveBeenCalledWith(mockResult);
+        });
+
+        it("test_mock_database_connection", async () => {
+            const mockToken = jwt.sign({ email: "test@test.com" }, TOKEN_SECRET);
+            const mockResult = [{ id: 1, name: "Test User", email: "test@test.com" }];
+            const mockQuery = jest.fn().mockReturnValue([mockResult]);
+            const mockConexion = { query: mockQuery };
+            const mockReq = { headers: { token: mockToken } };
+            const mockRes = { json: jest.fn() };
+
+            await dataUser(mockReq, mockRes);
+
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente where email=?', ["test@test.com"]);
+            expect(mockRes.json).toHaveBeenCalledWith(mockResult);
+        });
+
+        it("test_handles_errors_gracefully", async () => {
+            const mockToken = jwt.sign({ email: "test@test.com" }, TOKEN_SECRET);
+            const mockQuery = jest.fn().mockRejectedValue(new Error("Database error"));
+            const mockConexion = { query: mockQuery };
+            const mockReq = { headers: { token: mockToken } };
+            const mockRes = { json: jest.fn() };
+
+            await dataUser(mockReq, mockRes);
+
+            expect(mockQuery).toHaveBeenCalledWith('SELECT * FROM cliente where email=?', ["test@test.com"]);
+            expect(mockRes.json).toHaveBeenCalledWith("failed");
+            expect(console.log).toHaveBeenCalledWith(new Error("Database error"));
+        });
+    }); */
+
+    describe('sendMail API', () => {
+
+        /*test("test_valid_email_provided", async () => {
+            const req = { body: { email: "santiagocelada13@gmail.com" } };
+            const res = { json: jest.fn() };
+            await sendMailEmail(req, res);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        test("test_different_message_types", async () => {
+            const req = { body: { email: "validemail@test.com" } };
+            const res = { json: jest.fn() };
+            await sendMailEmail(req, res);
+            expect(res.json).toHaveBeenCalled();
+        }); */
+
+        test("test_invalid_email_provided", async () => {
+            const req = { body: { email: "invalidemail" } };
+            const res = { json: jest.fn() };
+            await sendMailEmail(req, res);
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        /*test("test_different_message_types", async () => {
+            const req = { body: { email: "validemail@test.com" } };
+            const res = { json: jest.fn() };
+            await sendMailEmail(req, res);
+            expect(res.json).toHaveBeenCalled();
+        });*/
+
+    });
+
+    describe('validateCodeEmail API', () => {
+
+        test("test_invalid_email_returns_error", async () => {
+            // Arrange
+            const req = {
+                body: {
+                    codigo: "1234"
+                },
+                params: {
+                    email: "invalid_email"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+
+            // Act
+            await validateCodeEmail(req, res);
+
+            // Assert
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        /*test("test_logs_code_and_result_for_debugging_purposes", async () => {
+            // Arrange
+            const req = {
+                body: {
+                    codigo: "1234"
+                },
+                params: {
+                    email: "test@example.com"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const queryResult = [
+                {
+                    codigo: 1234
+                }
+            ];
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValue([queryResult]);
+            const consoleSpy = jest.spyOn(console, "log");
+
+            // Act
+            await validateCodeEmail(req, res);
+
+            // Assert
+            expect(res.json).toHaveBeenCalledWith({ data: "CODE_VALIDE" });
+            expect(queryMock).toHaveBeenCalledWith(`SELECT codigo FROM cliente WHERE email = "test@example.com"`);
+            expect(consoleSpy).toHaveBeenCalledWith("1234");
+            expect(consoleSpy).toHaveBeenCalledWith(1234, "code ->", 1234);
+        });
+
+        test("test_email_not_found_returns_error", async () => {
+            // Arrange
+            const req = {
+                body: {
+                    codigo: "1234"
+                },
+                params: {
+                    email: "not_found@example.com"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const queryResult = [];
+            const queryMock = jest.spyOn(conexion, "query").mockResolvedValue([queryResult]);
+
+            // Act
+            await validateCodeEmail(req, res);
+
+            // Assert
+            expect(res.json).not.toHaveBeenCalled();
+            expect(queryMock).toHaveBeenCalledWith(`SELECT codigo FROM cliente WHERE email = "not_found@example.com"`);
+        }); */
+    });
+
+    describe('updatePasswordEmail API', () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                body: {
+                    password: "newPassword",
+                },
+                params: {
+                    email: "santiagocelada13@gmail.com",
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        /*test("should update password successfully", async () => {
+          const mockQuery = jest.fn().mockReturnValueOnce([
+            {
+              password: "$2b$10$zJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJ",
+            },
+          ]);
+          const mockUpdateQuery = jest.fn().mockReturnValueOnce([{ affectedRows: 1 }]);
+          conexion.query = mockQuery;
+          conexion.query.mockReturnValueOnce(mockUpdateQuery);
+      
+          await updatePasswordEmail(req, res);
+      
+          expect(mockQuery).toHaveBeenCalledWith(
+            `SELECT password FROM cliente WHERE email = "${req.params.email}"`
+          );
+          expect(mockUpdateQuery).toHaveBeenCalledWith(
+            `UPDATE cliente SET password = ? WHERE email = "${req.params.email}"`,
+            [expect.any(String)]
+          );
+          expect(res.json).toHaveBeenCalledWith({
+            result: mockUpdateQuery.mock.results[0].value,
+            data: "PASSWORD_UPDATE",
+          });
+        });*/
+
+        it("should not update password if old password is same as new password", async () => {
+            const mockQuery = jest.fn().mockReturnValueOnce([
+                {
+                    password: "$2b$10$zJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJ",
+                },
+            ]);
+            const mockUpdateQuery = jest.fn().mockReturnValueOnce([{ affectedRows: 0 }]);
+            conexion.query = mockQuery;
+            conexion.query.mockReturnValueOnce(mockUpdateQuery);
+
+            req.body.password = "$2b$10$zJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJZJ";
+
+            await updatePasswordEmail(req, res);
+
+            expect(mockQuery).toHaveBeenCalledWith(
+                `SELECT password FROM cliente WHERE email = "${req.params.email}"`
+            );
+            expect(mockUpdateQuery).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        it("should handle errors", async () => {
+            const mockQuery = jest.fn().mockRejectedValueOnce(new Error("DB error"));
+            conexion.query = mockQuery;
+
+            await updatePasswordEmail(req, res);
+
+            expect(mockQuery).toHaveBeenCalledWith(
+                `SELECT password FROM cliente WHERE email = "${req.params.email}"`
+            );
+            expect(res.json).not.toHaveBeenCalled();
+            expect(console.log).toHaveBeenCalledWith(new Error("DB error"));
+        });
+    });
+
+    describe('validateCode API', () => {
+
+        test("test_logs_error", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET)
+                },
+                body: {
+                    codigo: "1234"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const consoleSpy = jest.spyOn(console, "log");
+            await validateCode(req, res);
+            expect(consoleSpy).toHaveBeenCalled();
+        });
+
+        test("test_missing_token_or_code", async () => {
+            const req1 = {
+                headers: {},
+                body: {
+                    codigo: "1234"
+                }
+            };
+            const req2 = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET)
+                },
+                body: {}
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await validateCode(req1, res);
+            await validateCode(req2, res);
+            expect(res.json).not.toHaveBeenCalled();
+        });
+
+        test("test_invalid_token", async () => {
+            const req = {
+                headers: {
+                    token: "invalid_token"
+                },
+                body: {
+                    codigo: "1234"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await validateCode(req, res);
+            expect(res.json).not.toHaveBeenCalled();
+        });
+    });
+
+    /*describe('updatePassword', () => {
+
+        it("test_valid_token_matching_old_password", async () => {
+            const req = {
+                headers: {
+                    "token": "valid_token"
+                },
+                body: {
+                    "password": "old_password",
+                    "passsnuevaaa": "new_password"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const conexion = {
+                query: jest.fn().mockReturnValueOnce([{ password: "$2b$10$123456789012345678901234567890123456789012345678901234567890" }])
+                    .mockReturnValueOnce({ affectedRows: 1 })
+            };
+            const jwt = {
+                verify: jest.fn().mockReturnValueOnce({ email: "test@example.com" })
+            };
+            const bcrypt = {
+                genSaltSync: jest.fn().mockReturnValueOnce("salt"),
+                hashSync: jest.fn().mockReturnValueOnce("$2b$10$123456789012345678901234567890123456789012345678901234567890")
+                    .mockReturnValueOnce("$2b$10$123456789012345678901234567890123456789012345678901234567890")
+            };
+            await updatePassword(req, res);
+            expect(conexion.query).toHaveBeenCalledWith(`SELECT password FROM cliente WHERE email = "test@example.com"`);
+            expect(bcrypt.hashSync).toHaveBeenCalledWith("old_password", "salt");
+            expect(bcrypt.hashSync).toHaveBeenCalledWith("new_password", "salt");
+            expect(conexion.query).toHaveBeenCalledWith(`UPDATE cliente SET password = ? WHERE email = "test@example.com"`, ["$2b$10$123456789012345678901234567890123456789012345678901234567890"]);
+            expect(res.json).toHaveBeenCalledWith({ result: { affectedRows: 1 }, data: "PASSWORD_UPDATE" });
+        });
+
+        // Tests that the function returns an error when given the same new password as the old password. 
+        it("test_same_new_password_as_old_password", async () => {
+            const req = {
+                headers: {
+                    "token": "valid_token"
+                },
+                body: {
+                    "password": "old_password",
+                    "passsnuevaaa": "old_password"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const conexion = {
+                query: jest.fn().mockReturnValueOnce([{ password: "$2b$10$123456789012345678901234567890123456789012345678901234567890" }])
+            };
+            const jwt = {
+                verify: jest.fn().mockReturnValueOnce({ email: "test@example.com" })
+            };
+            const bcrypt = {
+                genSaltSync: jest.fn(),
+                hashSync: jest.fn()
+            };
+            await updatePassword(req, res);
+            expect(conexion.query).toHaveBeenCalledWith(`SELECT password FROM cliente WHERE email = "test@example.com"`);
+            expect(bcrypt.genSaltSync).not.toHaveBeenCalled();
+            expect(bcrypt.hashSync).not.toHaveBeenCalled();
+            expect(res.json).not.toHaveBeenCalledWith({ result: { affectedRows: 1 }, data: "PASSWORD_UPDATE" });
+            expect(res.json).toHaveBeenCalledWith({ error: "New password is the same as old password" });
+        });
+    }) */
+
+    /* describe('updateInfo', () => {
+
+        it("test_update_info_valid_token_and_input_data", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET)
+                },
+                body: {
+                    name: "John",
+                    number: "1234567890",
+                    professional: "Engineer",
+                    lastname: "Doe"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await updateInfo(req, res);
+            expect(res.json).toHaveBeenCalledWith({ result: expect.anything(), data: "UPDATE_INFO" });
+        });
+
+        it("test_update_info_database_connection_error", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET)
+                },
+                body: {
+                    name: "John",
+                    number: "1234567890",
+                    professional: "Engineer",
+                    lastname: "Doe"
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const mockQuery = jest.fn().mockRejectedValue(new Error("Database connection error"));
+            const mockConexion = {
+                query: mockQuery
+            };
+            jest.spyOn(conexion, "query").mockImplementation(mockConexion.query);
+            await updateInfo(req, res);
+            expect(res.json).toHaveBeenCalledWith({ data: "UPDATE_NOT" });
+        });
+
+    })  */
+
+
+    /* describe('deleteAccount', () => {
+
+        test("test_delete_account_valid_token_and_correct_password", async () => {
+            //mocking req and res objects
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                body: {
+                    password: "testpassword"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            //mocking database query results
+            const mockQueryResult = [[{ password: await bcrypt.hash("testpassword", 10) }]]
+            jest.spyOn(conexion, "query").mockImplementation((query, params) => {
+                return [mockQueryResult, null]
+            })
+            //calling function
+            await deleteAccount(req, res)
+            //assertions
+            expect(res.json).toHaveBeenCalledWith({ data: "eliminado" })
+        })
+
+        test("test_delete_account_invalid_token", async () => {
+            const req = {
+                headers: {
+                    token: "invalidtoken"
+                },
+                body: {
+                    password: "testpassword"
+                }
+            }
+            const res = {
+                json: jest.fn()
+            }
+            //calling function
+            await deleteAccount(req, res)
+            //assertions
+            expect(res.json).toHaveBeenCalledWith({ data: "jwt malformed" })
+        })
+    }) */
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ? Testing Controller messagesController (complete)
 
 // ! Error messagesPrivate API, error database, query not found and undifined, 
 // ! Error deleteChatCoversations, error call databases
@@ -670,7 +1154,6 @@ describe('3. Controller catalogue', () => {
 // ! Error workingUsers, error call databases
 // ! Error createNewChat, does not call the database
 
-// ? Testing Controller messagesController (complete)
 describe('5 Controller messagesController', () => {
 
     describe('sendMenssage API', () => {
@@ -781,7 +1264,7 @@ describe('5 Controller messagesController', () => {
         //
 
         // Tests the performance of the function with a large result set. 
-        // it("test_messages_private_with_large_result_set", async () => {
+        // test("test_messages_private_with_large_result_set", async () => {
         //     // Arrange
         //     const req = {
         //         headers: {
@@ -1179,6 +1662,8 @@ describe('5 Controller messagesController', () => {
 
 });
 
+// ? Testing Controller publicaciones (complete)
+
 // ! Error createPostTextos, error 404
 // ! Error likesTexts, database call errors in test: 1, 2, 3 and 6
 // ! Error DontLike, database call errors in test: 1, 2, 3 
@@ -1189,8 +1674,6 @@ describe('5 Controller messagesController', () => {
 // ! Error deleteComments, Revaived number of calls 0 Number of calls revived 0 of 4
 // ! Error deleteComments, Revaived number of calls 23 or 24 of 0 and 4
 
-
-// ? Testing Controller publicaciones (complete)
 describe('6. Controller publicaciones', () => {
 
     describe('imagenPerfil API', () => {
@@ -2437,8 +2920,6 @@ describe('6. Controller publicaciones', () => {
         });
 
     }); */
-
-
 });
 
 

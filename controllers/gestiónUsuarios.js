@@ -47,11 +47,6 @@ export const sendMailEmail = async (req, res) => {
 };
 
 
-
-
-
-
-
 export const sendMail = async (req, res) => {
   try {
     const token = req.headers["token"];
