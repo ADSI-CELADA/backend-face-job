@@ -542,7 +542,7 @@ export const userPosts = async (req, res) => {
       }
     }
   } catch (error) {
-    return res.status(404).json({ message: "ERROR 404" });
+    return res.json({ message: "ERROR 404" });
   }
 };
 

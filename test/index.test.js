@@ -12,7 +12,7 @@ import { createUserClient } from "../controllers/auths.js";
 import { consultCategories, consultProfessional, consultProfile, consultTarget, consultViews, postCategories } from "../controllers/catalogue.js";
 import { createNewChat, dataUsuerChat, delteChatComversations, messagesPrivate, newsWorks, sendMenssage, sendReport, workingUsers } from "../controllers/menssagesController.js";
 import { uploadImage } from "../utils/cloudinary.js";
-import { DontLike, DontLikeText, createPost, createPostTextos, imagenPerfil, likesImg, likesTexts } from "../controllers/publicaciones.js";
+import { DeletePost, DeletePostText, DontLike, DontLikeText, UpdateText, createPost, createPostTextos, deleteComments, deleteCommentsText, getComments, getCommentsText, imagenPerfil, insertComment, insertCommentText, likesImg, likesTexts, updateComments, userPosts, userPostsTextos } from "../controllers/publicaciones.js";
 
 // ! Messages API error all testing, expect a status code 200 OK but is received a 404
 // ! deleteAccountAdmin API error all testing, error in: invalid token, object error, error calls
@@ -1182,8 +1182,15 @@ describe('5 Controller messagesController', () => {
 // ! Error createPostTextos, error 404
 // ! Error likesTexts, database call errors in test: 1, 2, 3 and 6
 // ! Error DontLike, database call errors in test: 1, 2, 3 
+// ! Error UpdateText, intermediate values not iterables
+// ! Error deletePostTexts, intermediate values not iterables
+// ! Error insertComent, undefined affectRows all tests
+// ! Error insertComentTexts, undefined affectRows all tests
+// ! Error deleteComments, Revaived number of calls 0 Number of calls revived 0 of 4
+// ! Error deleteComments, Revaived number of calls 23 or 24 of 0 and 4
 
-// ? Testing Controller publicaciones
+
+// ? Testing Controller publicaciones (complete)
 describe('6. Controller publicaciones', () => {
 
     describe('imagenPerfil API', () => {
@@ -1659,7 +1666,780 @@ describe('6. Controller publicaciones', () => {
         });
     });
 
-})
+    describe("deletePost API", () => {
+        it("test_delete_post_no_likes_or_comments", async () => {
+            const req = { params: { id: 1 } };
+            const res = { json: jest.fn() };
+            const queryMock = jest.fn().mockReturnValueOnce([[], null]).mockReturnValueOnce([{ affectedRows: 1 }, null])
+                .mockReturnValueOnce([[], null]).mockReturnValueOnce([{ affectedRows: 1 }, null])
+                .mockReturnValueOnce([{ affectedRows: 1 }, null]).mockReturnValueOnce([{ affectedRows: 1 }, null]);
+            conexion.query = queryMock;
+            await DeletePost(req, res);
+            expect(queryMock).toHaveBeenCalledTimes(4);
+            expect(res.json).toHaveBeenCalledWith("bien eliminada");
+        });
+
+        it("test_delete_post_with_likes_and_comments", async () => {
+            const req = { params: { id: 1 } };
+            const res = { json: jest.fn() };
+            const queryMock = jest.fn().mockReturnValueOnce([[{ id_megusta: 1 }], null])
+                .mockReturnValueOnce([{ affectedRows: 1 }, null])
+                .mockReturnValueOnce([[{ idimagen: 1 }], null])
+                .mockReturnValueOnce([{ affectedRows: 1 }, null])
+                .mockReturnValueOnce([{ affectedRows: 1 }, null])
+                .mockReturnValueOnce([{ affectedRows: 1 }, null]);
+            conexion.query = queryMock;
+            await DeletePost(req, res);
+            expect(queryMock).toHaveBeenCalledTimes(6);
+            expect(res.json).toHaveBeenCalledWith("bien eliminada");
+        });
+
+    });
+
+    /*describe('UpdateText', () => {
+        let req, res, queryStub;
+
+        beforeEach(() => {
+            req = {
+                params: { id: 1 },
+                body: { text: 'new text' }
+            };
+            res = {
+                json: sinon.spy()
+            };
+            queryStub = sinon.stub().resolves({ affectedRows: 1 });
+        });
+
+        test('should update text in database and return success message', async () => {
+            const conexion = { query: queryStub };
+            await UpdateText(req, res, conexion);
+            expect(queryStub.calledOnceWithExactly('UPDATE publicacionestextos SET textos=? WHERE id=?', ['new text', 1])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly('bien actualizado')).toBeTruthy;
+        });
+
+        test('should not update text in database and return error message', async () => {
+            queryStub.resolves({ affectedRows: 0 });
+            const conexion = { query: queryStub };
+            await UpdateText(req, res, conexion);
+            expect(queryStub.calledOnceWithExactly('UPDATE publicacionestextos SET textos=? WHERE id=?', ['new text', 1])).toBeTruthy;
+            expect(res.json.calledOnceWithExactly('mal actualizado')).toBeFalsy;
+        });
+    }); */
+
+    /*describe('DeletePostText API', () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                params: {
+                    id: 1,
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        test("should delete post text and related data when all data exists", async () => {
+            const mockQuery = jest.fn();
+            mockQuery.mockReturnValueOnce([{ id_textos: 1 }]);
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce([{ idtextos: 1 }]);
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+
+            const conexion = {
+                query: mockQuery,
+            };
+
+            await DeletePostText(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(6);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT id_textos FROM megustatextos WHERE id_textos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM megustatextos WHERE id_textos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT idtextos FROM comentarios_textos WHERE idtextos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_textos WHERE idtextos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos_cliente WHERE id3=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos WHERE id=?",
+                [1]
+            );
+            expect(res.json).toHaveBeenCalledWith("bien eliminada");
+        });
+
+        test("should delete post text and related data when some data exists", async () => {
+            const mockQuery = jest.fn();
+            mockQuery.mockReturnValueOnce([]);
+            mockQuery.mockReturnValueOnce([]);
+            mockQuery.mockReturnValueOnce([{ idtextos: 1 }]);
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+
+            const conexion = {
+                query: mockQuery,
+            };
+
+            await DeletePostText(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(6);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT id_textos FROM megustatextos WHERE id_textos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT idtextos FROM comentarios_textos WHERE idtextos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_textos WHERE idtextos=?  or idtextos=NULL",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos_cliente WHERE id3=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos WHERE id=?",
+                [1]
+            );
+            expect(res.json).toHaveBeenCalledWith("bien eliminada");
+        });
+
+        test("should delete post text and related data when no data exists", async () => {
+            const mockQuery = jest.fn();
+            mockQuery.mockReturnValueOnce([]);
+            mockQuery.mockReturnValueOnce([]);
+            mockQuery.mockReturnValueOnce([]);
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+            mockQuery.mockReturnValueOnce({ affectedRows: 1 });
+
+            const conexion = {
+                query: mockQuery,
+            };
+
+            await DeletePostText(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(5);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT id_textos FROM megustatextos WHERE id_textos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "SELECT idtextos FROM comentarios_textos WHERE idtextos=?  ",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos_cliente WHERE id3=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM publicacionestextos WHERE id=?",
+                [1]
+            );
+            expect(res.json).toHaveBeenCalledWith("bien eliminada");
+        });
+    }) */
+
+
+    describe('userPosts', () => {
+
+        test("test_user_posts_valid_email_and_token", async () => {
+            // Mocking req and res objects
+            const req = {
+                params: { email: "test@test.com" },
+                headers: { token: "valid_token" },
+            };
+            const res = {
+                json: jest.fn(),
+            };
+
+            // Mocking database response
+            const mockResult = [{ profession: "test", comments: "test", img: "test", description: "test", likes: "test", id: 1, email: "test@test.com", name: "test", iconUser: "test", tiempo: "test", estado: "test" }];
+            const mockQuery = jest.fn().mockReturnValue([mockResult]);
+            const mockConexion = { query: mockQuery };
+            jest.spyOn(conexion, 'query').mockImplementation(mockConexion.query);
+
+            // Mocking jwt.verify function
+            const mockVerify = jest.fn().mockReturnValue({ email: "test@test.com" });
+            jest.spyOn(jwt, 'verify').mockImplementation(mockVerify);
+
+            await userPosts(req, res);
+
+            expect(mockQuery).toHaveBeenCalled();
+            expect(mockVerify).toHaveBeenCalled();
+            expect(res.json).toHaveBeenCalledWith(mockResult);
+        });
+
+        test("test_user_posts_invalid_token", async () => {
+            // Mocking req and res objects
+            const req = {
+                params: { email: "test@test.com" },
+                headers: { token: "invalid_token" },
+            };
+            const res = {
+                json: jest.fn(),
+            };
+
+            // Mocking jwt.verify function
+            const mockVerify = jest.fn().mockImplementation(() => { throw new Error() });
+            jest.spyOn(jwt, 'verify').mockImplementation(mockVerify);
+
+            await userPosts(req, res);
+
+            expect(mockVerify).toHaveBeenCalled();
+            expect(res.json).toHaveBeenCalledWith({ message: "ERROR 404" });
+        });
+
+        test("test_user_posts_database_query_syntax_error", async () => {
+            // Mocking req and res objects
+            const req = {
+                params: { email: "test@test.com" },
+                headers: { token: "valid_token" },
+            };
+            const res = {
+                json: jest.fn(),
+            };
+
+            // Mocking database response
+            const mockQuery = jest.fn().mockImplementation(() => { throw new Error() });
+            const mockConexion = { query: mockQuery };
+            jest.spyOn(conexion, 'query').mockImplementation(mockConexion.query);
+
+            // Mocking jwt.verify function
+            const mockVerify = jest.fn().mockReturnValue({ email: "test@test.com" });
+            jest.spyOn(jwt, 'verify').mockImplementation(mockVerify);
+
+            await userPosts(req, res);
+
+            expect(mockQuery).toHaveBeenCalled();
+            expect(mockVerify).toHaveBeenCalled();
+            expect(res.json).toHaveBeenCalledWith({ message: "ERROR 404" });
+        });
+
+    });
+
+    describe('userPostsTextos', () => {
+        test("test_user_posts_textos_with_correct_email_and_token", async () => {
+            const req = {
+                params: { email: "test@test.com" },
+                headers: { token: "valid_token" }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const expectedData = [{ /* expected data */ }];
+            const queryMock = jest.fn().mockReturnValue([expectedData]);
+            const conexionMock = { query: queryMock };
+            jest.spyOn(conexion, "query").mockImplementation(queryMock);
+            jwt.verify = jest.fn().mockReturnValue({ email: "test@test.com" });
+            await userPostsTextos(req, res);
+            expect(queryMock).toHaveBeenCalled();
+            expect(res.json).toHaveBeenCalledWith(expectedData);
+        });
+
+        test("test_user_posts_textos_with_incorrect_email", async () => {
+            const req = {
+                params: { email: "incorrect@test.com" },
+                headers: { token: "valid_token" }
+            };
+            const res = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn()
+            };
+            const queryMock = jest.fn().mockReturnValue([]);
+            const conexionMock = { query: queryMock };
+            jest.spyOn(conexion, "query").mockImplementation(queryMock);
+            jwt.verify = jest.fn().mockReturnValue({ email: "test@test.com" });
+            await userPostsTextos(req, res);
+            expect(queryMock).toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ message: "ERROR 404" });
+        });
+    });
+
+    /*describe('insertComent', () => {
+
+        test("test_insert_comment_valid_token_valid_comment_valid_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                body: {
+                    coment: "This is a valid comment"
+                },
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await insertComment(req, res);
+            expect(res.json).toHaveBeenCalledWith("insert OK");
+        });
+
+        test("test_insert_comment_valid_token_empty_comment_valid_id", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                body: {
+                    coment: ""
+                },
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await insertComment(req, res);
+            expect(res.json).toHaveBeenCalledWith("insert OK");
+        });
+
+        test("test_insert_comment_invalid_token", async () => {
+            const req = {
+                headers: {
+                    token: "invalid_token"
+                },
+                body: {
+                    coment: "This is a valid comment"
+                },
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await insertComment(req, res);
+            expect(res.json).toHaveBeenCalledWith("not insert");
+        });
+
+        test("test_insert_comment_missing_comment", async () => {
+            const req = {
+                headers: {
+                    token: jwt.sign({ email: "test@test.com" }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE })
+                },
+                body: {},
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            await insertComment(req, res);
+            expect(res.json).toHaveBeenCalledWith("not insert");
+        });
+
+    }); */
+
+    /* describe("insertCommentText", () => {
+        let req, res, conexion;
+
+        beforeEach(() => {
+            req = {
+                headers: {
+                    token: "valid_token",
+                },
+                body: {
+                    coment: "test comment",
+                },
+                params: {
+                    id: 1,
+                },
+            };
+            res = {
+                json: jest.fn(),
+            };
+            conexion = {
+                query: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        it("should insert comment and return 'insert OK'", async () => {
+            const tokenPayload = {
+                email: "test@example.com",
+            };
+            jwt.verify = jest.fn().mockReturnValue(tokenPayload);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            await insertCommentText(req, res);
+            expect(jwt.verify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios(comentario) VALUES(?)",
+                ["test comment"]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios_textos(id_comentario2,idtextos) VALUES(?,?)",
+                [1, 1]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios_usuario(id_comentario3,emailcliente) VALUES(?,?)",
+                [1, "test@example.com"]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
+                [1, 1]
+            );
+            expect(res.json).toHaveBeenCalledWith("insert OK");
+        });
+
+        it("should return 'not insert' if comment insertion fails", async () => {
+            jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+            conexion.query.mockReturnValueOnce([{ affectedRows: 0 }]);
+            await insertCommentText(req, res);
+            expect(jwt.verify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios(comentario) VALUES(?)",
+                ["test comment"]
+            );
+            expect(res.json).toHaveBeenCalledWith("not insert");
+        });
+
+        it("should return 'not insert' if comentarios_textos insertion fails", async () => {
+            jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 0 }]);
+            await insertCommentText(req, res);
+            expect(jwt.verify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios(comentario) VALUES(?)",
+                ["test comment"]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios_textos(id_comentario2,idtextos) VALUES(?,?)",
+                [1, 1]
+            );
+            expect(res.json).toHaveBeenCalledWith("not insert");
+        });
+
+        it("should return 'not insert' if comentarios_usuario insertion fails", async () => {
+            jwt.verify = jest.fn().mockReturnValue({ email: "test@example.com" });
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 1 }]);
+            conexion.query.mockReturnValueOnce([{ affectedRows: 0 }]);
+            await insertCommentText(req, res);
+            expect(jwt.verify).toHaveBeenCalledWith("valid_token", TOKEN_SECRET);
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios(comentario) VALUES(?)",
+                ["test comment"]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios_textos(id_comentario2,idtextos) VALUES(?,?)",
+                [1, 1]
+            );
+            expect(conexion.query).toHaveBeenCalledWith(
+                "INSERT INTO comentarios_usuario(id_comentario3,emailcliente) VALUES(?,?)",
+                [1, "test@example.com"]
+            );
+            expect(res.json).toHaveBeenCalledWith("not insert");
+        });
+    }); */
+
+    describe('getComents API', () => {
+        test('should call query with the correct SQL and parameters', async () => {
+            const req = { params: { id: 123 } };
+            const queryStub = sinon.stub().resolves([{}]);
+            const conexion = { query: queryStub };
+            const res = { json: sinon.spy() };
+
+            await getComments(req, res, conexion);
+
+            expect(queryStub.calledOnceWithExactly(
+                "SELECT cliente.name,cliente.iconUser,comentarios.comentario,comentarios.id,comentarios_imagen.idimagen,comentarios_usuario.emailcliente FROM comentarios,cliente,comentarios_usuario,comentarios_imagen WHERE comentarios.id=comentarios_usuario.id_comentario3 and comentarios.id=comentarios_imagen.id_comentario AND comentarios.comentario is NOT null and cliente.email=comentarios_usuario.emailcliente and comentarios_imagen.idimagen=? ORDER BY comentarios.hora DESC",
+                [123]
+            )).toBeTruthy;
+        });
+
+        test('should send the result as JSON', async () => {
+            const req = { params: { id: 123 } };
+            const queryStub = sinon.stub().resolves([{ name: 'John', comentario: 'Hello' }]);
+            const conexion = { query: queryStub };
+            const res = { json: sinon.spy() };
+
+            await getComments(req, res, conexion);
+
+            expect(res.json.calledOnceWithExactly([{ name: 'John', comentario: 'Hello' }])).toBeTruthy;
+        });
+
+        test('should log any errors', async () => {
+            const req = { params: { id: 123 } };
+            const queryStub = sinon.stub().rejects(new Error('Database error'));
+            const conexion = { query: queryStub };
+            const consoleStub = sinon.stub(console, 'log');
+            const res = { json: sinon.spy() };
+
+            await getComments(req, res, conexion);
+
+            expect(consoleStub.calledOnceWithExactly(new Error('Database error'))).toBeTruthy;
+        });
+    });
+
+    describe('getCommentsText API', () => {
+        afterEach(() => {
+            jest.fn();
+        });
+
+        it('should return comments text', async () => {
+            const req = { params: { id: 1 } };
+            const res = { json: jest.fn() };
+            const expected = [{ name: 'John', iconUser: 'user.png', comentario: 'Great post!', id: 1, idtextos: 1, emailcliente: 'john@example.com' }];
+            conexion.query.mockResolvedValueOnce([expected]);
+
+            await getCommentsText(req, res);
+
+            expect(conexion.query).toHaveBeenCalledWith(expect.any(String), [1]);
+            expect(res.json).toHaveBeenCalledWith(expected);
+        });
+
+        it('should handle errors', async () => {
+            const req = { params: { id: 1 } };
+            const res = { json: jest.fn() };
+            const error = new Error('Database error');
+            conexion.query.mockRejectedValueOnce(error);
+
+            await getCommentsText(req, res);
+
+            expect(conexion.query).toHaveBeenCalledWith(expect.any(String), [1]);
+            expect(console.log).toHaveBeenCalledWith(error);
+        });
+    });
+
+    describe("updateComments API", () => {
+
+        test("test_update_comments_successfully", async () => {
+            const req = {
+                body: {
+                    comment: "new comment"
+                },
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const queryResult = {
+                affectedRows: 1
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]);
+            await updateComments(req, res);
+            expect(mockQuery).toHaveBeenCalledWith("UPDATE comentarios SET comentarios.comentario=? WHERE comentarios.id=?", ["new comment", 1]);
+            expect(res.json).toHaveBeenCalledWith(queryResult);
+        });
+
+        test("test_update_comments_nonexistent_id", async () => {
+            const req = {
+                body: {
+                    comment: "new comment"
+                },
+                params: {
+                    id: 999
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const queryResult = {
+                affectedRows: 0
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]);
+            await updateComments(req, res);
+            expect(mockQuery).toHaveBeenCalledWith("UPDATE comentarios SET comentarios.comentario=? WHERE comentarios.id=?", ["new comment", 999]);
+            expect(res.json).toHaveBeenCalledWith("not update");
+        });
+
+        test("test_update_comments_security_vulnerability", async () => {
+            const req = {
+                body: {
+                    comment: "new comment'; DROP TABLE comentarios;--"
+                },
+                params: {
+                    id: 1
+                }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const queryResult = {
+                affectedRows: 1
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockResolvedValueOnce([queryResult]);
+            await updateComments(req, res);
+            expect(mockQuery).toHaveBeenCalledWith("UPDATE comentarios SET comentarios.comentario=? WHERE comentarios.id=?", ["new comment'; DROP TABLE comentarios;--", 1]);
+            expect(res.json).toHaveBeenCalledWith(queryResult);
+        });
+
+
+    });
+
+    /* describe('deletePost', () => {
+        let req, res;
+
+        beforeEach(() => {
+            req = {
+                body: { param: 1 },
+                params: { id: 1 },
+            };
+            res = {
+                json: jest.fn(),
+            };
+        });
+
+        afterEach(() => {
+            jest.fn();
+        });
+
+        test("should delete comments and return the updated post", async () => {
+            const mockQuery = jest.fn();
+            mockQuery.mockReturnValueOnce([{ affectedRows: 1 }]);
+            mockQuery.mockReturnValueOnce([{ affectedRows: 1 }]);
+            mockQuery.mockReturnValueOnce([{ affectedRows: 1 }]);
+            mockQuery.mockReturnValueOnce([{ affectedRows: 1 }]);
+            const conexion = { query: mockQuery };
+
+            await deleteComments(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(4);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_usuario WHERE id_comentario3=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_imagen WHERE id_comentario=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios WHERE id=?",
+                [1]
+            );
+            expect(mockQuery).toHaveBeenCalledWith(
+                "UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)-1 WHERE id=?",
+                [1, 1]
+            );
+            expect(res.json).toHaveBeenCalledWith([{ affectedRows: 1 }]);
+        });
+
+        test("should return 'not delete' if comments were not deleted", async () => {
+            const mockQuery = jest.fn();
+            mockQuery.mockReturnValueOnce([{ affectedRows: 0 }]);
+            const conexion = { query: mockQuery };
+
+            await deleteComments(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(1);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_usuario WHERE id_comentario3=?",
+                [1]
+            );
+            expect(res.json).toHaveBeenCalledWith("not delete");
+        });
+
+        test("should handle errors", async () => {
+            const mockQuery = jest.fn(() => {
+                throw new Error("Database error");
+            });
+            const conexion = { query: mockQuery };
+
+            await deleteComments(req, res, conexion);
+
+            expect(mockQuery).toHaveBeenCalledTimes(1);
+            expect(mockQuery).toHaveBeenCalledWith(
+                "DELETE FROM comentarios_usuario WHERE id_comentario3=?",
+                [1]
+            );
+            expect(console.log).toHaveBeenCalledWith(new Error("Database error"));
+        });
+
+    }); */
+
+    /*describe('deleteCommentsText', () => {
+
+        test("test_delete_comments_text_valid_id", async () => {
+            const req = {
+                params: { id: 1 },
+                body: { param: 1 }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockImplementation(() => [[{ affectedRows: 1 }]]);
+            await deleteCommentsText(req, res);
+            expect(mockQuery).toHaveBeenCalledTimes(4);
+            expect(res.json).toHaveBeenCalledWith([[{ affectedRows: 1 }]]);
+        });
+
+        test("test_delete_comments_text_non_integer_id", async () => {
+            const req = {
+                params: { id: "non-integer" },
+                body: { param: 1 }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockImplementation(() => []);
+            await deleteCommentsText(req, res);
+            expect(mockQuery).toHaveBeenCalledTimes(0);
+            expect(res.json).toHaveBeenCalledWith("not delete");
+        });
+
+        test("test_delete_comments_text_partial_id", async () => {
+            const req = {
+                params: { id: 1 },
+                body: { param: 1 }
+            };
+            const res = {
+                json: jest.fn()
+            };
+            const mockQuery = jest.spyOn(conexion, "query").mockImplementation((query, params) => {
+                if (query.includes("comentarios_usuario")) {
+                    return [[{ affectedRows: 1 }]];
+                } else if (query.includes("comentarios_textos")) {
+                    return [];
+                } else if (query.includes("comentarios")) {
+                    return [[{ affectedRows: 1 }]];
+                } else if (query.includes("publicacionestextos")) {
+                    return [[{ affectedRows: 1 }]];
+                }
+            });
+            await deleteCommentsText(req, res);
+            expect(mockQuery).toHaveBeenCalledTimes(4);
+            expect(res.json).toHaveBeenCalledWith("not delete");
+        });
+
+    }); */
+
+
+});
 
 
 
