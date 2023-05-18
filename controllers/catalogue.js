@@ -100,7 +100,7 @@ export const consultViews = async (req, res) => {
     if (token) {
       let correo=jwt.verify(token,TOKEN_SECRET)
       let {email}=correo
-    
+
       const [result] = await conexion.query(`SELECT email_visto FROM profesionales_vistos WHERE email_cliente = ?`,[email])
       
       if (result.length>0) {
@@ -111,7 +111,9 @@ export const consultViews = async (req, res) => {
         }
         for (let i = 0; i < emailView.length; i++) {
           const [info] = await conexion.query('SELECT name,email,profession,iconUser FROM cliente WHERE email=?',[emailView[i]]);
-          usersView.push(info[0])
+          if (info.length > 0) {
+            usersView.push(info[0])
+          }
         }
         res.json(usersView);
       }else{
