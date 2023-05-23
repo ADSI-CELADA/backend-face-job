@@ -144,11 +144,15 @@ export const likesImg = async (req, res) => {
         );
         if (resultado.affectedRows == 1) {
           const [rest] = await conexion.query(
-            "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
-            [id, id]
+            "SELECT likes FROM publicaciones WHERE id=?",[id]
           );
-          if (rest.affectedRows == 1) {
-            res.json("bien");
+          if (rest.length!=0) {
+            let like=rest[0].likes
+           const [likeFinal]=await conexion.query("UPDATE publicaciones SET likes=? WHERE id=?",
+            [like+1, id]) 
+            if (likeFinal.affectedRows==1) {
+              res.json('bien like Final')
+            }
           } else {
             res.json("mal el like");
           }
@@ -163,11 +167,15 @@ export const likesImg = async (req, res) => {
         );
         if (resulti.affectedRows == 1) {
           const [rest] = await conexion.query(
-            "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)+1 WHERE id=?",
-            [id, id]
+            'SELECT likes FROM publicaciones WHERE id=?',[id]
           );
-          if (rest.affectedRows == 1) {
-            res.json("bien");
+          if (rest.length != 0) {
+            let like=rest[0].likes
+            const [likeFinal]=await conexion.query("UPDATE publicaciones SET likes=? WHERE id=?",
+             [like+1, id]) 
+             if (likeFinal.affectedRows==1) {
+               res.json('bien like Final')
+             }
           } else {
             res.json("mal el like");
           }
@@ -201,11 +209,16 @@ export const likesTexts = async (req, res) => {
         );
         if (resultado.affectedRows == 1) {
           const [rest] = await conexion.query(
-            "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
-            [id, id]
+            'SELECT likes FROM publicacionestextos WHERE id=?',[id]
           );
-          if (rest.affectedRows == 1) {
-            res.json("bien");
+          if (rest.length != 0) {
+           let like=rest[0].likes
+           const [likeFinal]=await conexion.query("UPDATE publicacionestextos SET likes=? WHERE id=?",
+           [like+1, id])
+           if (likeFinal.affectedRows==1) {
+            res.json('bien like final')
+           }
+
           } else {
             res.json("mal el like");
           }
@@ -220,12 +233,17 @@ export const likesTexts = async (req, res) => {
         );
         if (resulti.affectedRows == 1) {
           const [rest] = await conexion.query(
-            "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
-            [id, id]
+            'SELECT likes FROM publicacionestextos WHERE id=?',[id]
           );
-          if (rest.affectedRows == 1) {
-            res.json("bien");
-          } else {
+          if (rest.length != 0) {
+           let like=rest[0].likes
+           const [likeFinal]=await conexion.query("UPDATE publicacionestextos SET likes=? WHERE id=?",
+           [like+1, id])
+           if (likeFinal.affectedRows==1) {
+            res.json('bien like final')
+           }
+
+          }  else {
             res.json("mal el like");
           }
         } else {
@@ -252,12 +270,17 @@ export const DontLikeText = async (req, res) => {
       );
       if (result.affectedRows == 1) {
         const [rest] = await conexion.query(
-          "UPDATE publicacionestextos SET likes=(SELECT likes FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
-          [id, id]
+          'SELECT likes FROM publicacionestextos WHERE id=?',[id]
         );
-        if (rest.affectedRows == 1) {
-          res.json("bien dislike");
-        } else {
+        if (rest.length != 0) {
+         let like=rest[0].likes
+         const [likeFinal]=await conexion.query("UPDATE publicacionestextos SET likes=? WHERE id=?",
+         [like-1, id])
+         if (likeFinal.affectedRows==1) {
+          res.json('bien like final')
+         }
+
+        }  else {
           res.json("mal el dislike");
         }
       } else {
@@ -283,11 +306,15 @@ export const DontLike = async (req, res) => {
       );
       if (result.affectedRows == 1) {
         const [rest] = await conexion.query(
-          "UPDATE publicaciones SET likes=(SELECT likes FROM publicaciones WHERE id=?)-1 WHERE id=?",
-          [id, id]
+          "SELECT likes FROM publicaciones WHERE id=?",[id]
         );
-        if (rest.affectedRows == 1) {
-          res.json("bien dislike");
+        if (rest.length!=0) {
+          let like=rest[0].likes
+         const [likeFinal]=await conexion.query("UPDATE publicaciones SET likes=? WHERE id=?",
+          [like-1, id]) 
+          if (likeFinal.affectedRows==1) {
+            res.json('bien like Final')
+          }
         } else {
           res.json("mal el dislike");
         }
@@ -640,10 +667,16 @@ export const insertComment = async (req, res) => {
         );
         if (response.affectedRows != 0) {
           const [rest] = await conexion.query(
-            "UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)+1 WHERE id=?",
-            [id, id]
+            'SELECT comments FROM publicaciones WHERE id=?',[id]
           );
-          res.json("insert OK");
+          if (rest.length!=0) {
+            let commen=rest[0].comments
+            const [commentFinal]=await conexion.query("UPDATE publicaciones SET comments=? WHERE id=?",
+            [commen+1, id])
+            if (commentFinal.affectedRows==1) {
+              res.json('se agrego ,un comentario')
+            }
+          }
         } else {
           res.json("not insert");
         }
@@ -676,10 +709,18 @@ export const insertCommentText = async (req, res) => {
         );
         if (response.affectedRows != 0) {
           const [rest] = await conexion.query(
-            "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)+1 WHERE id=?",
-            [id, id]
+
+            'SELECT comments FROM publicacionestextos WHERE id=?',[id]
           );
-          res.json("insert OK");
+          if (rest.length!=0) {
+            let commen=rest[0].comments
+            const [commentFinal]=await conexion.query("UPDATE publicacionestextos SET comments=? WHERE id=?",
+            [commen+1, id])
+            if (commentFinal.affectedRows==1) {
+               res.json("insert OK");
+            }
+          }
+         
         } else {
           res.json("not insert");
         }
@@ -755,12 +796,19 @@ export const deleteComments = async (req, res) => {
         );
         if (resultu.affectedRows != 0) {
           const [rest] = await conexion.query(
-            "UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)-1 WHERE id=?",
-            [param, param]
+            // "UPDATE publicaciones SET comments=(SELECT comments FROM publicaciones WHERE id=?)-1 WHERE id=?",
+            // [param, param]
+           ' SELECT comments FROM publicaciones WHERE id=?',[param]
+            
           );
 
-          if (rest.affectedRows != 0) {
-            res.json(rest);
+          if (rest.length != 0) {
+            let commen=rest[0].comments
+           const [commentFinal]=await conexion.query("UPDATE publicaciones SET comments=? WHERE id=?",
+            [commen-1, param]) 
+            if (commentFinal) {
+              res.json('delete comments')
+            }
           } else {
             console.log("falla el update");
           }
@@ -797,11 +845,17 @@ export const deleteCommentsText = async (req, res) => {
           );
           if (resultu.affectedRows != 0) {
             const [rest] = await conexion.query(
-              "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
-              [param, param]
+              // "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
+              // [param, param]
+              'SELECT comments FROM publicacionestextos WHERE id=?',[param]
             );
-            if (rest.affectedRows != 0) {
-              res.json(rest);
+            if (rest.length != 0) {
+              let commen=rest[0].comments
+              const [commentsFinal]=await conexion.query("UPDATE publicacionestextos SET comments=? WHERE id=?",
+              [commen-1, param])
+              if (commentsFinal.affectedRows==1) {
+                res.json('delete ok')
+              }
             }
           }
         }
