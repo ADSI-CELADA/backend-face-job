@@ -845,8 +845,6 @@ export const deleteCommentsText = async (req, res) => {
           );
           if (resultu.affectedRows != 0) {
             const [rest] = await conexion.query(
-              // "UPDATE publicacionestextos SET comments=(SELECT comments FROM publicacionestextos WHERE id=?)-1 WHERE id=?",
-              // [param, param]
               'SELECT comments FROM publicacionestextos WHERE id=?',[param]
             );
             if (rest.length != 0) {
