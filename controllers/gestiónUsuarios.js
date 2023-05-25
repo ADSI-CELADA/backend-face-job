@@ -194,7 +194,7 @@ export const updatePassword = async (req, res) => {
 
 export const updateInfo = async (req,res) =>{
  const token = req.headers["token"];
-  const { name, number, professional, lastname} = req.body
+  const { name, number, profession, lastname} = req.body
   console.log(token
 );
 try { 
@@ -203,7 +203,7 @@ try {
     let { email } = correo;
    
     const [result] = await conexion.query(
-    `UPDATE cliente SET name=?,number=?,profession=?,lastname=? where email=?`,[name,number,professional,lastname,email]
+    `UPDATE cliente SET name=?,number=?,profession=?,lastname=? where email=?`,[name,number,profession,lastname,email]
     )
     if (result.affectedRows !=0) {
       return res.json({ result, data: "UPDATE_INFO"})
