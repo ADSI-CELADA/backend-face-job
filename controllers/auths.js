@@ -5,26 +5,26 @@ import jwt from "jsonwebtoken";
 
 export const createUserClient = async (req, res) => {
   try {
-    let { email, name,lastname, date, number, password, iconUser, profession, codigo} =
-      req.body;
+    let { email, name, lastname, date, number, password, iconUser, profession, codigo } = req.body;
     codigo = 0;
-    iconUser = "https://res.cloudinary.com/de2sdukuk/image/upload/v1682083366/usericon_eqm409.jpg"
+    iconUser = "https://res.cloudinary.com/de2sdukuk/image/upload/v1682083366/usericon_eqm409.jpg";
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hash = bcrypt.hashSync(password, salt);
 
-    const [result] = await conexion.query(
-      "SELECT * FROM cliente WHERE email = ?",
-      [email]
-    );
+    const [result] = await conexion.query("SELECT * FROM cliente WHERE email = ?", [email]);
     if (result.length > 0) {
       res.json({ data: "ya existe el correo" });
     } else {
-      const [result] = await conexion.query(
-        `INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo,lastname,namecomplete) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
-        [email, name, date, number, hash, iconUser, profession, codigo,lastname,name+" "+lastname]
+      const [insertResult] = await conexion.query(
+        `INSERT INTO cliente (email, name, age, number, password, iconUser, profession, codigo, lastname, namecomplete) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [email, name, date, number, hash, iconUser, profession, codigo, lastname, name + " " + lastname]
       );
-      if (result.affectedRow != 0) { 
+
+      // Si la inserción fue exitosa, ejecuta la lógica del trigger
+      if (insertResult.affectedRow !== 0) {
+        // Lógica del trigger
+        await conexion.query(`UPDATE cliente SET cod_paquete = ?, info_paquete = ? WHERE email = ?`, ["4", "3", email]);
 
         return res.json({ data: "INSERT_OK" });
       } else {
